@@ -1,0 +1,29 @@
+Test run for E:\Projects\DotAir\AeroTech.ECTM.V1\tests\AeroTech.ECTM.Domain.ConformanceTests\bin\Debug\net10.0\AeroTech.ECTM.Domain.ConformanceTests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.01] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.31]   Discovering: AeroTech.ECTM.Domain.ConformanceTests
+[xUnit.net 00:00:00.64]   Discovered:  AeroTech.ECTM.Domain.ConformanceTests
+[xUnit.net 00:00:00.65]   Starting:    AeroTech.ECTM.Domain.ConformanceTests
+  Passed AeroTech.ECTM.Domain.ConformanceTests.AuditEntries.AuditEntryTests.The_time_of_an_entry_is_stored_in_utc [37 ms]
+  Passed AeroTech.ECTM.Domain.ConformanceTests.ConfigurationDocuments.ConfigurationDocumentTests.Content_that_is_not_one_json_object_is_refused(content: "not json") [39 ms]
+  Passed AeroTech.ECTM.Domain.ConformanceTests.ConfigurationDocuments.ConfigurationDocumentTests.Content_that_is_not_one_json_object_is_refused(content: "42") [2 ms]
+  Passed AeroTech.ECTM.Domain.ConformanceTests.ConfigurationDocuments.ConfigurationDocumentTests.Content_that_is_not_one_json_object_is_refused(content: "{\"a\":") [< 1 ms]
+  Passed AeroTech.ECTM.Domain.ConformanceTests.ConfigurationDocuments.ConfigurationDocumentTests.Content_that_is_not_one_json_object_is_refused(content: "[1,2]") [< 1 ms]
+  Passed AeroTech.ECTM.Domain.ConformanceTests.ConfigurationDocuments.ConfigurationDocumentTests.An_undefined_kind_is_refused [1 ms]
+  Passed AeroTech.ECTM.Domain.ConformanceTests.ConfigurationDocuments.ConfigurationDocumentTests.A_version_below_one_is_refused(versionNumber: 0) [< 1 ms]
+  Passed AeroTech.ECTM.Domain.ConformanceTests.ConfigurationDocuments.ConfigurationDocumentTests.A_version_below_one_is_refused(versionNumber: -1) [< 1 ms]
+  Passed AeroTech.ECTM.Domain.ConformanceTests.ConfigurationDocuments.ConfigurationDocumentTests.Empty_content_is_refused(content: "   ") [1 ms]
+  Passed AeroTech.ECTM.Domain.ConformanceTests.ConfigurationDocuments.ConfigurationDocumentTests.Empty_content_is_refused(content: "") [< 1 ms]
+  Passed AeroTech.ECTM.Domain.ConformanceTests.ConfigurationDocuments.ConfigurationDocumentTests.A_draft_carries_its_kind_version_status_and_content_hash [37 ms]
+  Passed AeroTech.ECTM.Domain.ConformanceTests.Architecture.AntiRegressionScanTests.No_test_reads_a_path_outside_the_repository [150 ms]
+  Passed AeroTech.ECTM.Domain.ConformanceTests.ConfigurationDocuments.ConfigurationDocumentTests.A_draft_keeps_the_document_it_is_based_on [57 ms]
+  Passed AeroTech.ECTM.Domain.ConformanceTests.Architecture.AntiRegressionScanTests.No_source_file_reads_a_recorder_ordinal [148 ms]
+  Passed AeroTech.ECTM.Domain.ConformanceTests.Fixtures.FixtureIntegrityTests.Every_real_recording_matches_the_identity_of_its_golden [387 ms]
+  Passed AeroTech.ECTM.Domain.ConformanceTests.Fixtures.FixtureIntegrityTests.No_fixture_file_is_missing_from_the_manifest [32 ms]
+[xUnit.net 00:00:01.57]   Finished:    AeroTech.ECTM.Domain.ConformanceTests
+  Passed AeroTech.ECTM.Domain.ConformanceTests.Fixtures.FixtureIntegrityTests.Every_fixture_file_matches_the_manifest [285 ms]
+
+Test Run Successful.
+Total tests: 17
+     Passed: 17
+ Total time: 3.5206 Seconds

@@ -10,9 +10,4 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="DataProfileAggregate\Profiles\ep-doa-profile-v1.json" LogicalName="ep-doa-profile-v1.json" />
-    <EmbeddedResource Include="DataProfileAggregate\Profiles\ep-doa-source-channel-qualification-v1.json" LogicalName="ep-doa-source-channel-qualification-v1.json" />
-  </ItemGroup>
 </Project>

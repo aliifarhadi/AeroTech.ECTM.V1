@@ -1,0 +1,6 @@
+[
+ "/Backoffice/v1/audit",
+ "/Backoffice/v1/config/kinds",
+ "/Backoffice/v1/config/{kind}/documents",
+ "/Backoffice/v1/config/{kind}/documents/{documentId}"
+]
