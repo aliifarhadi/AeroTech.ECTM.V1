@@ -11,20 +11,39 @@ public sealed class RouteInventoryTests(MigratedDatabaseFixture fixture)
 {
     private const string BusinessRoutePrefix = "Backoffice/";
 
-    private static readonly string[] P00Routes =
+    private static readonly string[] ContractRoutes =
     [
+        "GET Backoffice/v{version:apiVersion}/aircraft",
+        "GET Backoffice/v{version:apiVersion}/aircraft/{aircraftId:long}",
         "GET Backoffice/v{version:apiVersion}/audit",
         "GET Backoffice/v{version:apiVersion}/config/kinds",
         "GET Backoffice/v{version:apiVersion}/config/{kind}/documents",
-        "GET Backoffice/v{version:apiVersion}/config/{kind}/documents/{documentId:long}"
+        "GET Backoffice/v{version:apiVersion}/config/{kind}/documents/{documentId:long}",
+        "GET Backoffice/v{version:apiVersion}/engine-models",
+        "GET Backoffice/v{version:apiVersion}/engine-models/{engineModelId:long}",
+        "GET Backoffice/v{version:apiVersion}/engines",
+        "GET Backoffice/v{version:apiVersion}/engines/{engineId:long}",
+        "GET Backoffice/v{version:apiVersion}/installations",
+        "GET Backoffice/v{version:apiVersion}/maintenance-events",
+        "POST Backoffice/v{version:apiVersion}/aircraft",
+        "POST Backoffice/v{version:apiVersion}/engine-models",
+        "POST Backoffice/v{version:apiVersion}/engines",
+        "POST Backoffice/v{version:apiVersion}/installations",
+        "POST Backoffice/v{version:apiVersion}/installations/{installationId:long}/close",
+        "POST Backoffice/v{version:apiVersion}/maintenance-events",
+        "PUT Backoffice/v{version:apiVersion}/aircraft/{aircraftId:long}",
+        "PUT Backoffice/v{version:apiVersion}/engine-models/{engineModelId:long}",
+        "PUT Backoffice/v{version:apiVersion}/engines/{engineId:long}",
+        "PUT Backoffice/v{version:apiVersion}/engines/{engineId:long}/life-counters",
+        "PUT Backoffice/v{version:apiVersion}/maintenance-events/{maintenanceEventId:long}"
     ];
 
     [Fact]
-    public void The_business_routes_are_exactly_the_P00_contract()
+    public void The_business_routes_are_exactly_the_contract_of_the_delivered_phases()
     {
         var routes = BusinessRoutes();
 
-        Assert.Equal(P00Routes, routes);
+        Assert.Equal(ContractRoutes, routes);
     }
 
     private List<string> BusinessRoutes()

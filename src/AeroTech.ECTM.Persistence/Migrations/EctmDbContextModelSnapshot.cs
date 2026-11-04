@@ -23,6 +23,53 @@ namespace AeroTech.ECTM.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.HasSequence("RegistryVersions");
+
+            modelBuilder.Entity("AeroTech.ECTM.Domain.AircraftAggregate.Aircraft", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<byte>("EngineCount")
+                        .HasColumnType("tinyint");
+
+                    b.Property<DateTimeOffset>("LastUpdateTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long?>("LastUpdatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("OperatorCode")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("Registration")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)")
+                        .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TypeCode")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Registration")
+                        .IsUnique();
+
+                    b.ToTable("Aircraft", "Ectm");
+                });
+
             modelBuilder.Entity("AeroTech.ECTM.Domain.AuditEntryAggregate.AuditEntry", b =>
                 {
                     b.Property<long>("Id")
@@ -127,6 +174,400 @@ namespace AeroTech.ECTM.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("ConfigurationDocuments", "Ectm");
+                });
+
+            modelBuilder.Entity("AeroTech.ECTM.Domain.EngineAggregate.Engine", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset?>("ConfigurationDocumentedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ConfigurationDocumentedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("ConfigurationEvidenceReference")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<int?>("CyclesSinceLastEvent")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CyclesSinceNew")
+                        .HasColumnType("int");
+
+                    b.Property<long>("EngineModelId")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal?>("HoursSinceLastEvent")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("decimal(12,2)");
+
+                    b.Property<decimal?>("HoursSinceNew")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("decimal(12,2)");
+
+                    b.Property<DateTimeOffset>("LastUpdateTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long?>("LastUpdatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset?>("LifeCountersBasisAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("LifeCountersSource")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Manufacturer")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<string>("SerialNumber")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)")
+                        .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ThrustRatingCode")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("VariantCode")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EngineModelId");
+
+                    b.HasIndex("Manufacturer", "SerialNumber")
+                        .IsUnique();
+
+                    b.ToTable("Engines", "Ectm");
+                });
+
+            modelBuilder.Entity("AeroTech.ECTM.Domain.EngineAggregate.Entities.LifeCounterAdjustment", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("AdjustedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("AdjustedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTimeOffset>("BasisAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("CyclesSinceLastEvent")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CyclesSinceNew")
+                        .HasColumnType("int");
+
+                    b.Property<long>("EngineId")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal?>("HoursSinceLastEvent")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("decimal(12,2)");
+
+                    b.Property<decimal?>("HoursSinceNew")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("decimal(12,2)");
+
+                    b.Property<DateTimeOffset>("LastUpdateTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long?>("LastUpdatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<int>("Source")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EngineId");
+
+                    b.ToTable("EngineLifeCounterAdjustments", "Ectm");
+                });
+
+            modelBuilder.Entity("AeroTech.ECTM.Domain.EngineInstallationAggregate.EngineInstallation", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("AircraftId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("EngineId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Evidence")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTimeOffset>("InstalledAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("LastUpdateTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long?>("LastUpdatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<byte>("Position")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("RemovalReason")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTimeOffset?>("RemovedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EngineId")
+                        .IsUnique()
+                        .HasFilter("[RemovedAt] IS NULL");
+
+                    b.HasIndex("AircraftId", "Position")
+                        .IsUnique()
+                        .HasFilter("[RemovedAt] IS NULL");
+
+                    b.HasIndex("EngineId", "InstalledAt")
+                        .IsUnique();
+
+                    b.HasIndex("AircraftId", "Position", "InstalledAt")
+                        .IsUnique();
+
+                    b.ToTable("EngineInstallations", "Ectm", t =>
+                        {
+                            t.HasCheckConstraint("CK_EngineInstallations_Interval", "[RemovedAt] IS NULL OR [RemovedAt] > [InstalledAt]");
+
+                            t.HasCheckConstraint("CK_EngineInstallations_Position", "[Position] IN (1, 2)");
+                        });
+                });
+
+            modelBuilder.Entity("AeroTech.ECTM.Domain.EngineInstallationAggregate.Entities.RegistryChange", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("ChangeType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("ChangedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long>("InstallationId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("LastUpdateTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long?>("LastUpdatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<long>("RegistryVersion")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasDefaultValueSql("NEXT VALUE FOR [Ectm].[RegistryVersions]");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InstallationId");
+
+                    b.HasIndex("RegistryVersion")
+                        .IsUnique();
+
+                    b.ToTable("RegistryChanges", "Ectm");
+                });
+
+            modelBuilder.Entity("AeroTech.ECTM.Domain.EngineModelAggregate.EngineModel", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)")
+                        .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+                    b.PrimitiveCollection<string>("DocumentReferences")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Family")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<DateTimeOffset>("LastUpdateTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long?>("LastUpdatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Manufacturer")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<string>("ThrustRatingCode")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("VariantCode")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("EngineModels", "Ectm");
+                });
+
+            modelBuilder.Entity("AeroTech.ECTM.Domain.MaintenanceEventAggregate.MaintenanceEvent", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("AircraftId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("CyclesAtEvent")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DateReliability")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("EngineId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("EventAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("EventType")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("HoursAtEvent")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("decimal(12,2)");
+
+                    b.Property<int>("IdentityKind")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("LastUpdateTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long?>("LastUpdatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<byte?>("Position")
+                        .HasColumnType("tinyint");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<string>("WorkOrderReference")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EngineId");
+
+                    b.HasIndex("AircraftId", "Position");
+
+                    b.ToTable("MaintenanceEvents", "Ectm", t =>
+                        {
+                            t.HasCheckConstraint("CK_MaintenanceEvents_Identity", "([IdentityKind] = 1 AND [EngineId] IS NOT NULL AND [AircraftId] IS NULL AND [Position] IS NULL) OR ([IdentityKind] = 2 AND [EngineId] IS NULL AND [AircraftId] IS NOT NULL AND [Position] IN (1, 2))");
+                        });
+                });
+
+            modelBuilder.Entity("AeroTech.ECTM.Domain.EngineAggregate.Entities.LifeCounterAdjustment", b =>
+                {
+                    b.HasOne("AeroTech.ECTM.Domain.EngineAggregate.Engine", null)
+                        .WithMany("LifeCounterAdjustments")
+                        .HasForeignKey("EngineId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AeroTech.ECTM.Domain.EngineInstallationAggregate.Entities.RegistryChange", b =>
+                {
+                    b.HasOne("AeroTech.ECTM.Domain.EngineInstallationAggregate.EngineInstallation", null)
+                        .WithMany("Changes")
+                        .HasForeignKey("InstallationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AeroTech.ECTM.Domain.EngineAggregate.Engine", b =>
+                {
+                    b.Navigation("LifeCounterAdjustments");
+                });
+
+            modelBuilder.Entity("AeroTech.ECTM.Domain.EngineInstallationAggregate.EngineInstallation", b =>
+                {
+                    b.Navigation("Changes");
                 });
 #pragma warning restore 612, 618
         }

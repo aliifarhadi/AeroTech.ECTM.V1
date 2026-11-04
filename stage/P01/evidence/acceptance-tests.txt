@@ -1,0 +1,62 @@
+Test run for E:\Projects\DotAir\AeroTech.ECTM.V1\tests\AeroTech.ECTM.Application.AcceptanceTests\bin\Debug\net10.0\AeroTech.ECTM.Application.AcceptanceTests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.37]   Discovering: AeroTech.ECTM.Application.AcceptanceTests
+[xUnit.net 00:00:00.62]   Discovered:  AeroTech.ECTM.Application.AcceptanceTests
+[xUnit.net 00:00:00.63]   Starting:    AeroTech.ECTM.Application.AcceptanceTests
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Persistence.MigrationTests.The_test_database_has_every_migration_applied [101 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Persistence.MigrationTests.The_test_database_is_a_throwaway_database [1 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Persistence.MigrationTests.The_model_has_no_change_missing_from_the_migrations [192 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Flows.FleetSetupWalkthroughTests.J1_the_owner_describes_EP_DOA_with_both_engines_and_their_history [5 s]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.AircraftTests.A_blank_registration_is_rejected [37 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.AircraftTests.A_duplicate_registration_is_refused [55 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.AircraftTests.An_aircraft_is_created_read_listed_and_edited [391 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.AircraftTests.An_unknown_aircraft_is_not_found [10 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.EngineModelTests.A_duplicate_code_is_refused [42 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.EngineModelTests.An_engine_model_keeps_its_documents_and_can_be_edited [96 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.EngineModelTests.A_model_without_manufacturer_is_rejected [6 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.EngineTests.Setting_counters_without_a_reason_is_rejected [136 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.EngineTests.A_variant_without_evidence_is_refused [49 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.EngineTests.An_engine_registered_with_counters_has_one_initial_adjustment [319 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.EngineTests.An_engine_of_an_unknown_model_is_refused [10 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.EngineTests.A_negative_counter_is_refused [111 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.EngineTests.A_duplicate_serial_of_the_same_manufacturer_is_refused [95 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.EngineTests.Documenting_the_configuration_records_its_evidence [187 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.EngineTests.Setting_life_counters_appends_an_adjustment_and_writes_the_audit [527 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.InstallationTests.An_overlap_on_the_same_position_is_refused_naming_the_conflict [296 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.InstallationTests.An_engine_swap_in_a_dated_slot_keeps_both_periods_in_history [863 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.InstallationTests.A_removal_not_after_the_installation_is_refused [219 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.InstallationTests.The_same_engine_cannot_be_installed_on_two_aircraft_at_once [270 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.InstallationTests.Position_three_is_refused [152 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.InstallationTests.Closing_twice_is_refused [262 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.MaintenanceEventTests.A_wash_on_an_engine_is_listed_with_its_serial_number [146 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.MaintenanceEventTests.An_event_naming_both_an_engine_and_a_position_is_refused [61 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.MaintenanceEventTests.Negative_hours_are_refused [49 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.MaintenanceEventTests.A_position_only_event_names_the_aircraft_position_and_no_engine [207 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Fleet.MaintenanceEventTests.An_event_naming_neither_an_engine_nor_a_full_position_is_refused [50 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Configuration.ConfigurationDocumentsTests.A_page_outside_the_limits_is_rejected(paging: "pageSize=101") [29 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Configuration.ConfigurationDocumentsTests.A_page_outside_the_limits_is_rejected(paging: "pageSize=0") [5 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Configuration.ConfigurationDocumentsTests.A_page_outside_the_limits_is_rejected(paging: "pageNumber=0") [4 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Configuration.ConfigurationDocumentsTests.An_unknown_kind_is_not_found [12 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Configuration.ConfigurationDocumentsTests.A_seeded_draft_appears_in_the_list_of_its_kind [371 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Configuration.ConfigurationDocumentsTests.Only_the_exact_kind_code_is_accepted(kind: "1") [9 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Configuration.ConfigurationDocumentsTests.Only_the_exact_kind_code_is_accepted(kind: "data_profile") [7 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Configuration.ConfigurationDocumentsTests.Only_the_exact_kind_code_is_accepted(kind: "DATA_PROFILE,PARAMETER_CATALOG") [3 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Configuration.ConfigurationDocumentsTests.The_detail_of_a_draft_returns_its_content_as_json [70 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Configuration.ConfigurationDocumentsTests.An_unknown_document_is_not_found [11 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Configuration.ConfigurationDocumentsTests.A_document_requested_under_another_kind_is_not_found [21 ms]
+[xUnit.net 00:00:19.27]   Finished:    AeroTech.ECTM.Application.AcceptanceTests
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Configuration.ConfigurationKindsTests.Every_kind_is_listed_with_no_active_version [167 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Configuration.ConfigurationKindsTests.A_new_draft_is_counted_but_does_not_become_active [75 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Composition.CorrelationIdTests.An_error_response_carries_a_correlation_id [75 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Composition.CorrelationIdTests.Two_requests_carry_different_correlation_ids [255 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Composition.CorrelationIdTests.A_successful_response_carries_a_correlation_id [44 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Composition.RouteInventoryTests.The_business_routes_are_exactly_the_contract_of_the_delivered_phases [83 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Audit.AuditLogTests.Creating_a_document_writes_one_created_entry_with_actor_and_after_state [58 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Audit.AuditLogTests.The_audit_log_is_filtered_by_actor [86 ms]
+  Passed AeroTech.ECTM.Application.AcceptanceTests.Audit.AuditLogTests.A_period_that_ends_before_it_starts_is_rejected [16 ms]
+
+Test Run Successful.
+Total tests: 50
+     Passed: 50
+ Total time: 21.4707 Seconds

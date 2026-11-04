@@ -1,9 +1,16 @@
+using AeroTech.ECTM.Domain._Shared.Resources;
+using AeroTech.ECTM.Domain.AircraftAggregate;
 using AeroTech.ECTM.Domain.AuditEntryAggregate;
 using AeroTech.ECTM.Domain.ConfigurationDocumentAggregate;
+using AeroTech.ECTM.Domain.EngineAggregate;
+using AeroTech.ECTM.Domain.EngineInstallationAggregate;
+using AeroTech.ECTM.Domain.EngineModelAggregate;
+using AeroTech.ECTM.Domain.MaintenanceEventAggregate;
 using AeroTech.ECTM.Persistence.AuditEntryAggregate;
 using AeroTech.Framework.Core.Domain.Repository;
 using AeroTech.Framework.Core.ServiceContracts;
 using AeroTech.Framework.Infrastructure.Persistence;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace AeroTech.ECTM.Persistence
@@ -11,8 +18,12 @@ namespace AeroTech.ECTM.Persistence
     public sealed class EctmDbContext : CommandDbContext, IUnitOfWork
     {
         public const string DefaultSchema = "Ectm";
+        public const string RegistryVersionSequence = "RegistryVersions";
         public const string MigrationsHistorySchema = "dbo";
         public const string MigrationsHistoryTable = "__CommandsMigrationHistory";
+
+        private const int UniqueIndexViolation = 2601;
+        private const int UniqueConstraintViolation = 2627;
 
         private readonly IActorResolver _actorResolver;
         private readonly IClock _clock;
@@ -35,6 +46,16 @@ namespace AeroTech.ECTM.Persistence
 
         public DbSet<AuditEntry> AuditEntries => Set<AuditEntry>();
 
+        public DbSet<Aircraft> Aircraft => Set<Aircraft>();
+
+        public DbSet<EngineModel> EngineModels => Set<EngineModel>();
+
+        public DbSet<Engine> Engines => Set<Engine>();
+
+        public DbSet<EngineInstallation> EngineInstallations => Set<EngineInstallation>();
+
+        public DbSet<MaintenanceEvent> MaintenanceEvents => Set<MaintenanceEvent>();
+
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
             RecordAuditEntries();
@@ -42,17 +63,29 @@ namespace AeroTech.ECTM.Persistence
             return base.SaveChanges(acceptAllChangesOnSuccess);
         }
 
-        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
             RecordAuditEntries();
 
-            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+            try
+            {
+                return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw ExceptionFactory.ResourceChangedConcurrently();
+            }
+            catch (DbUpdateException exception) when (exception.InnerException is SqlException { Number: UniqueIndexViolation or UniqueConstraintViolation })
+            {
+                throw ExceptionFactory.ResourceChangedConcurrently();
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema(DefaultSchema);
             base.OnModelCreating(modelBuilder);
+            modelBuilder.HasSequence<long>(RegistryVersionSequence);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(EctmDbContext).Assembly);
         }
 

@@ -8,6 +8,7 @@ using AeroTech.Framework.Core.ServiceContracts;
 using AeroTech.Messages.Ectm.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace AeroTech.ECTM.Persistence.AuditEntryAggregate
 {
@@ -28,7 +29,7 @@ namespace AeroTech.ECTM.Persistence.AuditEntryAggregate
         public static IReadOnlyList<AuditEntry> Record(ChangeTracker changeTracker, Actor actor, DateTimeOffset occurredAt, IIdGenerator idGenerator)
         {
             var correlationId = Activity.Current?.TraceId.ToHexString();
-            var changedEntries = changeTracker.Entries<IAggregateRoot>().ToList();
+            var changedEntries = changeTracker.Entries<IEntity>().ToList();
             var auditEntries = new List<AuditEntry>();
 
             foreach (var entry in changedEntries)
@@ -92,6 +93,11 @@ namespace AeroTech.ECTM.Persistence.AuditEntryAggregate
             foreach (var property in values.Properties)
             {
                 if (PropertiesLeftOut.Contains(property.Name))
+                    continue;
+
+                var generatedByDatabase = property.ValueGenerated == ValueGenerated.OnAdd;
+
+                if (generatedByDatabase)
                     continue;
 
                 snapshot[property.Name] = values[property];

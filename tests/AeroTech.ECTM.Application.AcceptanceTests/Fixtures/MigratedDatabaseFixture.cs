@@ -17,6 +17,8 @@ public sealed class MigratedDatabaseFixture : IAsyncLifetime
 
     public SequentialIdGenerator Ids { get; } = new();
 
+    public InMemoryDistributedLock Locks { get; } = new();
+
     public TestDatabase Database { get; } = new();
 
     public HttpClient Client => _host.Client;
@@ -42,7 +44,8 @@ public sealed class MigratedDatabaseFixture : IAsyncLifetime
     {
         builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
         {
-            [$"ConnectionStrings:{PersistenceRegistration.ConnectionStringName}"] = Database.ConnectionString
+            [$"ConnectionStrings:{PersistenceRegistration.ConnectionStringName}"] = Database.ConnectionString,
+            ["ResourceLock:ExpirySeconds"] = "30"
         });
 
         builder.Services
@@ -51,5 +54,6 @@ public sealed class MigratedDatabaseFixture : IAsyncLifetime
 
         builder.Services.AddSingleton<IClock>(Clock);
         builder.Services.AddSingleton<IIdGenerator>(Ids);
+        builder.Services.AddSingleton<IDistributedLock>(Locks);
     }
 }
