@@ -1,4 +1,5 @@
 using AeroTech.ECTM.Application.AcceptanceTests.Fakes;
+using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Services;
 using AeroTech.ECTM.Persistence;
 using PersistenceRegistration = AeroTech.ECTM.Persistence.DependencyInjection;
 using AeroTech.Framework.Core.ServiceContracts;
@@ -32,6 +33,9 @@ public sealed class MigratedDatabaseFixture : IAsyncLifetime
         await Database.CreateAsync(Clock, Ids);
 
         _host = await RestApiHost.StartAsync(Compose);
+
+        using var scope = _host.Services.CreateScope();
+        await scope.ServiceProvider.GetRequiredService<IConfigurationSeeder>().SeedMissingAsync();
     }
 
     public async Task DisposeAsync()

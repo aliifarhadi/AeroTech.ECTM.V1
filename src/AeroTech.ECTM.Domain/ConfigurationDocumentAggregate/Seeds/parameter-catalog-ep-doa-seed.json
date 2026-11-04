@@ -1,0 +1,819 @@
+{
+  "catalogCode": "EP-DOA-PARAMETER-CATALOG",
+  "engineFamily": "CFM56-3 (models -3B1/-3B2/-3C1 per OEM-D1/D2); exact variant, rating and trim configuration per ESN from owner records (I-13)",
+  "source": "pack v3.3 contracts/parameter-catalog-ep-doa-v1.json (catalogVersion v2); ALT_RATE belongs to the PHASE_RULESET (P05)",
+  "parameters": [
+    {
+      "code": "ELAPSED_S",
+      "role": "TIME_AXIS",
+      "unit": "SECOND",
+      "valueKind": "NUMERIC",
+      "positions": [],
+      "plausibility": null,
+      "note": "primary time axis; 1 Hz; gaps when delta>1",
+      "oemIndication": null
+    },
+    {
+      "code": "UTC_PRIMARY",
+      "role": "CLOCK",
+      "unit": "HHMMSS",
+      "valueKind": "TEXT",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "AIR_GROUND",
+      "role": "DISCRETE_STATE",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": "observed literals: AIR, GND; lags radio height by 41-59 s in sample",
+      "oemIndication": null
+    },
+    {
+      "code": "PRESSURE_ALT_FT",
+      "role": "CONDITION",
+      "unit": "FOOT",
+      "valueKind": "NUMERIC",
+      "positions": [],
+      "plausibility": {
+        "min": -1500,
+        "max": 45000
+      },
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "CAS_KT",
+      "role": "CONDITION",
+      "unit": "KNOT",
+      "valueKind": "NUMERIC",
+      "positions": [],
+      "plausibility": {
+        "min": 0,
+        "max": 400
+      },
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "UTC_SECONDARY",
+      "role": "CLOCK",
+      "unit": "HHMMSS",
+      "valueKind": "TEXT",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "FLIGHT_NUMBER",
+      "role": "IDENTITY",
+      "unit": "NONE",
+      "valueKind": "TEXT",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "DAY",
+      "role": "IDENTITY",
+      "unit": "NONE",
+      "valueKind": "INTEGER",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "MONTH",
+      "role": "IDENTITY",
+      "unit": "NONE",
+      "valueKind": "INTEGER",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "N2_PCT",
+      "role": "ENGINE_PERFORMANCE",
+      "unit": "PERCENT",
+      "valueKind": "NUMERIC",
+      "positions": [
+        1,
+        2
+      ],
+      "plausibility": {
+        "min": 0,
+        "max": 110
+      },
+      "note": null,
+      "oemIndication": {
+        "text": "idle ~60 % (OEM-D3)",
+        "source": "OEM-D3"
+      }
+    },
+    {
+      "code": "N1_PCT",
+      "role": "ENGINE_PERFORMANCE",
+      "unit": "PERCENT",
+      "valueKind": "NUMERIC",
+      "positions": [
+        1,
+        2
+      ],
+      "plausibility": {
+        "min": 0,
+        "max": 110
+      },
+      "note": null,
+      "oemIndication": {
+        "text": "idle ~21.5 % (OEM-D3)",
+        "source": "OEM-D3"
+      }
+    },
+    {
+      "code": "FUEL_FLOW_PPH",
+      "role": "ENGINE_PERFORMANCE",
+      "unit": "PPH",
+      "valueKind": "NUMERIC",
+      "positions": [
+        1,
+        2
+      ],
+      "plausibility": {
+        "min": 0,
+        "max": 20000
+      },
+      "note": null,
+      "oemIndication": {
+        "text": "idle 550-950 pph; start 400-1100 pph (OEM-D3)",
+        "source": "OEM-D3"
+      }
+    },
+    {
+      "code": "EGT_C",
+      "role": "ENGINE_PERFORMANCE",
+      "unit": "CELSIUS",
+      "valueKind": "NUMERIC",
+      "positions": [
+        1,
+        2
+      ],
+      "plausibility": {
+        "min": -50,
+        "max": 1100
+      },
+      "note": null,
+      "oemIndication": {
+        "text": "idle 450-650 C; start <= 725 C (OEM-D3)",
+        "source": "OEM-D3"
+      }
+    },
+    {
+      "code": "OIL_PRESSURE_PSI",
+      "role": "ENGINE_HEALTH",
+      "unit": "PSI",
+      "valueKind": "NUMERIC",
+      "positions": [
+        1,
+        2
+      ],
+      "plausibility": {
+        "min": 0,
+        "max": 150
+      },
+      "note": null,
+      "oemIndication": {
+        "text": "idle 13-35 psi (OEM-D3)",
+        "source": "OEM-D3"
+      }
+    },
+    {
+      "code": "OIL_TEMP_C",
+      "role": "ENGINE_HEALTH",
+      "unit": "CELSIUS",
+      "valueKind": "NUMERIC",
+      "positions": [
+        1,
+        2
+      ],
+      "plausibility": {
+        "min": -50,
+        "max": 200
+      },
+      "note": null,
+      "oemIndication": {
+        "text": "<= 160 C, 165 C transient <= 15 min (OEM-D3)",
+        "source": "OEM-D3"
+      }
+    },
+    {
+      "code": "SYNC_WORD",
+      "role": "RECORDER",
+      "unit": "NONE",
+      "valueKind": "INTEGER",
+      "positions": [],
+      "plausibility": null,
+      "note": "frame sync; not analysed",
+      "oemIndication": null
+    },
+    {
+      "code": "TLA_DEG",
+      "role": "ENGINE_CONTROL",
+      "unit": "DEGREE",
+      "valueKind": "NUMERIC",
+      "positions": [
+        1,
+        2
+      ],
+      "plausibility": {
+        "min": -100,
+        "max": 100
+      },
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "GROSS_WEIGHT_LB",
+      "role": "CONDITION",
+      "unit": "POUND",
+      "valueKind": "NUMERIC",
+      "positions": [],
+      "plausibility": null,
+      "note": "unit/scale to be confirmed with frame document before use",
+      "oemIndication": null
+    },
+    {
+      "code": "N1_CLIMB_LIMIT_PCT",
+      "role": "ENGINE_CONTROL",
+      "unit": "PERCENT",
+      "valueKind": "NUMERIC",
+      "positions": [
+        1,
+        2
+      ],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "N1_TARGET_PCT",
+      "role": "ENGINE_CONTROL",
+      "unit": "PERCENT",
+      "valueKind": "NUMERIC",
+      "positions": [
+        1,
+        2
+      ],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "N1_BUG_PCT",
+      "role": "ENGINE_CONTROL",
+      "unit": "PERCENT",
+      "valueKind": "NUMERIC",
+      "positions": [
+        1,
+        2
+      ],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "VIB_N1_FAN",
+      "role": "ENGINE_HEALTH",
+      "unit": "RECORDER_VIBRATION_NATIVE_UNVERIFIED",
+      "valueKind": "NUMERIC",
+      "positions": [
+        1,
+        2
+      ],
+      "plausibility": null,
+      "note": "Recorder header has no engineering unit. Boeing AMM OEM-D4 specifies AVM units for a specified ground Vibration Survey; no evidence yet ties these CSV channels to that AVM scale. Do not apply OEM ground survey limits to in-flight data. Requires recorder frame/scale documentation and independent reconciliation before conversion.",
+      "oemIndication": null
+    },
+    {
+      "code": "VIB_N2_HPC",
+      "role": "ENGINE_HEALTH",
+      "unit": "RECORDER_VIBRATION_NATIVE_UNVERIFIED",
+      "valueKind": "NUMERIC",
+      "positions": [
+        1,
+        2
+      ],
+      "plausibility": null,
+      "note": "Recorder header has no engineering unit. Boeing AMM OEM-D4 specifies AVM units for a specified ground Vibration Survey; no evidence yet ties these CSV channels to that AVM scale. Do not apply OEM ground survey limits to in-flight data. Requires recorder frame/scale documentation and independent reconciliation before conversion.",
+      "oemIndication": null
+    },
+    {
+      "code": "VIB_N1_LPT",
+      "role": "ENGINE_HEALTH",
+      "unit": "RECORDER_VIBRATION_NATIVE_UNVERIFIED",
+      "valueKind": "NUMERIC",
+      "positions": [
+        1,
+        2
+      ],
+      "plausibility": null,
+      "note": "Recorder header has no engineering unit. Boeing AMM OEM-D4 specifies AVM units for a specified ground Vibration Survey; no evidence yet ties these CSV channels to that AVM scale. Do not apply OEM ground survey limits to in-flight data. Requires recorder frame/scale documentation and independent reconciliation before conversion.",
+      "oemIndication": null
+    },
+    {
+      "code": "VIB_N2_HPT",
+      "role": "ENGINE_HEALTH",
+      "unit": "RECORDER_VIBRATION_NATIVE_UNVERIFIED",
+      "valueKind": "NUMERIC",
+      "positions": [
+        1,
+        2
+      ],
+      "plausibility": null,
+      "note": "Recorder header has no engineering unit. Boeing AMM OEM-D4 specifies AVM units for a specified ground Vibration Survey; no evidence yet ties these CSV channels to that AVM scale. Do not apply OEM ground survey limits to in-flight data. Requires recorder frame/scale documentation and independent reconciliation before conversion.",
+      "oemIndication": null
+    },
+    {
+      "code": "FAN_IMBALANCE_ANGLE_DEG",
+      "role": "ENGINE_HEALTH",
+      "unit": "DEGREE",
+      "valueKind": "NUMERIC",
+      "positions": [
+        1,
+        2
+      ],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "LPT_IMBALANCE_ANGLE_DEG",
+      "role": "ENGINE_HEALTH",
+      "unit": "DEGREE",
+      "valueKind": "NUMERIC",
+      "positions": [
+        1,
+        2
+      ],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "TAT_C",
+      "role": "CONDITION",
+      "unit": "CELSIUS",
+      "valueKind": "NUMERIC",
+      "positions": [],
+      "plausibility": {
+        "min": -80,
+        "max": 70
+      },
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "IMPACT_PRESSURE_MB",
+      "role": "CONDITION",
+      "unit": "MILLIBAR",
+      "valueKind": "NUMERIC",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "STATIC_PRESSURE_INHG",
+      "role": "CONDITION",
+      "unit": "INHG",
+      "valueKind": "NUMERIC",
+      "positions": [],
+      "plausibility": {
+        "min": 3,
+        "max": 32
+      },
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "FUEL_ON_BOARD_LB",
+      "role": "CONDITION",
+      "unit": "POUND",
+      "valueKind": "NUMERIC",
+      "positions": [],
+      "plausibility": null,
+      "note": "scale to be confirmed",
+      "oemIndication": null
+    },
+    {
+      "code": "GROUNDSPEED_KT",
+      "role": "CONDITION",
+      "unit": "KNOT",
+      "valueKind": "NUMERIC",
+      "positions": [],
+      "plausibility": {
+        "min": 0,
+        "max": 700
+      },
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "RADIO_HEIGHT_FT",
+      "role": "CONDITION",
+      "unit": "FOOT",
+      "valueKind": "NUMERIC",
+      "positions": [],
+      "plausibility": {
+        "min": -20,
+        "max": 2500
+      },
+      "note": "valid only below ~2500 ft",
+      "oemIndication": null
+    },
+    {
+      "code": "FRAME_COUNTER",
+      "role": "RECORDER",
+      "unit": "NONE",
+      "valueKind": "INTEGER",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "AT_MANUAL_DISCONNECT",
+      "role": "DISCRETE_STATE",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "ENGINE_CUTOFF",
+      "role": "EVENT",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [
+        1,
+        2
+      ],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "STICK_SHAKER_L",
+      "role": "EVENT",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "STICK_SHAKER_R",
+      "role": "EVENT",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "AT_WARN_R",
+      "role": "DISCRETE_STATE",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "AT_WARN_L",
+      "role": "DISCRETE_STATE",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "ENGINE_BLEED",
+      "role": "CONFIGURATION",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [
+        1,
+        2
+      ],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "ENGINE_FIRE",
+      "role": "EVENT",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [
+        2,
+        1
+      ],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "AT_GA",
+      "role": "EVENT",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "AT_MCP_SPEED",
+      "role": "DISCRETE_STATE",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "AT_LIMIT",
+      "role": "DISCRETE_STATE",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "AT_N1_LIMIT_MODE",
+      "role": "DISCRETE_STATE",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": "empty in sample",
+      "oemIndication": null
+    },
+    {
+      "code": "AT_N1",
+      "role": "DISCRETE_STATE",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "AT_RETARD",
+      "role": "DISCRETE_STATE",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "AT_ENGAGED",
+      "role": "DISCRETE_STATE",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "AT_MIN_SPEED",
+      "role": "DISCRETE_STATE",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "ISOLATION_VALVE",
+      "role": "DISCRETE_STATE",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "WING_ANTI_ICE",
+      "role": "CONFIGURATION",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "COWL_ANTI_ICE",
+      "role": "CONFIGURATION",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [
+        1,
+        2
+      ],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "PACK_HL_R",
+      "role": "DISCRETE_STATE",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "PACK_HL_L",
+      "role": "DISCRETE_STATE",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "PACK_ON_R",
+      "role": "CONFIGURATION",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "PACK_ON_L",
+      "role": "CONFIGURATION",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "FCC_N1_LIMIT_MODE",
+      "role": "DISCRETE_STATE",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": "empty in sample",
+      "oemIndication": null
+    },
+    {
+      "code": "DAA_N1_LIMIT_MODE",
+      "role": "DISCRETE_STATE",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": "empty in sample",
+      "oemIndication": null
+    },
+    {
+      "code": "TOGA",
+      "role": "EVENT",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "ENGINE_ASYMMETRY",
+      "role": "DISCRETE_STATE",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "TR_DEPLOYED",
+      "role": "EVENT",
+      "unit": "ENUM",
+      "valueKind": "ENUM",
+      "positions": [
+        1,
+        2
+      ],
+      "plausibility": null,
+      "note": null,
+      "oemIndication": null
+    },
+    {
+      "code": "N1_DIFF_E1_E2_PCT",
+      "role": "DERIVED_SOURCE",
+      "unit": "PERCENT",
+      "valueKind": "NUMERIC",
+      "positions": [],
+      "plausibility": null,
+      "note": "recorder-supplied E1-E2 difference; verify sign against N1 channels; sample suggests not a simple difference",
+      "oemIndication": null
+    },
+    {
+      "code": "MACH",
+      "role": "CONDITION",
+      "unit": "MACH",
+      "valueKind": "NUMERIC",
+      "positions": [],
+      "plausibility": {
+        "min": 0,
+        "max": 1
+      },
+      "note": null,
+      "oemIndication": null
+    }
+  ],
+  "derivedParameters": [
+    {
+      "code": "EGT_DIFF_E2_E1_C",
+      "kind": "DIFFERENCE",
+      "role": "ENGINE_PERFORMANCE",
+      "unitOut": "CELSIUS",
+      "status": "CANDIDATE",
+      "description": "EGT_C[2] - EGT_C[1] at the same sample (pack catalog v2)",
+      "a": "EGT_C[2]",
+      "b": "EGT_C[1]"
+    },
+    {
+      "code": "TAT_K",
+      "kind": "LINEAR_COMBINATION",
+      "role": "CONDITION",
+      "unitOut": "KELVIN",
+      "status": "CANDIDATE",
+      "description": "total air temperature in kelvin, input of THETA",
+      "terms": [
+        {
+          "ref": "TAT_C",
+          "coefficient": 1.0
+        }
+      ],
+      "offset": 273.15
+    },
+    {
+      "code": "THETA",
+      "kind": "POWER_RATIO",
+      "role": "CORRECTION",
+      "unitOut": "RATIO",
+      "status": "CANDIDATE",
+      "description": "(TAT_C + 273.15) / 288.15, total-temperature form; owner confirms the OEM reference temperature definition",
+      "ref": "TAT_K",
+      "referenceConstant": 288.15,
+      "exponentConstantRef": null
+    },
+    {
+      "code": "DELTA",
+      "kind": "POWER_RATIO",
+      "role": "CORRECTION",
+      "unitOut": "RATIO",
+      "status": "CANDIDATE",
+      "description": "STATIC_PRESSURE_INHG / 29.92126; owner confirms whether the OEM uses total pressure",
+      "ref": "STATIC_PRESSURE_INHG",
+      "referenceConstant": 29.92126,
+      "exponentConstantRef": null
+    }
+  ]
+}

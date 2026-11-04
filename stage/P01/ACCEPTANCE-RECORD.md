@@ -8,7 +8,7 @@
   - `AddFleetRegistry` adds 7 tables, the `RegistryVersions` sequence, 3 check constraints and filtered unique indexes. It only adds; nothing is altered or dropped.
   - It is applied and verified on every throwaway test database: no pending migration, no pending model change.
   - **It is not yet applied to Development `DotAirEctmV1`.** The owner's host (`dotnet run`, port 4748) locks the ServiceHost build output. It can be applied once that host is stopped.
-- **Report, screen and route IDs:** R-D5 data, S4, S5 and S6 (Installations and Maintenance tabs), and the 17 docs/13 Fleet operations.
+- **Report, screen and route IDs:** R-D5 data, S4, S5 and S6 (Installations and Maintenance tabs), and the 19 docs/13 Fleet operations.
 
 ## Independent scientific contract
 NOT_APPLICABLE (SCIENTIFIC-CONTRACT.md). P01 has no computed engineering value.
@@ -49,7 +49,7 @@ NOT_APPLICABLE (SCIENTIFIC-CONTRACT.md). P01 has no computed engineering value.
 | Domain concepts | Aircraft, EngineModel, Engine + LifeCounterAdjustment, EngineInstallation + RegistryChange, MaintenanceEvent |
 | Enums | AircraftStatus, EngineStatus, LifeCounterSource, RegistryChangeType, MaintenanceEventType, DateReliability, IdentityKind |
 | Tables | Aircraft, EngineModels, Engines, EngineLifeCounterAdjustments, EngineInstallations, RegistryChanges, MaintenanceEvents (+ sequence RegistryVersions) |
-| Endpoints | 17 (route inventory test: 4 P00 + 17 P01) |
+| Endpoints | 19 (route inventory test: 4 P00 + 19 P01) |
 | UI pages | none here |
 | Tests | 28 new domain tests, 27 new acceptance tests |
 

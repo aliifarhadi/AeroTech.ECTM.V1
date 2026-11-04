@@ -13,10 +13,11 @@ namespace AeroTech.ECTM.Persistence.ConfigurationDocumentAggregate
 
         public ConfigurationDocumentRepository(EctmDbContext dbContext) => _dbContext = dbContext;
 
+        public async Task AddAsync(ConfigurationDocument document, CancellationToken cancellationToken = default)
+            => await _dbContext.ConfigurationDocuments.AddAsync(document, cancellationToken);
+
         public Task<ConfigurationDocument?> GetAsync(long id, CancellationToken cancellationToken = default)
-            => _dbContext.ConfigurationDocuments
-                .AsNoTracking()
-                .FirstOrDefaultAsync(document => document.Id == id, cancellationToken);
+            => _dbContext.ConfigurationDocuments.FirstOrDefaultAsync(document => document.Id == id, cancellationToken);
 
         public Task<ConfigurationDocument?> FindActiveAsync(ConfigurationKind kind, CancellationToken cancellationToken = default)
             => _dbContext.ConfigurationDocuments
@@ -25,6 +26,15 @@ namespace AeroTech.ECTM.Persistence.ConfigurationDocumentAggregate
                 .Where(document => document.Status == ConfigurationDocumentStatus.PUBLISHED)
                 .OrderByDescending(document => document.VersionNumber)
                 .FirstOrDefaultAsync(cancellationToken);
+
+        public async Task<int> LastVersionNumberAsync(ConfigurationKind kind, CancellationToken cancellationToken = default)
+        {
+            var lastVersion = await _dbContext.ConfigurationDocuments
+                .Where(document => document.Kind == kind)
+                .MaxAsync(document => (int?)document.VersionNumber, cancellationToken);
+
+            return lastVersion ?? 0;
+        }
 
         public async Task<IReadOnlyDictionary<ConfigurationKind, int>> CountByKindAsync(ConfigurationDocumentStatus status, CancellationToken cancellationToken = default)
         {

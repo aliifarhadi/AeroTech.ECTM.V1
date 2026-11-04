@@ -1,0 +1,1031 @@
+{
+  "profileCode": "EP-DOA-CSV",
+  "fileType": "CSV",
+  "delimiter": ",",
+  "encoding": "UTF-8",
+  "columnCount": 85,
+  "timeParameterCode": "ELAPSED_S",
+  "source": "legacy AeroTech.ECTM@0ad5f93 DataProfileAggregate/Profiles/ep-doa-profile-v1.json (headers, ordinals) + pack catalog v2 (codes, positions, units)",
+  "columns": [
+    {
+      "ordinal": 0,
+      "exactHeader": " Elapsed Time (seconds)",
+      "headerOccurrence": 1,
+      "parameterCode": "ELAPSED_S",
+      "position": null,
+      "sourceUnit": "SECOND",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 1,
+      "exactHeader": "UTC Time (hh:mm:ss)",
+      "headerOccurrence": 1,
+      "parameterCode": "UTC_PRIMARY",
+      "position": null,
+      "sourceUnit": "HHMMSS",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 2,
+      "exactHeader": " AIR GROUND ()",
+      "headerOccurrence": 1,
+      "parameterCode": "AIR_GROUND",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 3,
+      "exactHeader": " Pressure Altitude (feet)",
+      "headerOccurrence": 1,
+      "parameterCode": "PRESSURE_ALT_FT",
+      "position": null,
+      "sourceUnit": "FOOT",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 4,
+      "exactHeader": " Computed Airspeed (knots)",
+      "headerOccurrence": 1,
+      "parameterCode": "CAS_KT",
+      "position": null,
+      "sourceUnit": "KNOT",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 5,
+      "exactHeader": " UTC Time (hh:mm:ss)",
+      "headerOccurrence": 2,
+      "parameterCode": "UTC_SECONDARY",
+      "position": null,
+      "sourceUnit": "HHMMSS",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 6,
+      "exactHeader": " Flight Number ()",
+      "headerOccurrence": 1,
+      "parameterCode": "FLIGHT_NUMBER",
+      "position": null,
+      "sourceUnit": "NONE",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 7,
+      "exactHeader": " Day ()",
+      "headerOccurrence": 1,
+      "parameterCode": "DAY",
+      "position": null,
+      "sourceUnit": "NONE",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 8,
+      "exactHeader": " Month ",
+      "headerOccurrence": 1,
+      "parameterCode": "MONTH",
+      "position": null,
+      "sourceUnit": "NONE",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 9,
+      "exactHeader": " N2 Actual Engine 1 (% rpm)",
+      "headerOccurrence": 1,
+      "parameterCode": "N2_PCT",
+      "position": 1,
+      "sourceUnit": "PERCENT",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 10,
+      "exactHeader": " N2 Actual Engine 2 (% rpm)",
+      "headerOccurrence": 1,
+      "parameterCode": "N2_PCT",
+      "position": 2,
+      "sourceUnit": "PERCENT",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 11,
+      "exactHeader": " N1 Actual Engine 1 (% rpm)",
+      "headerOccurrence": 1,
+      "parameterCode": "N1_PCT",
+      "position": 1,
+      "sourceUnit": "PERCENT",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 12,
+      "exactHeader": " N1 Actual Engine 2 (% rpm)",
+      "headerOccurrence": 1,
+      "parameterCode": "N1_PCT",
+      "position": 2,
+      "sourceUnit": "PERCENT",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 13,
+      "exactHeader": " Fuel Flow Engine 1 (pph)",
+      "headerOccurrence": 1,
+      "parameterCode": "FUEL_FLOW_PPH",
+      "position": 1,
+      "sourceUnit": "PPH",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 14,
+      "exactHeader": " Fuel Flow Engine 2 (pph)",
+      "headerOccurrence": 1,
+      "parameterCode": "FUEL_FLOW_PPH",
+      "position": 2,
+      "sourceUnit": "PPH",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 15,
+      "exactHeader": " EGT Engine 1 (degs. C)",
+      "headerOccurrence": 1,
+      "parameterCode": "EGT_C",
+      "position": 1,
+      "sourceUnit": "CELSIUS",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 16,
+      "exactHeader": " EGT Engine 2 (degs. C)",
+      "headerOccurrence": 1,
+      "parameterCode": "EGT_C",
+      "position": 2,
+      "sourceUnit": "CELSIUS",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 17,
+      "exactHeader": " Oil Pressure Engine 1 (psi)",
+      "headerOccurrence": 1,
+      "parameterCode": "OIL_PRESSURE_PSI",
+      "position": 1,
+      "sourceUnit": "PSI",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 18,
+      "exactHeader": " Oil Pressure Engine 2 (psi)",
+      "headerOccurrence": 1,
+      "parameterCode": "OIL_PRESSURE_PSI",
+      "position": 2,
+      "sourceUnit": "PSI",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 19,
+      "exactHeader": " Oil Temperature Engine 1 (degs. C)",
+      "headerOccurrence": 1,
+      "parameterCode": "OIL_TEMP_C",
+      "position": 1,
+      "sourceUnit": "CELSIUS",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 20,
+      "exactHeader": " Oil Temperature Engine 2 (degs. C)",
+      "headerOccurrence": 1,
+      "parameterCode": "OIL_TEMP_C",
+      "position": 2,
+      "sourceUnit": "CELSIUS",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 21,
+      "exactHeader": " Sync Word ",
+      "headerOccurrence": 1,
+      "parameterCode": "SYNC_WORD",
+      "position": null,
+      "sourceUnit": "NONE",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 22,
+      "exactHeader": " Throttle Lever Position Engine 1 (degs.)",
+      "headerOccurrence": 1,
+      "parameterCode": "TLA_DEG",
+      "position": 1,
+      "sourceUnit": "DEGREE",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 23,
+      "exactHeader": " Throttle Lever Position Engine 2 (degs.)",
+      "headerOccurrence": 1,
+      "parameterCode": "TLA_DEG",
+      "position": 2,
+      "sourceUnit": "DEGREE",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 24,
+      "exactHeader": " Gross Weight (lbs)",
+      "headerOccurrence": 1,
+      "parameterCode": "GROSS_WEIGHT_LB",
+      "position": null,
+      "sourceUnit": "POUND",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 25,
+      "exactHeader": " N1 Climb Limit Engine 1 (% rpm)",
+      "headerOccurrence": 1,
+      "parameterCode": "N1_CLIMB_LIMIT_PCT",
+      "position": 1,
+      "sourceUnit": "PERCENT",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 26,
+      "exactHeader": " N1 Climb Limit Engine 2 (% rpm)",
+      "headerOccurrence": 1,
+      "parameterCode": "N1_CLIMB_LIMIT_PCT",
+      "position": 2,
+      "sourceUnit": "PERCENT",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 27,
+      "exactHeader": " N1Target Engine 1 (% rpm)",
+      "headerOccurrence": 1,
+      "parameterCode": "N1_TARGET_PCT",
+      "position": 1,
+      "sourceUnit": "PERCENT",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 28,
+      "exactHeader": " N1Target Engine 2 (% rpm)",
+      "headerOccurrence": 1,
+      "parameterCode": "N1_TARGET_PCT",
+      "position": 2,
+      "sourceUnit": "PERCENT",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 29,
+      "exactHeader": " N1 Bug Drtive Engine 1 (% rpm)",
+      "headerOccurrence": 1,
+      "parameterCode": "N1_BUG_PCT",
+      "position": 1,
+      "sourceUnit": "PERCENT",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 30,
+      "exactHeader": " N1 Bug Drtive Engine 2 (% rpm)",
+      "headerOccurrence": 1,
+      "parameterCode": "N1_BUG_PCT",
+      "position": 2,
+      "sourceUnit": "PERCENT",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 31,
+      "exactHeader": " N1 FAN Vibration Engine 1 ()",
+      "headerOccurrence": 1,
+      "parameterCode": "VIB_N1_FAN",
+      "position": 1,
+      "sourceUnit": "RECORDER_VIBRATION_NATIVE_UNVERIFIED",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 32,
+      "exactHeader": " N1 FAN Vibration Engine 2 ()",
+      "headerOccurrence": 1,
+      "parameterCode": "VIB_N1_FAN",
+      "position": 2,
+      "sourceUnit": "RECORDER_VIBRATION_NATIVE_UNVERIFIED",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 33,
+      "exactHeader": " N2 HPC Vibration Engine 1 ()",
+      "headerOccurrence": 1,
+      "parameterCode": "VIB_N2_HPC",
+      "position": 1,
+      "sourceUnit": "RECORDER_VIBRATION_NATIVE_UNVERIFIED",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 34,
+      "exactHeader": " N2 HPC Vibration Engine 2 ()",
+      "headerOccurrence": 1,
+      "parameterCode": "VIB_N2_HPC",
+      "position": 2,
+      "sourceUnit": "RECORDER_VIBRATION_NATIVE_UNVERIFIED",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 35,
+      "exactHeader": " N1 LPT Vibration Engine 1 ()",
+      "headerOccurrence": 1,
+      "parameterCode": "VIB_N1_LPT",
+      "position": 1,
+      "sourceUnit": "RECORDER_VIBRATION_NATIVE_UNVERIFIED",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 36,
+      "exactHeader": " N1 LPT Vibration Engine 2 ()",
+      "headerOccurrence": 1,
+      "parameterCode": "VIB_N1_LPT",
+      "position": 2,
+      "sourceUnit": "RECORDER_VIBRATION_NATIVE_UNVERIFIED",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 37,
+      "exactHeader": " N2 HPT Vibration Engine 1 ()",
+      "headerOccurrence": 1,
+      "parameterCode": "VIB_N2_HPT",
+      "position": 1,
+      "sourceUnit": "RECORDER_VIBRATION_NATIVE_UNVERIFIED",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 38,
+      "exactHeader": " N2 HPT Vibration Engine 2 ()",
+      "headerOccurrence": 1,
+      "parameterCode": "VIB_N2_HPT",
+      "position": 2,
+      "sourceUnit": "RECORDER_VIBRATION_NATIVE_UNVERIFIED",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 39,
+      "exactHeader": " Fan Imbalance Angle Engine 1 (degs.)",
+      "headerOccurrence": 1,
+      "parameterCode": "FAN_IMBALANCE_ANGLE_DEG",
+      "position": 1,
+      "sourceUnit": "DEGREE",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 40,
+      "exactHeader": " Fan Imbalance Angle Engine 2 (degs.)",
+      "headerOccurrence": 1,
+      "parameterCode": "FAN_IMBALANCE_ANGLE_DEG",
+      "position": 2,
+      "sourceUnit": "DEGREE",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 41,
+      "exactHeader": " LPT Imbalance Angle Engine 1 (degs.)",
+      "headerOccurrence": 1,
+      "parameterCode": "LPT_IMBALANCE_ANGLE_DEG",
+      "position": 1,
+      "sourceUnit": "DEGREE",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 42,
+      "exactHeader": " LPT Imbalance Angle Engine 2 (degs.)",
+      "headerOccurrence": 1,
+      "parameterCode": "LPT_IMBALANCE_ANGLE_DEG",
+      "position": 2,
+      "sourceUnit": "DEGREE",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 43,
+      "exactHeader": " Total Air Temperature (degs. C)",
+      "headerOccurrence": 1,
+      "parameterCode": "TAT_C",
+      "position": null,
+      "sourceUnit": "CELSIUS",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 44,
+      "exactHeader": " Impact Pressure (mb)",
+      "headerOccurrence": 1,
+      "parameterCode": "IMPACT_PRESSURE_MB",
+      "position": null,
+      "sourceUnit": "MILLIBAR",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 45,
+      "exactHeader": " Static Pressure (In Hg)",
+      "headerOccurrence": 1,
+      "parameterCode": "STATIC_PRESSURE_INHG",
+      "position": null,
+      "sourceUnit": "INHG",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 46,
+      "exactHeader": " Fuel On Board (lbs)",
+      "headerOccurrence": 1,
+      "parameterCode": "FUEL_ON_BOARD_LB",
+      "position": null,
+      "sourceUnit": "POUND",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 47,
+      "exactHeader": " Groundspeed (knots)",
+      "headerOccurrence": 1,
+      "parameterCode": "GROUNDSPEED_KT",
+      "position": null,
+      "sourceUnit": "KNOT",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 48,
+      "exactHeader": " Radio Height (feet)",
+      "headerOccurrence": 1,
+      "parameterCode": "RADIO_HEIGHT_FT",
+      "position": null,
+      "sourceUnit": "FOOT",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 49,
+      "exactHeader": " Frame Counter ",
+      "headerOccurrence": 1,
+      "parameterCode": "FRAME_COUNTER",
+      "position": null,
+      "sourceUnit": "NONE",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 50,
+      "exactHeader": " A/T Manual Disconnect ",
+      "headerOccurrence": 1,
+      "parameterCode": "AT_MANUAL_DISCONNECT",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 51,
+      "exactHeader": " Cutoff Engine 1 ",
+      "headerOccurrence": 1,
+      "parameterCode": "ENGINE_CUTOFF",
+      "position": 1,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 52,
+      "exactHeader": " Cutoff Engine 2 ",
+      "headerOccurrence": 1,
+      "parameterCode": "ENGINE_CUTOFF",
+      "position": 2,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 53,
+      "exactHeader": " Stick Shaker Left ",
+      "headerOccurrence": 1,
+      "parameterCode": "STICK_SHAKER_L",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 54,
+      "exactHeader": " Stick Shaker Right ",
+      "headerOccurrence": 1,
+      "parameterCode": "STICK_SHAKER_R",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 55,
+      "exactHeader": " A/T Right Warning ",
+      "headerOccurrence": 1,
+      "parameterCode": "AT_WARN_R",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 56,
+      "exactHeader": " A/T Left Warning ",
+      "headerOccurrence": 1,
+      "parameterCode": "AT_WARN_L",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 57,
+      "exactHeader": " Engine 1 Bleed ",
+      "headerOccurrence": 1,
+      "parameterCode": "ENGINE_BLEED",
+      "position": 1,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 58,
+      "exactHeader": " Engine 2 Fire ",
+      "headerOccurrence": 1,
+      "parameterCode": "ENGINE_FIRE",
+      "position": 2,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 59,
+      "exactHeader": " Engine 1 Fire ",
+      "headerOccurrence": 1,
+      "parameterCode": "ENGINE_FIRE",
+      "position": 1,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 60,
+      "exactHeader": " Engine 2 Bleed ",
+      "headerOccurrence": 1,
+      "parameterCode": "ENGINE_BLEED",
+      "position": 2,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 61,
+      "exactHeader": " A/T GA ",
+      "headerOccurrence": 1,
+      "parameterCode": "AT_GA",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 62,
+      "exactHeader": " A/T MCP Speed ",
+      "headerOccurrence": 1,
+      "parameterCode": "AT_MCP_SPEED",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 63,
+      "exactHeader": " A/T Limit ",
+      "headerOccurrence": 1,
+      "parameterCode": "AT_LIMIT",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 64,
+      "exactHeader": " A/T N1 Limit Mode ()",
+      "headerOccurrence": 1,
+      "parameterCode": "AT_N1_LIMIT_MODE",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 65,
+      "exactHeader": " A/T N1 ",
+      "headerOccurrence": 1,
+      "parameterCode": "AT_N1",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 66,
+      "exactHeader": " A/T Retard ",
+      "headerOccurrence": 1,
+      "parameterCode": "AT_RETARD",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 67,
+      "exactHeader": " AT Engaged ",
+      "headerOccurrence": 1,
+      "parameterCode": "AT_ENGAGED",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 68,
+      "exactHeader": " A/T Min Speed ",
+      "headerOccurrence": 1,
+      "parameterCode": "AT_MIN_SPEED",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 69,
+      "exactHeader": " ISOLATION Valve ",
+      "headerOccurrence": 1,
+      "parameterCode": "ISOLATION_VALVE",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 70,
+      "exactHeader": " Wing Anti-Ice ",
+      "headerOccurrence": 1,
+      "parameterCode": "WING_ANTI_ICE",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 71,
+      "exactHeader": " Cowl Anti Ice Switch Engine 1 ",
+      "headerOccurrence": 1,
+      "parameterCode": "COWL_ANTI_ICE",
+      "position": 1,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 72,
+      "exactHeader": " Cowl Anti Ice Switch Engine 2 ",
+      "headerOccurrence": 1,
+      "parameterCode": "COWL_ANTI_ICE",
+      "position": 2,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 73,
+      "exactHeader": " ECS Pack H/L Right ",
+      "headerOccurrence": 1,
+      "parameterCode": "PACK_HL_R",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 74,
+      "exactHeader": " ECS Pack H/L Left ",
+      "headerOccurrence": 1,
+      "parameterCode": "PACK_HL_L",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 75,
+      "exactHeader": " ECS Pack On/Off Right ",
+      "headerOccurrence": 1,
+      "parameterCode": "PACK_ON_R",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 76,
+      "exactHeader": " ECS Pack On/Off Left ",
+      "headerOccurrence": 1,
+      "parameterCode": "PACK_ON_L",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 77,
+      "exactHeader": " FCC N1 Limit Mode ()",
+      "headerOccurrence": 1,
+      "parameterCode": "FCC_N1_LIMIT_MODE",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 78,
+      "exactHeader": " DAA N1 Limit Mode ()",
+      "headerOccurrence": 1,
+      "parameterCode": "DAA_N1_LIMIT_MODE",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 79,
+      "exactHeader": " TO/GA ",
+      "headerOccurrence": 1,
+      "parameterCode": "TOGA",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 80,
+      "exactHeader": " Engine Asymmetry ",
+      "headerOccurrence": 1,
+      "parameterCode": "ENGINE_ASYMMETRY",
+      "position": null,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 81,
+      "exactHeader": " TR Deployed Engine 1 ",
+      "headerOccurrence": 1,
+      "parameterCode": "TR_DEPLOYED",
+      "position": 1,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 82,
+      "exactHeader": " TR Deployed Engine 2 ",
+      "headerOccurrence": 1,
+      "parameterCode": "TR_DEPLOYED",
+      "position": 2,
+      "sourceUnit": "ENUM",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 83,
+      "exactHeader": " Diff N1 Eng1-Eng2 (% rpm)",
+      "headerOccurrence": 1,
+      "parameterCode": "N1_DIFF_E1_E2_PCT",
+      "position": null,
+      "sourceUnit": "PERCENT",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    },
+    {
+      "ordinal": 84,
+      "exactHeader": " MACH (mach)",
+      "headerOccurrence": 1,
+      "parameterCode": "MACH",
+      "position": null,
+      "sourceUnit": "MACH",
+      "conversion": "IDENTITY",
+      "missingTokens": [
+        ""
+      ]
+    }
+  ]
+}

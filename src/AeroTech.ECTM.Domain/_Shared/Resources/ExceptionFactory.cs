@@ -27,6 +27,40 @@ namespace AeroTech.ECTM.Domain._Shared.Resources
         public static BusinessException ConfigurationDocumentContentIsNotJsonObject() =>
             new(80104, ExceptionMessages.ConfigurationDocumentContentIsNotJsonObject) { HttpStatus = 422 };
 
+        public static BusinessException ConfigurationKindNotAuthorable(params object?[] args) =>
+            new(80105, ExceptionMessages.ConfigurationKindNotAuthorable, args) { HttpStatus = 422 };
+
+        public static BusinessException ConfigurationDocumentIsNotDraft(params object?[] args) =>
+            new(80106, ExceptionMessages.ConfigurationDocumentIsNotDraft, args) { HttpStatus = 409 };
+
+        public static BusinessException ConfigurationDocumentIsNotPublished(params object?[] args) =>
+            new(80107, ExceptionMessages.ConfigurationDocumentIsNotPublished, args) { HttpStatus = 409 };
+
+        public static BusinessException ConfigurationDocumentIsInvalid(params object?[] args) =>
+            new(80108, ExceptionMessages.ConfigurationDocumentIsInvalid, args) { HttpStatus = 422 };
+
+        public static BusinessException ApprovalNoteIsRequired() =>
+            new(80109, ExceptionMessages.ApprovalNoteIsRequired) { HttpStatus = 422 };
+
+        public static BusinessException BasedOnDocumentIsInvalid(params object?[] args) =>
+            new(80110, ExceptionMessages.BasedOnDocumentIsInvalid, args) { HttpStatus = 422 };
+
+        public static BusinessException DryRunNotAvailable(params object?[] args) =>
+            new(80111, ExceptionMessages.DryRunNotAvailable, args) { HttpStatus = 422 };
+
+        public static BusinessException SourceFileIsUnreadable(params object?[] args) =>
+            new(80112, ExceptionMessages.SourceFileIsUnreadable, args) { HttpStatus = 422 };
+
+        public static BusinessException SourceFileIsTooLarge(params object?[] args) =>
+            new(80113, ExceptionMessages.SourceFileIsTooLarge, args) { HttpStatus = 422 };
+
+
+        public static BusinessException TypedDefinitionIsInvalid(params object?[] args) =>
+            new(80115, ExceptionMessages.TypedDefinitionIsInvalid, args) { HttpStatus = 422 };
+
+        public static BusinessException ActiveSetIncomplete(params object?[] args) =>
+            new(80116, ExceptionMessages.ActiveSetIncomplete, args) { HttpStatus = 422 };
+
         // Fleet registry: 80200-80299
         public static BusinessException AircraftNotFound(params object?[] args) =>
             new(80200, ExceptionMessages.AircraftNotFound, args) { HttpStatus = 404 };

@@ -53,6 +53,6 @@
 |---|---|
 | Domain concepts | Aircraft, EngineModel, Engine (+ LifeCounterAdjustment), EngineInstallation (+ RegistryChange), MaintenanceEvent |
 | Tables | Aircraft, EngineModels, Engines, EngineLifeCounterAdjustments, EngineInstallations, RegistryChanges, MaintenanceEvents; sequence RegistryVersions |
-| Endpoints | the 17 docs/13 Fleet operations |
+| Endpoints | the 19 docs/13 Fleet operations |
 | UI pages | none here (frontend repository: S4–S6 without analytic tabs) |
 | Tests | domain overlap and identity rules; acceptance for every route, overlap naming, swap, POSITION_ONLY event, counter adjustment audit |

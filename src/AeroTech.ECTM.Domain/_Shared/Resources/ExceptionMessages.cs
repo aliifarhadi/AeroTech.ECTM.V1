@@ -12,6 +12,17 @@ namespace AeroTech.ECTM.Domain._Shared.Resources
         public const string ConfigurationDocumentVersionIsInvalid = "Configuration document version {0} is invalid. Versions start at 1.";
         public const string ConfigurationDocumentContentIsRequired = "A configuration document requires content.";
         public const string ConfigurationDocumentContentIsNotJsonObject = "Configuration document content must be one JSON object.";
+        public const string ConfigurationKindNotAuthorable = "Configuration kind {0} is delivered in phase {1}.";
+        public const string ConfigurationDocumentIsNotDraft = "Configuration document {0} is {1}; only a draft can be changed or published.";
+        public const string ConfigurationDocumentIsNotPublished = "Configuration document {0} is {1}; only a published document can be retired.";
+        public const string ConfigurationDocumentIsInvalid = "Configuration document {0} has {1} validation issue(s).";
+        public const string ApprovalNoteIsRequired = "Publishing requires an approval note.";
+        public const string BasedOnDocumentIsInvalid = "Document {0} cannot be the base of a {1} draft.";
+        public const string DryRunNotAvailable = "A dry-run of {0} is delivered in phase {1}.";
+        public const string SourceFileIsUnreadable = "The source file cannot be read: {0}";
+        public const string SourceFileIsTooLarge = "The source file has {0} bytes; the limit is {1}.";
+        public const string TypedDefinitionIsInvalid = "The typed definition is invalid: {0}";
+        public const string ActiveSetIncomplete = "No published {0} document is active.";
 
         // Fleet registry
         public const string AircraftNotFound = "Aircraft {0} was not found.";

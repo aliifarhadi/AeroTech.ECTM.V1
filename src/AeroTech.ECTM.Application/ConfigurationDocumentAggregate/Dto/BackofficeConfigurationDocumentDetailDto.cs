@@ -13,6 +13,12 @@ namespace AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Dto
         long? BasedOnDocumentId,
         string ContentSha256,
         DateTimeOffset LastUpdateTime,
+        DateTimeOffset? PublishedUtc,
+        string? PublishedBy,
+        string? ApprovalNote,
+        DateTimeOffset? RetiredUtc,
+        string? RetiredBy,
+        string? RetirementNote,
         JsonElement Content)
     {
         public static BackofficeConfigurationDocumentDetailDto From(ConfigurationDocument document)
@@ -24,6 +30,12 @@ namespace AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Dto
                 document.BasedOnDocumentId,
                 document.ContentSha256,
                 document.LastUpdateTime,
+                document.PublishedAt,
+                document.PublishedBy,
+                document.ApprovalNote,
+                document.RetiredAt,
+                document.RetiredBy,
+                document.RetirementNote,
                 StoredJson.Parse(document.Content));
     }
 }

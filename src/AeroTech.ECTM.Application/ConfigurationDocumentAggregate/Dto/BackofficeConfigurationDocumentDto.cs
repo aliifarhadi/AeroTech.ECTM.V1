@@ -10,7 +10,13 @@ namespace AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Dto
         EnumValueDto Status,
         long? BasedOnDocumentId,
         string ContentSha256,
-        DateTimeOffset LastUpdateTime)
+        DateTimeOffset LastUpdateTime,
+        DateTimeOffset? PublishedUtc,
+        string? PublishedBy,
+        string? ApprovalNote,
+        DateTimeOffset? RetiredUtc,
+        string? RetiredBy,
+        string? RetirementNote)
     {
         public static BackofficeConfigurationDocumentDto From(ConfigurationDocument document)
             => new(
@@ -20,6 +26,12 @@ namespace AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Dto
                 EnumValueDto.Of(document.Status),
                 document.BasedOnDocumentId,
                 document.ContentSha256,
-                document.LastUpdateTime);
+                document.LastUpdateTime,
+                document.PublishedAt,
+                document.PublishedBy,
+                document.ApprovalNote,
+                document.RetiredAt,
+                document.RetiredBy,
+                document.RetirementNote);
     }
 }

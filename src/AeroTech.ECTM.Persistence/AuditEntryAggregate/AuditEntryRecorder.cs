@@ -75,7 +75,7 @@ namespace AeroTech.ECTM.Persistence.AuditEntryAggregate
             if (action == AuditAction.CREATED)
                 return null;
 
-            return SnapshotOf(entry.OriginalValues);
+            return SnapshotOf(entry, entry.OriginalValues, onlyModified: action == AuditAction.UPDATED);
         }
 
         private static string? AfterOf(EntityEntry entry, AuditAction action)
@@ -83,10 +83,10 @@ namespace AeroTech.ECTM.Persistence.AuditEntryAggregate
             if (action == AuditAction.DELETED)
                 return null;
 
-            return SnapshotOf(entry.CurrentValues);
+            return SnapshotOf(entry, entry.CurrentValues, onlyModified: action == AuditAction.UPDATED);
         }
 
-        private static string SnapshotOf(PropertyValues values)
+        private static string SnapshotOf(EntityEntry entry, PropertyValues values, bool onlyModified)
         {
             var snapshot = new Dictionary<string, object?>();
 
@@ -98,6 +98,11 @@ namespace AeroTech.ECTM.Persistence.AuditEntryAggregate
                 var generatedByDatabase = property.ValueGenerated == ValueGenerated.OnAdd;
 
                 if (generatedByDatabase)
+                    continue;
+
+                var unchanged = !entry.Property(property.Name).IsModified;
+
+                if (onlyModified && unchanged)
                     continue;
 
                 snapshot[property.Name] = values[property];

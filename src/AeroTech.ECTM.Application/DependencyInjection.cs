@@ -4,9 +4,19 @@ using AeroTech.ECTM.Application.AircraftAggregate.Queries.GetAircraftById;
 using AeroTech.ECTM.Application.AircraftAggregate.Queries.GetAircraftPaginated;
 using AeroTech.ECTM.Application.AircraftAggregate.Services;
 using AeroTech.ECTM.Application.AuditEntryAggregate.Queries.GetAuditEntriesPaginated;
+using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Commands.CreateConfigurationDraft;
+using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Commands.PublishConfigurationDocument;
+using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Commands.RetireConfigurationDocument;
+using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Commands.UpdateConfigurationDraft;
+using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.EvaluateTypedDefinition;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.GetConfigurationDocumentById;
+using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.GetConfigurationDocumentDiff;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.GetConfigurationDocumentsPaginated;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.GetConfigurationKinds;
+using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.GetReadiness;
+using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.PreviewDataProfile;
+using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.ValidateConfigurationDocument;
+using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Services;
 using AeroTech.ECTM.Application.EngineAggregate.Commands.AdjustEngineLifeCounters;
 using AeroTech.ECTM.Application.EngineAggregate.Commands.CreateEngine;
 using AeroTech.ECTM.Application.EngineAggregate.Commands.UpdateEngine;
@@ -59,9 +69,25 @@ namespace AeroTech.ECTM.Application
                 $"{ResourceLockOptions.SectionName}:{nameof(ResourceLockOptions.ExpirySeconds)}");
             services.Configure<ResourceLockOptions>(resourceLock);
 
+            services.AddScoped<IConfigurationContentValidator, ParameterCatalogContentValidator>();
+            services.AddScoped<IConfigurationContentValidator, DataProfileContentValidator>();
+            services.AddScoped<ConfigurationContentValidators>();
+            services.AddScoped<ConfigurationDocumentLoader>();
+            services.AddScoped<ActiveCatalogLoader>();
+            services.AddScoped<IConfigurationDocumentLock, ConfigurationDocumentLock>();
+            services.AddScoped<IConfigurationSeeder, ConfigurationSeeder>();
             services.AddScoped<IGetConfigurationKindsService, GetConfigurationKindsService>();
             services.AddScoped<IGetConfigurationDocumentsPaginatedService, GetConfigurationDocumentsPaginatedService>();
             services.AddScoped<IGetConfigurationDocumentByIdService, GetConfigurationDocumentByIdService>();
+            services.AddScoped<ICreateConfigurationDraftService, CreateConfigurationDraftService>();
+            services.AddScoped<IUpdateConfigurationDraftService, UpdateConfigurationDraftService>();
+            services.AddScoped<IPublishConfigurationDocumentService, PublishConfigurationDocumentService>();
+            services.AddScoped<IRetireConfigurationDocumentService, RetireConfigurationDocumentService>();
+            services.AddScoped<IValidateConfigurationDocumentService, ValidateConfigurationDocumentService>();
+            services.AddScoped<IGetConfigurationDocumentDiffService, GetConfigurationDocumentDiffService>();
+            services.AddScoped<IPreviewDataProfileService, PreviewDataProfileService>();
+            services.AddScoped<IEvaluateTypedDefinitionService, EvaluateTypedDefinitionService>();
+            services.AddScoped<IGetReadinessService, GetReadinessService>();
 
             services.AddScoped<IGetAuditEntriesPaginatedService, GetAuditEntriesPaginatedService>();
 

@@ -1,4 +1,5 @@
 using AeroTech.ECTM.Application;
+using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Services;
 using AeroTech.ECTM.Consumers;
 using AeroTech.ECTM.Persistence;
 using AeroTech.ECTM.RestApi;
@@ -39,7 +40,24 @@ if (app.Environment.IsStaging())
 
 app.UsePresentation();
 
+await SeedConfigurationAsync(app);
+
 app.Run();
+
+static async Task SeedConfigurationAsync(WebApplication app)
+{
+    using var scope = app.Services.CreateScope();
+    var seeder = scope.ServiceProvider.GetRequiredService<IConfigurationSeeder>();
+
+    try
+    {
+        await seeder.SeedMissingAsync();
+    }
+    catch (Exception exception)
+    {
+        app.Logger.LogWarning(exception, "Configuration seed drafts were not created; they are retried at the next start.");
+    }
+}
 
 public partial class Program
 {

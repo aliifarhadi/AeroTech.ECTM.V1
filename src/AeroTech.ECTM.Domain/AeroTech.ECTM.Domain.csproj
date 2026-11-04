@@ -10,4 +10,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="ConfigurationDocumentAggregate\Seeds\parameter-catalog-ep-doa-seed.json" LogicalName="parameter-catalog-ep-doa-seed.json" />
+    <EmbeddedResource Include="ConfigurationDocumentAggregate\Seeds\data-profile-ep-doa-seed.json" LogicalName="data-profile-ep-doa-seed.json" />
+  </ItemGroup>
 </Project>

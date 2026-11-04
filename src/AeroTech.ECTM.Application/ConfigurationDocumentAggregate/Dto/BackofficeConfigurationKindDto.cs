@@ -6,6 +6,8 @@ namespace AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Dto
 {
     public sealed record BackofficeConfigurationKindDto(
         EnumValueDto Kind,
+        string DeliveryPhase,
+        bool Authorable,
         BackofficeConfigurationDocumentDto? ActiveVersion,
         string? ActiveVersionReason,
         int DraftCount,
@@ -13,12 +15,20 @@ namespace AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Dto
     {
         public const string NoActiveVersion = "NO_ACTIVE_VERSION";
 
-        public static BackofficeConfigurationKindDto From(ConfigurationKind kind, ConfigurationDocument? activeDocument, int draftCount, int publishedCount)
+        public static BackofficeConfigurationKindDto From(
+            ConfigurationKind kind,
+            string deliveryPhase,
+            bool authorable,
+            ConfigurationDocument? activeDocument,
+            int draftCount,
+            int publishedCount)
         {
             if (activeDocument is null)
-                return new(EnumValueDto.Of(kind), null, NoActiveVersion, draftCount, publishedCount);
+                return new(EnumValueDto.Of(kind), deliveryPhase, authorable, null, NoActiveVersion, draftCount, publishedCount);
 
-            return new(EnumValueDto.Of(kind), BackofficeConfigurationDocumentDto.From(activeDocument), null, draftCount, publishedCount);
+            var activeVersion = BackofficeConfigurationDocumentDto.From(activeDocument);
+
+            return new(EnumValueDto.Of(kind), deliveryPhase, authorable, activeVersion, null, draftCount, publishedCount);
         }
     }
 }

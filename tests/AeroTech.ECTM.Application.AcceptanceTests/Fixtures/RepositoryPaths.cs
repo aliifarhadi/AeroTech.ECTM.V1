@@ -8,6 +8,8 @@ public static class RepositoryPaths
 
     public static string ServiceHost(string fileName) => Path.Combine(Root, "src", "AeroTech.ECTM.ServiceHost", fileName);
 
+    public static string Fixtures(params string[] segments) => Path.Combine([Root, "tests", "fixtures", .. segments]);
+
     private static string FindRoot()
     {
         var directory = new DirectoryInfo(AppContext.BaseDirectory);
