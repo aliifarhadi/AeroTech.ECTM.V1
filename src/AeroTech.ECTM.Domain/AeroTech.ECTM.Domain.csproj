@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Framework\AeroTech.Framework.Core\AeroTech.Framework.Core.csproj" />
+    <ProjectReference Include="..\..\Contracts\AeroTech.Messages\AeroTech.Messages.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="DataProfileAggregate\Profiles\ep-doa-profile-v1.json" LogicalName="ep-doa-profile-v1.json" />
+    <EmbeddedResource Include="DataProfileAggregate\Profiles\ep-doa-source-channel-qualification-v1.json" LogicalName="ep-doa-source-channel-qualification-v1.json" />
+  </ItemGroup>
+</Project>

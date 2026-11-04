@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/AeroTech.ECTM.Application/AeroTech.ECTM.Application.csproj" />
+    <ProjectReference Include="../../src/AeroTech.ECTM.Consumers/AeroTech.ECTM.Consumers.csproj" />
+    <ProjectReference Include="../../src/AeroTech.ECTM.Persistence/AeroTech.ECTM.Persistence.csproj" />
+    <ProjectReference Include="../../src/AeroTech.ECTM.RestApi/AeroTech.ECTM.RestApi.csproj" />
+    <ProjectReference Include="../../Framework/AeroTech.Framework.Presentation/AeroTech.Framework.Presentation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="YamlDotNet" Version="16.2.1" />
+  </ItemGroup>
+</Project>

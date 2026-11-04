@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Framework\AeroTech.Framework.Presentation\AeroTech.Framework.Presentation.csproj" />
+    <ProjectReference Include="..\AeroTech.ECTM.Application\AeroTech.ECTM.Application.csproj" />
+    <ProjectReference Include="..\AeroTech.ECTM.Persistence\AeroTech.ECTM.Persistence.csproj" />
+    <ProjectReference Include="..\..\Contracts\AeroTech.Messages\AeroTech.Messages.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.2" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
