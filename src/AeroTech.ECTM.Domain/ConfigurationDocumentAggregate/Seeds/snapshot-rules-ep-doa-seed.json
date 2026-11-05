@@ -1,0 +1,182 @@
+{
+  "rulesCode": "EP-DOA-SNAPSHOTS",
+  "title": "قواعد نقاط پایداری موتور EP-DOA",
+  "description": "این قواعد برای هر موتور، جداگانه، نقطهٔ برخاست (پنجرهٔ اوج N1 و بیشینهٔ EGT) و نقطهٔ کروز پایدار را برای سه selector انتخاب می‌کنند و اختلاف EGT دو موتور را روی بلوک مشترکشان می‌دهند. برای هر پنجره، مقدار واقعی هر شرط و پنجره‌های ردشدهٔ مجاور هم ثبت می‌شود. آمار فاز (کمینه، بیشینه، میانگین، میانه، p95 و انحراف معیار) هم برای هر فاز و هر بخش پرواز محاسبه می‌شود. منطق برخاست و کروز همان مرجع پک ECTM v3.3 است. مقایسهٔ جفتی طبق قاعدهٔ اصلاح‌شدهٔ پک انجام می‌شود. آستانه‌ها پیشنهادی‌اند و هنوز کالیبره نشده‌اند و مهندس قوای محرکه آن‌ها را تأیید نکرده است. دلیل هر انتخاب در بخش decisions آمده است.",
+  "calibrationStatus": "CANDIDATE",
+  "engineeringSignOff": "PENDING",
+  "source": "pack v3.3 docs/05 and contracts/policy-defaults-v1.json -> snapshots (policy v1-calibration-candidate); reference/ectm_oracle.py snapshots() for takeoff and cruise (reproduces fixtures/golden 8/8); paired by the joint-block rule of docs/05 section 2.5 against fixtures/independent/paired-joint-block-v1.json; measured on all 102 real files of samples/ (stage/P06 GAP-ANALYSIS)",
+  "channels": {
+    "engineN1": "N1_PCT",
+    "engineEgt": "EGT_C",
+    "altitude": "PRESSURE_ALT_FT",
+    "mach": "MACH",
+    "toga": "TOGA"
+  },
+  "engineParameters": [
+    "N1_PCT",
+    "N2_PCT",
+    "EGT_C",
+    "FUEL_FLOW_PPH",
+    "OIL_PRESSURE_PSI",
+    "OIL_TEMP_C",
+    "VIB_N1_FAN",
+    "VIB_N2_HPC",
+    "VIB_N1_LPT",
+    "VIB_N2_HPT"
+  ],
+  "conditionParameters": ["PRESSURE_ALT_FT", "MACH", "TAT_C", "CAS_KT", "GROUNDSPEED_KT"],
+  "configurationChannels": [
+    "ENGINE_BLEED[1]",
+    "ENGINE_BLEED[2]",
+    "WING_ANTI_ICE",
+    "COWL_ANTI_ICE[1]",
+    "COWL_ANTI_ICE[2]",
+    "PACK_ON_R",
+    "PACK_ON_L"
+  ],
+  "masks": {
+    "untrusted": ["ALTITUDE_RATE_UNTRUSTED"],
+    "coherence": ["AIRGROUND_LAGS_RADIO_HEIGHT", "ENGINE_CHANNELS_LAG_KINEMATICS"],
+    "gapNeighboursUntrusted": true
+  },
+  "takeoff": {
+    "liftoffAnchor": "LIFTOFF",
+    "searchBeforeLiftoffSec": 30,
+    "searchAfterLiftoffSec": 120,
+    "partialStartN1Pct": 85,
+    "windowBeforePeakSec": 5,
+    "windowAfterPeakSec": 4,
+    "minValidN1Samples": 8
+  },
+  "cruise": {
+    "phase": "CRUISE",
+    "selectors": [
+      { "code": "STRICT", "n1TolerancePct": 0.5, "altitudeRangeFt": 100, "machRange": 0.01, "windowSec": 120, "minBlockSec": 300, "reportSec": 60 },
+      { "code": "OPERATOR_300S", "n1TolerancePct": 1.0, "altitudeRangeFt": 200, "machRange": 0.02, "windowSec": 120, "minBlockSec": 300, "reportSec": 60 },
+      { "code": "OPERATOR_60S", "n1TolerancePct": 1.5, "altitudeRangeFt": 300, "machRange": 0.02, "windowSec": 60, "minBlockSec": 60, "reportSec": 60 }
+    ]
+  },
+  "paired": {
+    "parameter": "EGT_C",
+    "minMatchedSamples": 20
+  },
+  "phaseMetrics": {
+    "percentile": 95
+  },
+  "controlContext": {
+    "phases": ["TAKEOFF_ROLL", "TAKEOFF", "CLIMB"],
+    "engineChannels": ["N1_PCT", "N1_TARGET_PCT", "N1_CLIMB_LIMIT_PCT", "N1_BUG_PCT", "TLA_DEG"],
+    "modeChannels": ["AT_ENGAGED", "AT_N1", "AT_N1_LIMIT_MODE", "AT_RETARD", "AT_MCP_SPEED", "AT_MIN_SPEED", "AT_LIMIT", "FCC_N1_LIMIT_MODE", "DAA_N1_LIMIT_MODE"],
+    "verificationNote": "UNVERIFIED until the recorder documentation confirms the control channels (I-02); descriptive only, no derate inference"
+  },
+  "decisions": [
+    {
+      "id": "P06-D01",
+      "topic": "Reference",
+      "choice": "Takeoff and cruise follow the pack oracle snapshots() exactly; the paired E2-E1 value follows the joint-block rule of docs/05 section 2.5",
+      "basis": "The oracle reproduces the 8 goldens; docs/17 section 3 names its paired value a defect and freezes the corrected expectations in fixtures/independent/paired-joint-block-v1.json",
+      "alternative": "The oracle's paired value (intersection of the two centred windows)",
+      "howToChange": "Not a document edit; a new paired rule is a code change with its own independent vectors",
+      "appliesTo": ["document", "paired"]
+    },
+    {
+      "id": "P06-D02",
+      "topic": "Windows in seconds",
+      "choice": "Search and takeoff windows are measured in elapsed seconds; the oracle counts samples",
+      "basis": "docs/05 states seconds; on 1 Hz files both agree, and the 102 real files give the same result (corpus parity)",
+      "alternative": "Count samples as the oracle does",
+      "howToChange": "Not a document edit; only matters for files with gaps inside a window",
+      "appliesTo": ["takeoff"]
+    },
+    {
+      "id": "P06-D03",
+      "topic": "Two takeoff observations",
+      "choice": "TAKEOFF_N1_PEAK_CONTEXT is the 10-s window around the engine's own first N1 maximum; TAKEOFF_EGT_PEAK_OBSERVED is the engine's first EGT maximum in the same search interval, with its offset from the N1 peak",
+      "basis": "docs/05 section 1; the two are never conflated and neither is an EGT margin",
+      "alternative": "One takeoff point",
+      "howToChange": "Edit the takeoff window seconds or the minimum valid N1 samples",
+      "appliesTo": ["takeoff"]
+    },
+    {
+      "id": "P06-D04",
+      "topic": "Context status at takeoff",
+      "choice": "The takeoff values are reported even when an AIR/GROUND or engine lag mask overlaps the window, with contextStatus CONTEXT_UNVERIFIED_CHANNEL_COHERENCE",
+      "basis": "The oracle does so; on the 102 real files 86 engine-1 and 74 engine-2 takeoff windows overlap the AIR/GROUND lag, which is a discrete lag and not an engine-value problem",
+      "alternative": "Leave the AIR/GROUND lag out of the context check, after the engineer's review",
+      "howToChange": "Remove AIRGROUND_LAGS_RADIO_HEIGHT from masks.coherence",
+      "appliesTo": ["masks"]
+    },
+    {
+      "id": "P06-D05",
+      "topic": "Cruise selectors",
+      "choice": "All three pack selectors are computed and shown; no default selector is chosen",
+      "basis": "Availability on the 102 real files: STRICT 8 / 12 of 102 (engine 1 / engine 2), OPERATOR_300S 93 / 94, OPERATOR_60S 102 / 102; the default is chosen at corpus calibration (P13)",
+      "alternative": "Keep only one selector",
+      "howToChange": "Add, remove or edit an entry of cruise.selectors",
+      "appliesTo": ["cruise"]
+    },
+    {
+      "id": "P06-D06",
+      "topic": "Cruise eligibility",
+      "choice": "Every sample of a window is CRUISE, outside the untrusted and coherence masks and the gap neighbours, with N1 of that engine only, altitude, Mach and the 7 configuration literals inside the selector's limits",
+      "basis": "docs/05 section 2.1 and the oracle; N1 of the other engine is never read",
+      "alternative": "Allow the coherence masks in cruise",
+      "howToChange": "Edit masks or configurationChannels",
+      "appliesTo": ["masks", "configurationChannels", "cruise"]
+    },
+    {
+      "id": "P06-D07",
+      "topic": "Phase metrics",
+      "choice": "Per engine and condition parameter for the whole flight, each phase, each segment and each steady cruise block: samples, valued, missing, gap starts, masked samples, min, max, mean, median, nearest-rank p95 and sample standard deviation (n - 1)",
+      "basis": "docs/05 section 3; nearest rank as in the pack screening; descriptive only, never trended",
+      "alternative": "Interpolated percentile or population standard deviation",
+      "howToChange": "Edit phaseMetrics.percentile or conditionParameters",
+      "appliesTo": ["phaseMetrics", "conditionParameters"]
+    },
+    {
+      "id": "P06-D10",
+      "topic": "Centring of the report windows",
+      "choice": "An engine's cruise report window starts at centre - reportSec / 2 of its block, with centre = (start + end) / 2; the paired report window starts at jointStart + (jointLength - reportSec) / 2",
+      "basis": "Each follows its frozen reference: the goldens for the engine windows, fixtures/independent/paired-joint-block-v1.json for the paired window; the two differ by one sample when a length is even",
+      "alternative": "One centring formula for both, after the engineer's review and a reviewed change of one reference",
+      "howToChange": "Not a document edit; a code change with both references re-checked",
+      "appliesTo": ["cruise", "paired"]
+    },
+    {
+      "id": "P06-D11",
+      "topic": "Summation",
+      "choice": "Means and sums use compensated (Neumaier) summation",
+      "basis": "The pack reference computes with it (Python 3.12+ sum), and it is the more accurate method; plain summation differs in the last digit",
+      "alternative": "Plain left-to-right summation",
+      "howToChange": "Not a document edit",
+      "appliesTo": ["document"]
+    },
+    {
+      "id": "P06-D12",
+      "topic": "Engine control context (R-F5)",
+      "choice": "N1 actual, N1 target, climb limit, bug and TLA per engine, and the A/T and N1-limit mode literals, summarised over takeoff roll, takeoff and climb",
+      "basis": "docs/10 R-F5; the channels are documented as UNVERIFIED (I-02), so the report is descriptive and infers no derate",
+      "alternative": "Channels chosen by catalog role",
+      "howToChange": "Edit controlContext.engineChannels, modeChannels or phases",
+      "appliesTo": ["controlContext"]
+    },
+    {
+      "id": "P06-D08",
+      "topic": "Thresholds",
+      "choice": "Every number is the value of policy-defaults-v1.json -> snapshots",
+      "basis": "Pack values, CANDIDATE until calibration in P13",
+      "alternative": "Values proposed by the powerplant engineer",
+      "howToChange": "Edit the number in a draft and compare with the dry-run before publishing",
+      "appliesTo": ["document"]
+    },
+    {
+      "id": "P06-D09",
+      "topic": "Engineering sign-off",
+      "choice": "PENDING",
+      "basis": "Never inferred automatically",
+      "alternative": "APPROVED after the powerplant engineer's review",
+      "howToChange": "Set engineeringSignOff in a new version with the reviewer's approval note",
+      "appliesTo": ["document"]
+    }
+  ]
+}

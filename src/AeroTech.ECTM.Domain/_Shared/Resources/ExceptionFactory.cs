@@ -175,9 +175,6 @@ namespace AeroTech.ECTM.Domain._Shared.Resources
         public static BusinessException ReviewNotAllowed(params object?[] args) =>
             new(80314, ExceptionMessages.ReviewNotAllowed, args) { HttpStatus = 409 };
 
-        public static BusinessException ReviewActionDeliveredLater(params object?[] args) =>
-            new(80315, ExceptionMessages.ReviewActionDeliveredLater, args) { HttpStatus = 422 };
-
         public static BusinessException FlightParameterNotFound(params object?[] args) =>
             new(80316, ExceptionMessages.FlightParameterNotFound, args) { HttpStatus = 422 };
 
@@ -201,5 +198,14 @@ namespace AeroTech.ECTM.Domain._Shared.Resources
 
         public static BusinessException DocumentNotPublishedOfKind(params object?[] args) =>
             new(80323, ExceptionMessages.DocumentNotPublishedOfKind, args) { HttpStatus = 422 };
+
+        public static BusinessException FlightNotAnalysed(params object?[] args) =>
+            new(80324, ExceptionMessages.FlightNotAnalysed, args) { HttpStatus = 422 };
+
+        public static BusinessException ReviewRevisionStale(params object?[] args) =>
+            new(80325, ExceptionMessages.ReviewRevisionStale, args) { HttpStatus = 409 };
+
+        public static BusinessException StabilityPointsNotEvaluated(params object?[] args) =>
+            new(80326, ExceptionMessages.StabilityPointsNotEvaluated, args) { HttpStatus = 404 };
     }
 }

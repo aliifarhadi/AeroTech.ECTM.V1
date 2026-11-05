@@ -8,6 +8,9 @@ namespace AeroTech.Messages.Ectm.Enums
         IMPORT = 1,
 
         [Display(Name = "Recompute")]
-        RECOMPUTE = 2
+        RECOMPUTE = 2,
+
+        [Display(Name = "Identity Change")]
+        IDENTITY_CHANGE = 3
     }
 }

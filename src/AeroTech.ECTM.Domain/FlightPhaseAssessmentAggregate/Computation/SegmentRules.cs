@@ -9,7 +9,7 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
         IReadOnlyList<FlightPhaseCode>? MediumConfidenceLabels,
         IReadOnlyDictionary<FlightPhaseCode, IReadOnlyList<string>>? EvidenceCodes)
     {
-        public void Check(PhaseRuleSetCheck check, string path)
+        public void Check(RuleDocumentCheck check, string path)
         {
             check.Entries(CoherenceSuspectMasks, $"{path}.coherenceSuspectMasks", allowEmpty: true);
 
@@ -30,7 +30,7 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
                 var codes = EvidenceCodes.GetValueOrDefault(label);
 
                 if (codes is null || codes.Count == 0 || codes.Any(string.IsNullOrWhiteSpace))
-                    check.Issue($"{path}.evidenceCodes.{label}", PhaseRuleSetValidator.FieldRequired, $"The label {label} can occur and needs its evidence codes.");
+                    check.Issue($"{path}.evidenceCodes.{label}", RuleDocumentCheck.FieldRequired, $"The label {label} can occur and needs its evidence codes.");
             }
         }
     }

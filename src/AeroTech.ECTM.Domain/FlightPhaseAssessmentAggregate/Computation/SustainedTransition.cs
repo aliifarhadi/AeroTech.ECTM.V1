@@ -43,7 +43,7 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
                 TextAt: frame.Text(Channel!, found));
         }
 
-        public override void Check(PhaseRuleSetCheck check, string path)
+        public override void Check(RuleDocumentCheck check, string path)
         {
             CheckBases(check, path);
             check.TextChannel(Channel, $"{path}.channel");

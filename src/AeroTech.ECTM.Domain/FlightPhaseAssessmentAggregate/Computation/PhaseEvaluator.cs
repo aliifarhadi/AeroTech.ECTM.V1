@@ -10,7 +10,7 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
         public static PhaseResult Evaluate(PhaseRuleSetContent rules, QualityInput input, QualityResult quality)
         {
             if (Run(rules, input, quality) is not { } evaluation)
-                return new PhaseResult(PhaseRuleSetHeader.Of(rules), PhaseReference.Compare(rules), input.SampleCount, TimeAxisNotIncreasing, [], [], [], [], [], []);
+                return new PhaseResult(RuleDocumentHeader.Of(rules), PhaseReference.Compare(rules), input.SampleCount, TimeAxisNotIncreasing, [], [], [], [], [], []);
 
             return evaluation.Result();
         }

@@ -11,9 +11,14 @@ using AeroTech.ECTM.Application.FlightPhaseAssessmentAggregate.Queries.ExplainFl
 using AeroTech.ECTM.Application.FlightPhaseAssessmentAggregate.Queries.GetFlightEvents.Backoffice;
 using AeroTech.ECTM.Application.FlightPhaseAssessmentAggregate.Queries.GetFlightPhases.Backoffice;
 using AeroTech.ECTM.Application.FlightQualityAggregate.Queries.GetFlightQuality.Backoffice;
+using AeroTech.ECTM.Application.FlightReviewAggregate.Commands.BulkReviewFlights.Backoffice;
+using AeroTech.ECTM.Application.FlightStabilityPointsAggregate.Queries.GetFlightControlContext.Backoffice;
+using AeroTech.ECTM.Application.FlightStabilityPointsAggregate.Queries.GetFlightPhaseMetrics.Backoffice;
+using AeroTech.ECTM.Application.FlightStabilityPointsAggregate.Queries.GetFlightStabilityPoints.Backoffice;
 using AeroTech.ECTM.Domain.FlightAggregate.Arguments;
 using AeroTech.ECTM.Domain.FlightAggregate.Computation;
 using AeroTech.ECTM.RestApi.V1.FlightAggregate.Requests;
+using AeroTech.Messages.Ectm.Enums;
 using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -59,7 +64,7 @@ namespace AeroTech.ECTM.RestApi.V1.FlightAggregate
 
         [HttpPost("{flightId:long}/review")]
         public async Task<IActionResult> Review(long flightId, [FromBody] ReviewFlightRequest request, CancellationToken cancellationToken)
-            => Ok(await _mediator.Send(new BackofficeReviewFlightCommand(flightId, request.Action, request.Note), cancellationToken));
+            => Ok(await _mediator.Send(new BackofficeReviewFlightCommand(flightId, request.Action, request.ReasonCode, request.Note, request.AnalysisRevisionId), cancellationToken));
 
         [HttpGet("{flightId:long}/series")]
         public async Task<IActionResult> Series(
@@ -94,6 +99,22 @@ namespace AeroTech.ECTM.RestApi.V1.FlightAggregate
         public async Task<IActionResult> ExplainPhase(long flightId, [FromQuery] int sampleIndex, CancellationToken cancellationToken)
             => Ok(await _mediator.Send(new BackofficeExplainFlightPhaseQuery(flightId, sampleIndex), cancellationToken));
 
+        [HttpGet("{flightId:long}/stability-points")]
+        public async Task<IActionResult> StabilityPoints(long flightId, CancellationToken cancellationToken)
+            => Ok(await _mediator.Send(new BackofficeGetFlightStabilityPointsQuery(flightId), cancellationToken));
+
+        [HttpGet("{flightId:long}/phase-metrics")]
+        public async Task<IActionResult> PhaseMetrics(long flightId, [FromQuery] MetricGroupKind? group, CancellationToken cancellationToken)
+            => Ok(await _mediator.Send(new BackofficeGetFlightPhaseMetricsQuery(flightId, group), cancellationToken));
+
+        [HttpGet("{flightId:long}/control-context")]
+        public async Task<IActionResult> ControlContext(long flightId, CancellationToken cancellationToken)
+            => Ok(await _mediator.Send(new BackofficeGetFlightControlContextQuery(flightId), cancellationToken));
+
+        [HttpPost("bulk-review")]
+        public async Task<IActionResult> BulkReview([FromBody] BulkReviewFlightsRequest request, CancellationToken cancellationToken)
+            => Ok(await _mediator.Send(new BackofficeBulkReviewFlightsCommand(request.FlightIds, request.Action, request.ReasonCode, request.Note), cancellationToken));
+
         [HttpGet("{flightId:long}/events")]
         public async Task<IActionResult> Events(long flightId, CancellationToken cancellationToken)
             => Ok(await _mediator.Send(new BackofficeGetFlightEventsQuery(flightId), cancellationToken));
@@ -105,7 +126,7 @@ namespace AeroTech.ECTM.RestApi.V1.FlightAggregate
         [HttpPost("{flightId:long}/recompute")]
         public async Task<IActionResult> Recompute(long flightId, [FromBody] RecomputeFlightRequest request, CancellationToken cancellationToken)
         {
-            var command = new BackofficeRecomputeFlightCommand(flightId, request.QualityRulesDocumentId, request.PhaseRuleSetDocumentId, request.DryRun ?? false);
+            var command = new BackofficeRecomputeFlightCommand(flightId, request.QualityRulesDocumentId, request.PhaseRuleSetDocumentId, request.SnapshotRulesDocumentId, request.DryRun ?? false);
 
             return Ok(await _mediator.Send(command, cancellationToken));
         }

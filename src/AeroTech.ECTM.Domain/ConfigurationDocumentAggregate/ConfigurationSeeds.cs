@@ -9,7 +9,8 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate
             [ConfigurationKind.PARAMETER_CATALOG] = "parameter-catalog-ep-doa-seed.json",
             [ConfigurationKind.DATA_PROFILE] = "data-profile-ep-doa-seed.json",
             [ConfigurationKind.QUALITY_RULES] = "quality-rules-ep-doa-seed.json",
-            [ConfigurationKind.PHASE_RULESET] = "phase-ruleset-ep-doa-seed.json"
+            [ConfigurationKind.PHASE_RULESET] = "phase-ruleset-ep-doa-seed.json",
+            [ConfigurationKind.SNAPSHOT_RULES] = "snapshot-rules-ep-doa-seed.json"
         };
 
         public static string ContentOf(ConfigurationKind kind)

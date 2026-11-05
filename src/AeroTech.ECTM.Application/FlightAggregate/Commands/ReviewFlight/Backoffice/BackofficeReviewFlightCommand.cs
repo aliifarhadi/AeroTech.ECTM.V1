@@ -4,5 +4,5 @@ using MediatR;
 
 namespace AeroTech.ECTM.Application.FlightAggregate.Commands.ReviewFlight.Backoffice
 {
-    public sealed record BackofficeReviewFlightCommand(long FlightId, ReviewAction Action, string? Note) : IRequest<BackofficeFlightDetailDto>, IReviewFlightCommand;
+    public sealed record BackofficeReviewFlightCommand(long FlightId, ReviewAction Action, ExclusionReason? ReasonCode, string? Note, long? AnalysisRevisionId) : IRequest<BackofficeFlightDetailDto>, IReviewFlightCommand;
 }

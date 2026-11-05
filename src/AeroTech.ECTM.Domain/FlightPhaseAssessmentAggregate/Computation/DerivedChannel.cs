@@ -12,6 +12,6 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
 
         public abstract DerivedValueTrace Trace(PhaseFrame frame, int index);
 
-        public abstract void Check(PhaseRuleSetCheck check, string path);
+        public abstract void Check(RuleDocumentCheck check, string path);
     }
 }

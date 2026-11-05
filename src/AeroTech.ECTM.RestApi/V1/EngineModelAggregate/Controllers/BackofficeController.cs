@@ -2,7 +2,9 @@ using AeroTech.ECTM.Application.EngineModelAggregate.Commands.CreateEngineModel.
 using AeroTech.ECTM.Application.EngineModelAggregate.Commands.UpdateEngineModel.Backoffice;
 using AeroTech.ECTM.Application.EngineModelAggregate.Queries.GetEngineModelById.Backoffice;
 using AeroTech.ECTM.Application.EngineModelAggregate.Queries.GetEngineModelsPaginated.Backoffice;
+using AeroTech.ECTM.Application.FlightStabilityPointsAggregate.Queries.GetModelPeriodPerformance.Backoffice;
 using AeroTech.ECTM.RestApi.V1.EngineModelAggregate.Requests;
+using AeroTech.Messages.Ectm.Enums;
 using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -42,6 +44,16 @@ namespace AeroTech.ECTM.RestApi.V1.EngineModelAggregate
         [HttpGet("{engineModelId:long}")]
         public async Task<IActionResult> GetById(long engineModelId, CancellationToken cancellationToken)
             => Ok(await _mediator.Send(new BackofficeGetEngineModelByIdQuery(engineModelId), cancellationToken));
+
+        [HttpGet("{engineModelId:long}/period-performance")]
+        public async Task<IActionResult> PeriodPerformance(
+            long engineModelId,
+            [FromQuery] SnapshotKind kind,
+            [FromQuery] string? selector,
+            [FromQuery] DateOnly? from,
+            [FromQuery] DateOnly? to,
+            CancellationToken cancellationToken)
+            => Ok(await _mediator.Send(new BackofficeGetModelPeriodPerformanceQuery(engineModelId, from, to, kind, selector), cancellationToken));
 
         [HttpPut("{engineModelId:long}")]
         public async Task<IActionResult> Update(long engineModelId, [FromBody] UpdateEngineModelRequest request, CancellationToken cancellationToken)

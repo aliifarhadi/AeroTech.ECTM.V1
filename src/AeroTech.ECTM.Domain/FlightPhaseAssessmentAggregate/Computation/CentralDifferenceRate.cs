@@ -32,7 +32,7 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
             return new DerivedValueTrace(Code!, Operator, rate, [before!.Value, after!.Value], null);
         }
 
-        public override void Check(PhaseRuleSetCheck check, string path)
+        public override void Check(RuleDocumentCheck check, string path)
         {
             check.NumericChannel(Parameter, $"{path}.parameter");
             check.Positive(HalfWindowSec, $"{path}.halfWindowSec");

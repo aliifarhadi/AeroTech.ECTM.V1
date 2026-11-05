@@ -1,4 +1,5 @@
 using AeroTech.ECTM.Application._Shared.Enums;
+using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Dto;
 using AeroTech.ECTM.Domain.AnalysisRevisionAggregate;
 using AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate;
 
@@ -11,7 +12,7 @@ namespace AeroTech.ECTM.Application.FlightPhaseAssessmentAggregate.Dto
         int RevisionNumber,
         long PhaseRuleSetDocumentId,
         int PhaseRuleSetVersion,
-        BackofficePhaseRuleSetHeaderDto RuleSet,
+        BackofficeRuleDocumentHeaderDto RuleSet,
         BackofficePhaseReferenceDto Reference,
         EnumValueDto Status,
         string? NotEvaluableReason,
@@ -33,7 +34,7 @@ namespace AeroTech.ECTM.Application.FlightPhaseAssessmentAggregate.Dto
                 revision.Number,
                 assessment.PhaseRuleSetDocumentId,
                 assessment.PhaseRuleSetVersion,
-                BackofficePhaseRuleSetHeaderDto.From(result.RuleSet),
+                BackofficeRuleDocumentHeaderDto.From(result.RuleSet),
                 BackofficePhaseReferenceDto.From(result.Reference),
                 EnumValueDto.Of(assessment.Status),
                 result.NotEvaluableReason,

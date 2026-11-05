@@ -158,7 +158,7 @@ namespace AeroTech.ECTM.Application.ImportBatchAggregate.Services
 
             var revision = await _analysisRecorder.OpenAsync(flight, rules, RevisionTrigger.IMPORT, cancellationToken);
 
-            await _analysisRecorder.CompleteAsync(revision, rules, QualityInput.From(recording), cancellationToken);
+            await _analysisRecorder.CompleteAsync(flight, revision, rules, QualityInput.From(recording), cancellationToken);
         }
 
         private async Task<ImportBatch> BatchOfAsync(long batchId, CancellationToken cancellationToken)

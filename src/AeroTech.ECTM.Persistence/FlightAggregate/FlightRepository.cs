@@ -4,6 +4,7 @@ using AeroTech.ECTM.Domain.FlightAggregate.Contracts;
 using AeroTech.ECTM.Domain.FlightAggregate.Entities;
 using AeroTech.ECTM.Persistence._Shared;
 using AeroTech.Framework.Core.Domain.Queries;
+using AeroTech.Messages.Ectm.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace AeroTech.ECTM.Persistence.FlightAggregate
@@ -57,6 +58,31 @@ namespace AeroTech.ECTM.Persistence.FlightAggregate
                 .Where(flight => flight.FlightNumber == flightNumber)
                 .OrderBy(flight => flight.ImportedAt)
                 .FirstOrDefaultAsync(cancellationToken);
+
+        public async Task<IReadOnlyList<Flight>> ListForEngineAsync(long engineId, FlightState state, CancellationToken cancellationToken = default)
+            => await _dbContext.Flights
+                .Include(flight => flight.Engines)
+                .Where(flight => flight.State == state)
+                .Where(flight => flight.Engines.Any(engine => engine.EngineId == engineId))
+                .ToListAsync(cancellationToken);
+
+        public async Task<IReadOnlyList<Flight>> ListWithEngineBetweenAsync(long engineId, DateOnly? from, DateOnly? to, CancellationToken cancellationToken = default)
+        {
+            var query = _dbContext.Flights
+                .AsNoTracking()
+                .Include(flight => flight.Engines)
+                .Where(flight => flight.Engines.Any(engine => engine.EngineId == engineId));
+
+            if (from is { } first)
+                query = query.Where(flight => flight.FlightDate >= first);
+
+            if (to is { } last)
+                query = query.Where(flight => flight.FlightDate <= last);
+
+            return await query
+                .OrderBy(flight => flight.FlightDate)
+                .ToListAsync(cancellationToken);
+        }
 
         public async Task<IReadOnlyList<Flight>> ListForAircraftAsync(long aircraftId, DateOnly? from, DateOnly? to, CancellationToken cancellationToken = default)
         {

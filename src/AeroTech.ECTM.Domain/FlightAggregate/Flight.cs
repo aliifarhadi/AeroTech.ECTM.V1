@@ -12,7 +12,6 @@ namespace AeroTech.ECTM.Domain.FlightAggregate
     public sealed class Flight : AggregateRoot<long>
     {
         public const string IdentityChange = "IDENTITY";
-        public const string AcceptAndExcludePhase = "P06";
 
         private readonly List<FlightEngineAssignment> _engines = new();
         private readonly List<FlightValidationIssue> _issues = new();
@@ -172,17 +171,42 @@ namespace AeroTech.ECTM.Domain.FlightAggregate
                 case ReviewAction.REQUEST_IDENTITY:
                     RequestIdentity(note);
                     break;
+                case ReviewAction.ACCEPT:
+                    Decide(ReviewAction.ACCEPT, FlightState.ACCEPTED);
+                    break;
+                case ReviewAction.EXCLUDE:
+                    Decide(ReviewAction.EXCLUDE, FlightState.EXCLUDED);
+                    break;
                 default:
-                    throw ExceptionFactory.ReviewActionDeliveredLater(action, AcceptAndExcludePhase);
+                    throw ExceptionFactory.ReviewNotAllowed(action, State);
             }
+        }
+
+        public void ReturnToReview()
+        {
+            if (State is FlightState.ACCEPTED or FlightState.EXCLUDED)
+                State = FlightState.PENDING_REVIEW;
+        }
+
+        public string EngineAssignmentKey()
+            => string.Join("|", _engines
+                .OrderBy(engine => engine.Position)
+                .Select(engine => $"{engine.Position}:{engine.Status}:{engine.EngineId?.ToString() ?? "-"}"));
+
+        private void Decide(ReviewAction action, FlightState decided)
+        {
+            if (State != FlightState.PENDING_REVIEW)
+                throw ExceptionFactory.ReviewNotAllowed(action, State);
+
+            State = decided;
         }
 
         private void Hold(string? note, DateTimeOffset now)
         {
-            if (State is not (FlightState.PENDING_REVIEW or FlightState.NEEDS_IDENTITY))
+            if (State is not (FlightState.PENDING_REVIEW or FlightState.NEEDS_IDENTITY or FlightState.ACCEPTED))
                 throw ExceptionFactory.ReviewNotAllowed(ReviewAction.HOLD, State);
 
-            StateBeforeHold = State;
+            StateBeforeHold = State == FlightState.ACCEPTED ? FlightState.PENDING_REVIEW : State;
             State = FlightState.HELD;
             HoldNote = OptionalText.Normalize(note);
             HeldAt = now;
@@ -201,7 +225,7 @@ namespace AeroTech.ECTM.Domain.FlightAggregate
 
         private void RequestIdentity(string? note)
         {
-            if (State != FlightState.PENDING_REVIEW)
+            if (State is not (FlightState.PENDING_REVIEW or FlightState.ACCEPTED))
                 throw ExceptionFactory.ReviewNotAllowed(ReviewAction.REQUEST_IDENTITY, State);
 
             IdentityStatus = IdentityStatus.NEEDS_CONFIRMATION;

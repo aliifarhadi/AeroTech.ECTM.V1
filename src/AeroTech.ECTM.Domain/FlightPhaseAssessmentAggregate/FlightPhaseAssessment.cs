@@ -59,6 +59,16 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate
 
         public PhaseResult ReadResult() => PhaseResult.FromJson(Result);
 
+        public void MarkFinal()
+        {
+            Status = ResultStatus.FINAL;
+        }
+
+        public void MarkProvisional()
+        {
+            Status = ResultStatus.PROVISIONAL;
+        }
+
         public void Supersede()
         {
             Status = ResultStatus.SUPERSEDED;

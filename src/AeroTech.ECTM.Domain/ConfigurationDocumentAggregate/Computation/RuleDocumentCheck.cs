@@ -3,8 +3,15 @@ using AeroTech.Messages.Ectm.Enums;
 
 namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
 {
-    public sealed class PhaseRuleSetCheck(ValidatedCatalog? catalog, List<ValidationIssue> issues)
+    public sealed class RuleDocumentCheck(ValidatedCatalog? catalog, List<ValidationIssue> issues)
     {
+        public const string FieldRequired = "FIELD_REQUIRED";
+        public const string ValueInvalid = "VALUE_INVALID";
+        public const string ChannelUnknown = "CHANNEL_UNKNOWN";
+        public const string ChannelKindInvalid = "CHANNEL_KIND_INVALID";
+        public const string ReferenceUnknown = "REFERENCE_UNKNOWN";
+        public const string CodeDuplicate = "CODE_DUPLICATE";
+
         private readonly HashSet<string> _derivedChannels = new(StringComparer.Ordinal);
         private readonly HashSet<string> _anchors = new(StringComparer.Ordinal);
         private readonly HashSet<string> _conditions = new(StringComparer.Ordinal);
@@ -28,56 +35,56 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
         public void Required(object? value, string path)
         {
             if (value is null)
-                Issue(path, PhaseRuleSetValidator.FieldRequired, "A value is required.");
+                Issue(path, FieldRequired, "A value is required.");
         }
 
         public void Text(string? value, string path)
         {
             if (string.IsNullOrWhiteSpace(value))
-                Issue(path, PhaseRuleSetValidator.FieldRequired, "A value is required.");
+                Issue(path, FieldRequired, "A value is required.");
         }
 
         public void Positive(double? value, string path)
         {
             if (value is not > 0)
-                Issue(path, PhaseRuleSetValidator.ValueInvalid, "A positive number is required.");
+                Issue(path, ValueInvalid, "A positive number is required.");
         }
 
         public void NotNegative(double? value, string path)
         {
             if (value is not >= 0)
-                Issue(path, PhaseRuleSetValidator.ValueInvalid, "A number of zero or more is required.");
+                Issue(path, ValueInvalid, "A number of zero or more is required.");
         }
 
         public void AtLeast(int? value, int minimum, string path)
         {
             if (value is null || value < minimum)
-                Issue(path, PhaseRuleSetValidator.ValueInvalid, $"A whole number of at least {minimum} is required.");
+                Issue(path, ValueInvalid, $"A whole number of at least {minimum} is required.");
         }
 
         public void Entries<TItem>(IReadOnlyList<TItem>? items, string path, bool allowEmpty)
         {
             if (items is null)
-                Issue(path, PhaseRuleSetValidator.FieldRequired, "A list is required.");
+                Issue(path, FieldRequired, "A list is required.");
             else if (!allowEmpty && items.Count == 0)
-                Issue(path, PhaseRuleSetValidator.ValueInvalid, "The list needs at least one entry.");
+                Issue(path, ValueInvalid, "The list needs at least one entry.");
         }
 
         public void Label(FlightPhaseCode? label, PhaseUnknownReason? unknownReason, string path)
         {
             if (label is not { } present)
             {
-                Issue($"{path}.label", PhaseRuleSetValidator.FieldRequired, "A phase label is required.");
+                Issue($"{path}.label", FieldRequired, "A phase label is required.");
                 return;
             }
 
             _labels.Add(present);
 
             if (present == FlightPhaseCode.UNKNOWN && unknownReason is null)
-                Issue($"{path}.unknownReason", PhaseRuleSetValidator.FieldRequired, "An UNKNOWN label needs a reason.");
+                Issue($"{path}.unknownReason", FieldRequired, "An UNKNOWN label needs a reason.");
 
             if (present != FlightPhaseCode.UNKNOWN && unknownReason is not null)
-                Issue($"{path}.unknownReason", PhaseRuleSetValidator.ValueInvalid, "Only an UNKNOWN label carries a reason.");
+                Issue($"{path}.unknownReason", ValueInvalid, "Only an UNKNOWN label carries a reason.");
         }
 
         public void ProducesLabel(FlightPhaseCode label) => _labels.Add(label);
@@ -88,28 +95,28 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
                 return;
 
             if (catalog?.Find(code!) is not null)
-                Issue(path, PhaseRuleSetValidator.CodeDuplicate, $"{code} is already a parameter of the catalog.");
+                Issue(path, CodeDuplicate, $"{code} is already a parameter of the catalog.");
 
             if (!_derivedChannels.Add(code!))
-                Issue(path, PhaseRuleSetValidator.CodeDuplicate, $"{code} is defined twice.");
+                Issue(path, CodeDuplicate, $"{code} is defined twice.");
         }
 
         public void DefineAnchor(string? code, string path)
         {
             if (Code(code, path) && !_anchors.Add(code!))
-                Issue(path, PhaseRuleSetValidator.CodeDuplicate, $"{code} is defined twice.");
+                Issue(path, CodeDuplicate, $"{code} is defined twice.");
         }
 
         public void DefineCondition(string? code, string path)
         {
             if (Code(code, path) && !_conditions.Add(code!))
-                Issue(path, PhaseRuleSetValidator.CodeDuplicate, $"{code} is defined twice.");
+                Issue(path, CodeDuplicate, $"{code} is defined twice.");
         }
 
         public void Anchor(string? code, string path)
         {
             if (Code(code, path) && !_anchors.Contains(code!))
-                Issue(path, PhaseRuleSetValidator.ReferenceUnknown, $"{code} is not an anchor defined above this point.");
+                Issue(path, ReferenceUnknown, $"{code} is not an anchor defined above this point.");
         }
 
         public void Condition(string? code, string path)
@@ -118,15 +125,15 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
                 return;
 
             if (!ConditionsAvailable)
-                Issue(path, PhaseRuleSetValidator.ReferenceUnknown, "Conditions are evaluated after the anchors and cannot be used here.");
+                Issue(path, ReferenceUnknown, "Conditions are evaluated after the anchors and cannot be used here.");
             else if (!_conditions.Contains(code!))
-                Issue(path, PhaseRuleSetValidator.ReferenceUnknown, $"{code} is not a condition defined above this point.");
+                Issue(path, ReferenceUnknown, $"{code} is not a condition defined above this point.");
         }
 
         public void Mask(string? code, string path)
         {
             if (Code(code, path) && !QualitySpanCodes.All.Contains(code!))
-                Issue(path, PhaseRuleSetValidator.ReferenceUnknown, $"'{code}' is not a quality span code.");
+                Issue(path, ReferenceUnknown, $"'{code}' is not a quality span code.");
         }
 
         public void NumericChannel(string? key, string path)
@@ -135,7 +142,7 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
                 return;
 
             if (RecordedEntryOf(key!, path) is { } entry && !entry.IsNumeric)
-                Issue(path, PhaseRuleSetValidator.ChannelKindInvalid, $"{key} must be numeric.");
+                Issue(path, ChannelKindInvalid, $"{key} must be numeric.");
         }
 
         public void TextChannel(string? key, string path)
@@ -145,19 +152,19 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
 
             if (_derivedChannels.Contains(key!))
             {
-                Issue(path, PhaseRuleSetValidator.ChannelKindInvalid, $"{key} is a numeric derived channel.");
+                Issue(path, ChannelKindInvalid, $"{key} is a numeric derived channel.");
                 return;
             }
 
             if (RecordedEntryOf(key!, path) is { } entry && entry.IsNumeric)
-                Issue(path, PhaseRuleSetValidator.ChannelKindInvalid, $"{key} must be a text or enumerated parameter.");
+                Issue(path, ChannelKindInvalid, $"{key} must be a text or enumerated parameter.");
         }
 
         public void Literal(string? key, string? value, string path)
         {
             if (string.IsNullOrEmpty(value))
             {
-                Issue(path, PhaseRuleSetValidator.FieldRequired, "A literal value is required.");
+                Issue(path, FieldRequired, "A literal value is required.");
                 return;
             }
 
@@ -165,7 +172,22 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
                 return;
 
             if (entry.EnumValues is { Count: > 0 } values && !values.Contains(value))
-                Issue(path, PhaseRuleSetValidator.ValueInvalid, $"'{value}' is not one of the recorded values of {reference.Code}: {string.Join(", ", values)}.");
+                Issue(path, ValueInvalid, $"'{value}' is not one of the recorded values of {reference.Code}: {string.Join(", ", values)}.");
+        }
+
+        public void Percent(double? value, string path)
+        {
+            if (value is not (> 0 and <= 100))
+                Issue(path, ValueInvalid, "A percentage above 0 and up to 100 is required.");
+        }
+
+        public void EngineParameter(string? code, string path)
+        {
+            if (ParameterOf(code, path) is not { } entry)
+                return;
+
+            if (!entry.IsNumeric || entry.Positions.Count == 0)
+                Issue(path, ChannelKindInvalid, $"{code} must be a numeric engine parameter with positions.");
         }
 
         public CatalogEntry? ParameterOf(string? code, string path)
@@ -181,7 +203,7 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
             var entry = catalog.Find(code!);
 
             if (entry is null || entry.IsDerived)
-                Issue(path, PhaseRuleSetValidator.ChannelUnknown, $"{code} is not a recorded parameter of the active catalog.");
+                Issue(path, ChannelUnknown, $"{code} is not a recorded parameter of the active catalog.");
 
             return entry is { IsDerived: false } ? entry : null;
         }
@@ -192,7 +214,7 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
 
             if (reference is null || reference.UsesPositionPlaceholder)
             {
-                Issue(path, PhaseRuleSetValidator.ValueInvalid, $"'{key}' must be CODE or CODE[1|2].");
+                Issue(path, ValueInvalid, $"'{key}' must be CODE or CODE[1|2].");
                 return null;
             }
 
@@ -202,7 +224,7 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
             var positionMatches = reference.Position is { } position ? entry.Positions.Contains(position) : entry.Positions.Count == 0;
 
             if (!positionMatches)
-                Issue(path, PhaseRuleSetValidator.ValueInvalid, $"'{key}' does not match the positions of {reference.Code}.");
+                Issue(path, ValueInvalid, $"'{key}' does not match the positions of {reference.Code}.");
 
             return entry;
         }
@@ -212,7 +234,7 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
             if (!string.IsNullOrWhiteSpace(code))
                 return true;
 
-            Issue(path, PhaseRuleSetValidator.FieldRequired, "A code is required.");
+            Issue(path, FieldRequired, "A code is required.");
             return false;
         }
     }

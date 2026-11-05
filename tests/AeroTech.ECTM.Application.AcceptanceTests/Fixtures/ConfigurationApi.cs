@@ -16,6 +16,8 @@ public sealed class ConfigurationApi(HttpClient client)
 
     public const string PhaseRuleSet = "PHASE_RULESET";
 
+    public const string SnapshotRules = "SNAPSHOT_RULES";
+
     public static JsonNode SeedOf(string kind) => JsonNode.Parse(ConfigurationSeeds.ContentOf(Enum.Parse<ConfigurationKind>(kind)))!;
 
     public async Task<string> EnsureActiveAsync(string kind)

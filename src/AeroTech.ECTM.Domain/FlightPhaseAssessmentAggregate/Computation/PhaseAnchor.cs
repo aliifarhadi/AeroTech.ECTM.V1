@@ -17,7 +17,7 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
 
         public abstract AnchorResult Find(PhaseFrame frame);
 
-        public abstract void Check(PhaseRuleSetCheck check, string path);
+        public abstract void Check(RuleDocumentCheck check, string path);
 
         protected AnchorBasis BasisWhenNotFound(PhaseFrame frame)
         {
@@ -30,19 +30,19 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
             return AnchorBasis.NOT_FOUND;
         }
 
-        protected void CheckBases(PhaseRuleSetCheck check, string path)
+        protected void CheckBases(RuleDocumentCheck check, string path)
         {
             check.Required(Basis, $"{path}.basis");
 
             if (Basis is { } basis && (FileEdgeBases.Contains(basis) || basis == AnchorBasis.NOT_FOUND))
-                check.Issue($"{path}.basis", PhaseRuleSetValidator.ValueInvalid, "The basis names the evidence of a found anchor, not a fallback.");
+                check.Issue($"{path}.basis", RuleDocumentCheck.ValueInvalid, "The basis names the evidence of a found anchor, not a fallback.");
 
             check.Entries(FallbackBases, $"{path}.fallbackBases", allowEmpty: true);
 
             for (var item = 0; item < (FallbackBases?.Count ?? 0); item++)
             {
                 if (!FileEdgeBases.Contains(FallbackBases![item]))
-                    check.Issue($"{path}.fallbackBases[{item}]", PhaseRuleSetValidator.ValueInvalid, "A fallback basis is PARTIAL_START or PARTIAL_END of the quality result.");
+                    check.Issue($"{path}.fallbackBases[{item}]", RuleDocumentCheck.ValueInvalid, "A fallback basis is PARTIAL_START or PARTIAL_END of the quality result.");
             }
         }
 

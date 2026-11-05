@@ -7,6 +7,7 @@ using AeroTech.ECTM.Application.AircraftAggregate.Commands.UpdateAircraft;
 using AeroTech.ECTM.Application.AircraftAggregate.Queries.GetAircraftById;
 using AeroTech.ECTM.Application.AircraftAggregate.Queries.GetAircraftPaginated;
 using AeroTech.ECTM.Application.AircraftAggregate.Services;
+using AeroTech.ECTM.Application.AnalysisRevisionAggregate.Commands.RecomputeEngine;
 using AeroTech.ECTM.Application.AnalysisRevisionAggregate.Commands.RecomputeFlight;
 using AeroTech.ECTM.Application.AnalysisRevisionAggregate.Queries.GetFlightRevisions;
 using AeroTech.ECTM.Application.AnalysisRevisionAggregate.Services;
@@ -56,6 +57,16 @@ using AeroTech.ECTM.Application.FlightPhaseAssessmentAggregate.Services;
 using AeroTech.ECTM.Application.FlightQualityAggregate.Queries.GetAircraftQuality;
 using AeroTech.ECTM.Application.FlightQualityAggregate.Queries.GetFlightQuality;
 using AeroTech.ECTM.Application.FlightQualityAggregate.Services;
+using AeroTech.ECTM.Application.FlightReviewAggregate.Commands.BulkReviewFlights;
+using AeroTech.ECTM.Application.FlightReviewAggregate.Queries.GetReviewReport;
+using AeroTech.ECTM.Application.FlightReviewAggregate.Services;
+using AeroTech.ECTM.Application.FlightStabilityPointsAggregate.Queries.GetEngineDataCoverage;
+using AeroTech.ECTM.Application.FlightStabilityPointsAggregate.Queries.GetEnginePeriodPerformance;
+using AeroTech.ECTM.Application.FlightStabilityPointsAggregate.Queries.GetFlightControlContext;
+using AeroTech.ECTM.Application.FlightStabilityPointsAggregate.Queries.GetFlightPhaseMetrics;
+using AeroTech.ECTM.Application.FlightStabilityPointsAggregate.Queries.GetFlightStabilityPoints;
+using AeroTech.ECTM.Application.FlightStabilityPointsAggregate.Queries.GetModelPeriodPerformance;
+using AeroTech.ECTM.Application.FlightStabilityPointsAggregate.Services;
 using AeroTech.ECTM.Application.ImportBatchAggregate.Commands.CommitImport;
 using AeroTech.ECTM.Application.ImportBatchAggregate.Commands.PreviewImport;
 using AeroTech.ECTM.Application.ImportBatchAggregate.Queries.GetImportBatchById;
@@ -100,6 +111,7 @@ namespace AeroTech.ECTM.Application
             services.AddScoped<IConfigurationContentValidator, DataProfileContentValidator>();
             services.AddScoped<IConfigurationContentValidator, QualityRulesContentValidator>();
             services.AddScoped<IConfigurationContentValidator, PhaseRuleSetContentValidator>();
+            services.AddScoped<IConfigurationContentValidator, SnapshotRulesContentValidator>();
             services.AddScoped<ConfigurationContentValidators>();
             services.AddScoped<ConfigurationDocumentLoader>();
             services.AddScoped<ActiveCatalogLoader>();
@@ -181,6 +193,8 @@ namespace AeroTech.ECTM.Application
 
             services.AddScoped<AnalysisRulesLoader>();
             services.AddScoped<AnalysisRecorder>();
+            services.AddScoped<RevisionResults>();
+            services.AddScoped<RecomputeScheduler>();
             services.AddScoped<PhasePreviewer>();
             services.AddScoped<IProcessingJobHandler, RecomputeJobHandler>();
             services.AddScoped<IRecomputeFlightService, RecomputeFlightService>();
@@ -190,6 +204,18 @@ namespace AeroTech.ECTM.Application
             services.AddScoped<IGetFlightEventsService, GetFlightEventsService>();
             services.AddScoped<IGetAircraftEventRatesService, GetAircraftEventRatesService>();
             services.AddScoped<IDryRunPhasesOnFlightService, DryRunPhasesOnFlightService>();
+
+            services.AddScoped<FlightReviewer>();
+            services.AddScoped<EngineObservationLoader>();
+            services.AddScoped<IBulkReviewFlightsService, BulkReviewFlightsService>();
+            services.AddScoped<IRecomputeEngineService, RecomputeEngineService>();
+            services.AddScoped<IGetFlightStabilityPointsService, GetFlightStabilityPointsService>();
+            services.AddScoped<IGetFlightPhaseMetricsService, GetFlightPhaseMetricsService>();
+            services.AddScoped<IGetFlightControlContextService, GetFlightControlContextService>();
+            services.AddScoped<IGetEnginePeriodPerformanceService, GetEnginePeriodPerformanceService>();
+            services.AddScoped<IGetModelPeriodPerformanceService, GetModelPeriodPerformanceService>();
+            services.AddScoped<IGetEngineDataCoverageService, GetEngineDataCoverageService>();
+            services.AddScoped<IGetReviewReportService, GetReviewReportService>();
 
             return services;
         }

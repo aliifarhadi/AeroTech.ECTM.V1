@@ -1,3 +1,4 @@
+using AeroTech.Messages.Ectm.Enums;
 using AeroTech.ECTM.Domain.FlightAggregate.Arguments;
 using AeroTech.ECTM.Domain.FlightAggregate.Entities;
 using AeroTech.Framework.Core.Domain.Queries;
@@ -19,6 +20,10 @@ namespace AeroTech.ECTM.Domain.FlightAggregate.Contracts
         Task<IReadOnlyList<Flight>> ListByIdsAsync(IReadOnlyCollection<long> ids, CancellationToken cancellationToken = default);
 
         Task<Flight?> FindSameIdentityAsync(long excludedFlightId, long aircraftId, DateOnly flightDate, string flightNumber, CancellationToken cancellationToken = default);
+
+        Task<IReadOnlyList<Flight>> ListForEngineAsync(long engineId, FlightState state, CancellationToken cancellationToken = default);
+
+        Task<IReadOnlyList<Flight>> ListWithEngineBetweenAsync(long engineId, DateOnly? from, DateOnly? to, CancellationToken cancellationToken = default);
 
         Task<IReadOnlyList<Flight>> ListForAircraftAsync(long aircraftId, DateOnly? from, DateOnly? to, CancellationToken cancellationToken = default);
 

@@ -9,8 +9,11 @@ namespace AeroTech.ECTM.Application.AnalysisRevisionAggregate.Services
         QualityRulesContent Quality,
         ConfigurationDocument? PhaseDocument,
         PhaseRuleSetContent? Phase,
+        ConfigurationDocument? SnapshotDocument,
+        SnapshotRulesContent? Snapshot,
         IReadOnlySet<string> ParameterCodes)
     {
-        public bool AreUsedBy(AnalysisRevision revision) => revision.UsesVersions(QualityDocument.Id, PhaseDocument?.Id);
+        public bool AreUsedBy(AnalysisRevision revision, string engineAssignments)
+            => revision.UsesInputs(QualityDocument.Id, PhaseDocument?.Id, SnapshotDocument?.Id, engineAssignments);
     }
 }

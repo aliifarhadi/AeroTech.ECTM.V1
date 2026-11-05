@@ -26,6 +26,9 @@ namespace AeroTech.ECTM.Domain.AnalysisRevisionAggregate
             QualityRulesVersion = args.QualityRulesVersion;
             PhaseRuleSetDocumentId = args.PhaseRuleSetDocumentId;
             PhaseRuleSetVersion = args.PhaseRuleSetVersion;
+            SnapshotRulesDocumentId = args.SnapshotRulesDocumentId;
+            SnapshotRulesVersion = args.SnapshotRulesVersion;
+            EngineAssignments = args.EngineAssignments;
             CreatedAt = createdAt;
         }
 
@@ -55,6 +58,12 @@ namespace AeroTech.ECTM.Domain.AnalysisRevisionAggregate
 
         public int? PhaseRuleSetVersion { get; private set; }
 
+        public long? SnapshotRulesDocumentId { get; private set; }
+
+        public int? SnapshotRulesVersion { get; private set; }
+
+        public string EngineAssignments { get; private set; } = default!;
+
         public long? ProcessingJobId { get; private set; }
 
         public string? FailureCode { get; private set; }
@@ -68,8 +77,14 @@ namespace AeroTech.ECTM.Domain.AnalysisRevisionAggregate
         public static AnalysisRevision Open(long id, int number, RevisionTrigger trigger, AnalysisRevisionArgs args, DateTimeOffset now)
             => new(id, number, trigger, args, now);
 
-        public bool UsesVersions(long qualityRulesDocumentId, long? phaseRuleSetDocumentId)
-            => QualityRulesDocumentId == qualityRulesDocumentId && PhaseRuleSetDocumentId == phaseRuleSetDocumentId;
+        public bool UsesInputs(long qualityRulesDocumentId, long? phaseRuleSetDocumentId, long? snapshotRulesDocumentId, string engineAssignments)
+        {
+            var sameRules = QualityRulesDocumentId == qualityRulesDocumentId
+                            && PhaseRuleSetDocumentId == phaseRuleSetDocumentId
+                            && SnapshotRulesDocumentId == snapshotRulesDocumentId;
+
+            return sameRules && EngineAssignments == engineAssignments;
+        }
 
         public void AssignJob(long processingJobId)
         {

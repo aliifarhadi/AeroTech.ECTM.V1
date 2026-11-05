@@ -11,6 +11,8 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Contracts
 
         Task<ConfigurationDocument?> FindActiveAsync(ConfigurationKind kind, CancellationToken cancellationToken = default);
 
+        Task<IReadOnlyList<ConfigurationDocument>> ListPublishedBetweenAsync(DateTimeOffset from, DateTimeOffset to, CancellationToken cancellationToken = default);
+
         Task<int> LastVersionNumberAsync(ConfigurationKind kind, CancellationToken cancellationToken = default);
 
         Task<IReadOnlyDictionary<ConfigurationKind, int>> CountByKindAsync(ConfigurationDocumentStatus status, CancellationToken cancellationToken = default);

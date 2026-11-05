@@ -38,14 +38,14 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
             return new DerivedValueTrace(Code!, Operator, median, window, null);
         }
 
-        public override void Check(PhaseRuleSetCheck check, string path)
+        public override void Check(RuleDocumentCheck check, string path)
         {
             check.NumericChannel(Source, $"{path}.source");
             check.AtLeast(Points, 1, $"{path}.points");
             check.AtLeast(MinValid, 1, $"{path}.minValid");
 
             if (MinValid > Points)
-                check.Issue($"{path}.minValid", PhaseRuleSetValidator.ValueInvalid, "minValid cannot exceed points.");
+                check.Issue($"{path}.minValid", RuleDocumentCheck.ValueInvalid, "minValid cannot exceed points.");
 
             check.Entries(NullInsideMasks, $"{path}.nullInsideMasks", allowEmpty: true);
 

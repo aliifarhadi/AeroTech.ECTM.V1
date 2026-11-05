@@ -1,10 +1,11 @@
+using AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
 {
     public sealed record PhaseResult(
-        PhaseRuleSetHeader RuleSet,
+        RuleDocumentHeader RuleSet,
         PhaseReferenceComparison Reference,
         int SampleCount,
         string? NotEvaluableReason,

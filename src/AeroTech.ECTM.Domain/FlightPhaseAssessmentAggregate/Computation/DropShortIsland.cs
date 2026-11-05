@@ -21,7 +21,7 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
             }
         }
 
-        public override void Check(PhaseRuleSetCheck check, string path)
+        public override void Check(RuleDocumentCheck check, string path)
         {
             check.Positive(MinSec, $"{path}.minSec");
             check.Entries(Exempt, $"{path}.exempt", allowEmpty: true);

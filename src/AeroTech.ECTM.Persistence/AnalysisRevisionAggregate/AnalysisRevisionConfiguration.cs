@@ -23,6 +23,7 @@ namespace AeroTech.ECTM.Persistence.AnalysisRevisionAggregate
             builder.Property(revision => revision.ParameterCatalogVersion).IsRequired();
             builder.Property(revision => revision.QualityRulesDocumentId).IsRequired();
             builder.Property(revision => revision.QualityRulesVersion).IsRequired();
+            builder.Property(revision => revision.EngineAssignments).HasMaxLength(200).IsRequired();
             builder.Property(revision => revision.FailureCode).HasMaxLength(100);
             builder.Property(revision => revision.CreatedAt).IsRequired();
 

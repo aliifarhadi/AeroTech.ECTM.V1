@@ -9,6 +9,8 @@ using AeroTech.ECTM.Domain.EngineModelAggregate;
 using AeroTech.ECTM.Domain.FlightAggregate;
 using AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate;
 using AeroTech.ECTM.Domain.FlightQualityAggregate;
+using AeroTech.ECTM.Domain.FlightReviewAggregate;
+using AeroTech.ECTM.Domain.FlightStabilityPointsAggregate;
 using AeroTech.ECTM.Domain.ImportBatchAggregate;
 using AeroTech.ECTM.Domain.MaintenanceEventAggregate;
 using AeroTech.ECTM.Domain.ProcessingJobAggregate;
@@ -76,6 +78,10 @@ namespace AeroTech.ECTM.Persistence
         public DbSet<AnalysisRevision> AnalysisRevisions => Set<AnalysisRevision>();
 
         public DbSet<FlightPhaseAssessment> FlightPhaseAssessments => Set<FlightPhaseAssessment>();
+
+        public DbSet<FlightStabilityPoints> FlightStabilityPoints => Set<FlightStabilityPoints>();
+
+        public DbSet<FlightReview> FlightReviews => Set<FlightReview>();
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {

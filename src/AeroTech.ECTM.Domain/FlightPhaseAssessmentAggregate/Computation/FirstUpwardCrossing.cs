@@ -27,7 +27,7 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
             return new AnchorResult(Code!, Operator, null, null, BasisWhenNotFound(frame), Channel!);
         }
 
-        public override void Check(PhaseRuleSetCheck check, string path)
+        public override void Check(RuleDocumentCheck check, string path)
         {
             CheckBases(check, path);
             check.NumericChannel(Channel, $"{path}.channel");

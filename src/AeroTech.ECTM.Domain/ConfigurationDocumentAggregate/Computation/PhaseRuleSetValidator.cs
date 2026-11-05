@@ -5,15 +5,13 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
 {
     public static class PhaseRuleSetValidator
     {
-        public const string FieldRequired = "FIELD_REQUIRED";
-        public const string ValueInvalid = "VALUE_INVALID";
-        public const string ChannelUnknown = "CHANNEL_UNKNOWN";
-        public const string ChannelKindInvalid = "CHANNEL_KIND_INVALID";
-        public const string ReferenceUnknown = "REFERENCE_UNKNOWN";
-        public const string CodeDuplicate = "CODE_DUPLICATE";
+        public const string FieldRequired = RuleDocumentCheck.FieldRequired;
+        public const string ValueInvalid = RuleDocumentCheck.ValueInvalid;
+        public const string ChannelUnknown = RuleDocumentCheck.ChannelUnknown;
+        public const string ChannelKindInvalid = RuleDocumentCheck.ChannelKindInvalid;
+        public const string ReferenceUnknown = RuleDocumentCheck.ReferenceUnknown;
+        public const string CodeDuplicate = RuleDocumentCheck.CodeDuplicate;
         public const string ActiveCatalogRequired = "ACTIVE_CATALOG_REQUIRED";
-
-        public const string DocumentTarget = "document";
 
         public static PhaseRuleSetValidation Validate(string content, ValidatedCatalog? catalog)
         {
@@ -23,7 +21,7 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
             if (rules is null)
                 return new PhaseRuleSetValidation(null, issues, new HashSet<string>());
 
-            var check = new PhaseRuleSetCheck(catalog, issues);
+            var check = new RuleDocumentCheck(catalog, issues);
             var targets = new DecisionTargets();
 
             Header(rules, check);
@@ -36,12 +34,12 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
             PostProcessing(rules.PostProcessing, check, targets);
             Segments(rules.Segments, check);
             Events(rules.Events, check, targets);
-            Decisions(rules.Decisions, check, targets);
+            RuleDecisions.Check(rules.Decisions, check, target => targets.Exists(target, check));
 
             return new PhaseRuleSetValidation(issues.Count == 0 ? rules : null, issues, check.Parameters);
         }
 
-        private static void Header(PhaseRuleSetContent rules, PhaseRuleSetCheck check)
+        private static void Header(PhaseRuleSetContent rules, RuleDocumentCheck check)
         {
             check.Text(rules.RuleSetCode, "$.ruleSetCode");
             check.Text(rules.Title, "$.title");
@@ -51,7 +49,7 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
             check.Required(rules.EngineeringSignOff, "$.engineeringSignOff");
         }
 
-        private static void DerivedChannels(IReadOnlyList<DerivedChannel>? channels, PhaseRuleSetCheck check)
+        private static void DerivedChannels(IReadOnlyList<DerivedChannel>? channels, RuleDocumentCheck check)
         {
             check.Entries(channels, "$.derivedChannels", allowEmpty: true);
 
@@ -67,7 +65,7 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
             }
         }
 
-        private static void Anchors(IReadOnlyList<PhaseAnchor>? anchors, PhaseRuleSetCheck check)
+        private static void Anchors(IReadOnlyList<PhaseAnchor>? anchors, RuleDocumentCheck check)
         {
             check.Entries(anchors, "$.anchors", allowEmpty: true);
 
@@ -83,7 +81,7 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
             }
         }
 
-        private static void Conditions(IReadOnlyList<PhaseCondition>? conditions, PhaseRuleSetCheck check)
+        private static void Conditions(IReadOnlyList<PhaseCondition>? conditions, RuleDocumentCheck check)
         {
             check.Entries(conditions, "$.conditions", allowEmpty: true);
 
@@ -99,7 +97,7 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
             }
         }
 
-        private static void LabelRules(IReadOnlyList<LabelRule>? rules, PhaseRuleSetCheck check, DecisionTargets targets)
+        private static void LabelRules(IReadOnlyList<LabelRule>? rules, RuleDocumentCheck check, DecisionTargets targets)
         {
             check.Entries(rules, "$.labelRules", allowEmpty: false);
 
@@ -117,7 +115,7 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
             }
         }
 
-        private static void Fallback(FallbackLabel? fallback, PhaseRuleSetCheck check)
+        private static void Fallback(FallbackLabel? fallback, RuleDocumentCheck check)
         {
             if (fallback is null)
             {
@@ -128,7 +126,7 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
             check.Label(fallback.Label, fallback.UnknownReason, "$.fallback");
         }
 
-        private static void PostProcessing(IReadOnlyList<PhasePostProcessor>? steps, PhaseRuleSetCheck check, DecisionTargets targets)
+        private static void PostProcessing(IReadOnlyList<PhasePostProcessor>? steps, RuleDocumentCheck check, DecisionTargets targets)
         {
             check.Entries(steps, "$.postProcessing", allowEmpty: true);
 
@@ -144,7 +142,7 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
             }
         }
 
-        private static void Segments(SegmentRules? segments, PhaseRuleSetCheck check)
+        private static void Segments(SegmentRules? segments, RuleDocumentCheck check)
         {
             if (segments is null)
             {
@@ -155,7 +153,7 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
             segments.Check(check, "$.segments");
         }
 
-        private static void Events(IReadOnlyList<EventDefinition>? events, PhaseRuleSetCheck check, DecisionTargets targets)
+        private static void Events(IReadOnlyList<EventDefinition>? events, RuleDocumentCheck check, DecisionTargets targets)
         {
             check.Entries(events, "$.events", allowEmpty: true);
 
@@ -173,40 +171,7 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
             }
         }
 
-        private static void Decisions(IReadOnlyList<RuleDecision>? decisions, PhaseRuleSetCheck check, DecisionTargets targets)
-        {
-            check.Entries(decisions, "$.decisions", allowEmpty: true);
-
-            var ids = new HashSet<string>(StringComparer.Ordinal);
-
-            for (var item = 0; item < (decisions?.Count ?? 0); item++)
-            {
-                var path = $"$.decisions[{item}]";
-
-                if (Present(decisions![item], path, check) is not { } decision)
-                    continue;
-
-                check.Text(decision.Id, $"{path}.id");
-                check.Text(decision.Topic, $"{path}.topic");
-                check.Text(decision.Choice, $"{path}.choice");
-                check.Text(decision.Basis, $"{path}.basis");
-                check.Text(decision.Alternative, $"{path}.alternative");
-                check.Text(decision.HowToChange, $"{path}.howToChange");
-
-                if (decision.Id is not null && !ids.Add(decision.Id))
-                    check.Issue($"{path}.id", CodeDuplicate, $"{decision.Id} is defined twice.");
-
-                check.Entries(decision.AppliesTo, $"{path}.appliesTo", allowEmpty: false);
-
-                for (var target = 0; target < (decision.AppliesTo?.Count ?? 0); target++)
-                {
-                    if (!targets.Exists(decision.AppliesTo![target], check))
-                        check.Issue($"{path}.appliesTo[{target}]", ReferenceUnknown, $"'{decision.AppliesTo[target]}' does not name a part of this document.");
-                }
-            }
-        }
-
-        private static TItem? Present<TItem>(TItem? item, string path, PhaseRuleSetCheck check)
+        private static TItem? Present<TItem>(TItem? item, string path, RuleDocumentCheck check)
             where TItem : class
         {
             if (item is null)
@@ -223,9 +188,9 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
 
             public HashSet<string> Events { get; } = new(StringComparer.Ordinal);
 
-            public bool Exists(string? target, PhaseRuleSetCheck check)
+            public bool Exists(string? target, RuleDocumentCheck check)
             {
-                if (target == DocumentTarget || target == "fallback" || target == "segments")
+                if (target == "fallback" || target == "segments")
                     return true;
 
                 var parts = target?.Split('/', 2) ?? [];

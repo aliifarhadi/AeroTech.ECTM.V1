@@ -14,6 +14,6 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
 
         public abstract void Apply(PhaseFrame frame, PhaseLabels labels);
 
-        public abstract void Check(PhaseRuleSetCheck check, string path);
+        public abstract void Check(RuleDocumentCheck check, string path);
     }
 }

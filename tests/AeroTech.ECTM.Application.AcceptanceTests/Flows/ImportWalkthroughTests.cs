@@ -13,6 +13,8 @@ public sealed class ImportWalkthroughTests(MigratedDatabaseFixture fixture)
     private const string Flight24 = "2026-10-01_EP-DOA_24.csv";
     private const string Flight25 = "2026-10-01_EP-DOA_25.csv";
     private const string Flight9072 = "2026-09-24_EP-DOA_9072.csv";
+    private const string Flight6950 = "2026-09-30_EP-DOA_6950.csv";
+    private const string Flight6951 = "2026-09-30_EP-DOA_6951.csv";
     private const string AirGroundHeader = " AIR GROUND ()";
 
     private const string EgtOverN2 = """
@@ -99,7 +101,125 @@ public sealed class ImportWalkthroughTests(MigratedDatabaseFixture fixture)
         await QualityIsEvaluatedOnCommit(batch, flight24, fleet.AircraftId);
         await PhasesAreEvaluatedOnCommit(flight24, fleet.AircraftId);
         await APhaseDraftDryRunsWithoutBeingPublished(flight24, ImportApi.ItemNamed(batch, Flight9072).GetProperty("flightId").GetString()!);
+        await StabilityPointsAreReadyForTheSingleReview(batch);
+        await TheEightFlightsAreReviewedOnce(batch, fleet);
     }
+
+    private async Task StabilityPointsAreReadyForTheSingleReview(JsonElement batch)
+    {
+        var flight6951 = ImportApi.ItemNamed(batch, Flight6951).GetProperty("flightId").GetString()!;
+        var flight6950 = ImportApi.ItemNamed(batch, Flight6950).GetProperty("flightId").GetString()!;
+        var points6951 = await _imports.GetDataAsync($"flights/{flight6951}/stability-points");
+        var points6950 = await _imports.GetDataAsync($"flights/{flight6950}/stability-points");
+        var both = SelectorOf(points6951, "OPERATOR_300S");
+        var engineOneMissing = SelectorOf(points6950, "OPERATOR_300S");
+
+        Assert.Equal("PROVISIONAL", ImportApi.NameOf(points6951, "status"));
+        Assert.Equal(2, both.GetProperty("availableEngineCount").GetInt32());
+        Assert.Equal(("AVAILABLE", 60), (ImportApi.NameOf(both.GetProperty("paired"), "availability"), both.GetProperty("paired").GetProperty("matchedSamples").GetInt32()));
+        Assert.Equal("NO_ELIGIBLE_BLOCK", ImportApi.NameOf(EngineOf(engineOneMissing, 1), "reason"));
+        Assert.Equal("AVAILABLE", ImportApi.NameOf(EngineOf(engineOneMissing, 2), "availability"));
+        Assert.Equal("MISSING_ENGINE_WINDOW", ImportApi.NameOf(engineOneMissing.GetProperty("paired"), "reason"));
+        Assert.NotEmpty(EngineOf(both, 1).GetProperty("gates").GetProperty("reportWindowGates").EnumerateArray());
+
+        var wholeFlight = await _imports.GetDataAsync($"flights/{flight6951}/phase-metrics?group=WHOLE_FLIGHT");
+        Assert.Single(wholeFlight.GetProperty("groups").EnumerateArray());
+
+        var control = await _imports.GetDataAsync($"flights/{flight6951}/control-context");
+        Assert.Contains("UNVERIFIED", control.GetProperty("verificationNote").GetString());
+        Assert.Equal(3, control.GetProperty("phases").GetArrayLength());
+    }
+
+    private async Task TheEightFlightsAreReviewedOnce(JsonElement batch, ImportApi.FleetIds fleet)
+    {
+        var flightIds = ImportApi.RealFiles.Select(name => ImportApi.ItemNamed(batch, name).GetProperty("flightId").GetString()!).ToList();
+        var flight25 = ImportApi.ItemNamed(batch, Flight25).GetProperty("flightId").GetString()!;
+        var others = flightIds.Where(id => id != flight25).ToList();
+        var performanceRoute = $"engines/{fleet.EngineOneId}/period-performance?kind=CRUISE&selector=OPERATOR_60S&from=2026-09-24&to=2026-10-01";
+
+        var beforeAcceptance = await _imports.GetDataAsync(performanceRoute);
+        Assert.Equal((8, 0, 0), (beforeAcceptance.GetProperty("flights").GetInt32(), beforeAcceptance.GetProperty("acceptedFlights").GetInt32(), beforeAcceptance.GetProperty("contributors").GetInt32()));
+
+        await ReviewAsync(flight25, new { action = "HOLD", note = "waiting for the shop visit report" }, "HELD");
+
+        using (var bulk = await _imports.PostAsync("flights/bulk-review", new { flightIds = others, action = "ACCEPT", note = "weekly review" }))
+        {
+            var result = await ApiResponses.DataOf(bulk);
+            var refused = result.GetProperty("items").EnumerateArray().Where(item => ImportApi.NameOf(item, "outcome") == "REFUSED").ToList();
+
+            Assert.Equal(7, result.GetProperty("applied").GetInt32() + result.GetProperty("refused").GetInt32());
+            Assert.All(refused, item => Assert.NotEmpty(item.GetProperty("refusals").EnumerateArray()));
+
+            foreach (var item in refused)
+                await ReviewAsync(item.GetProperty("flightId").GetString()!, new { action = "ACCEPT", note = "accepted individually after reading the refusals" }, "ACCEPTED");
+        }
+
+        await ReviewAsync(flight25, new { action = "RELEASE" }, "PENDING_REVIEW");
+
+        using (var stale = await _imports.PostAsync($"flights/{flight25}/review", new { action = "ACCEPT", analysisRevisionId = "1" }))
+        {
+            Assert.Equal(HttpStatusCode.Conflict, stale.StatusCode);
+            Assert.Equal(80325, await ApiResponses.FirstErrorCodeOf(stale));
+        }
+
+        using (var noReason = await _imports.PostAsync($"flights/{flight25}/review", new { action = "EXCLUDE", note = "no reason given" }))
+            Assert.Equal(HttpStatusCode.BadRequest, noReason.StatusCode);
+
+        using (var freeText = await _imports.PostAsync($"flights/{flight25}/review", new { action = "EXCLUDE", reasonCode = "BAD DATA", note = "free text is not a reason" }))
+            Assert.Equal(HttpStatusCode.BadRequest, freeText.StatusCode);
+
+        var revision25 = (await _imports.GetDataAsync($"flights/{flight25}/revisions"))[0];
+        await ReviewAsync(flight25, new { action = "ACCEPT", note = "shop report read", analysisRevisionId = FleetApi.IdOf(revision25) }, "ACCEPTED");
+
+        var accepted = await _imports.GetDataAsync("flights?state=ACCEPTED&pageSize=50");
+        var review25 = (await _imports.GetDataAsync($"flights/{flight25}/revisions"))[0].GetProperty("review");
+        var afterAcceptance = await _imports.GetDataAsync(performanceRoute);
+
+        Assert.Equal("8", accepted.GetProperty("totalCount").GetString());
+        Assert.Equal("ACCEPTED", ImportApi.NameOf(review25, "state"));
+        Assert.Equal(["HOLD", "RELEASE", "ACCEPT"], review25.GetProperty("entries").EnumerateArray().Select(entry => ImportApi.NameOf(entry, "action")));
+        Assert.Equal("FINAL", ImportApi.NameOf(await _imports.GetDataAsync($"flights/{flight25}/stability-points"), "status"));
+        Assert.Equal((8, 8), (afterAcceptance.GetProperty("acceptedFlights").GetInt32(), afterAcceptance.GetProperty("contributors").GetInt32()));
+        Assert.Contains(afterAcceptance.GetProperty("parameters").EnumerateArray(), parameter => parameter.GetProperty("parameter").GetString() == "EGT_C" && parameter.GetProperty("n").GetInt32() == 8);
+
+        var coverage = await _imports.GetDataAsync($"engines/{fleet.EngineOneId}/data-coverage?from=2026-09-24&to=2026-10-01");
+        Assert.Equal(8, coverage.GetProperty("flightsReceived").GetInt32());
+        Assert.Contains(coverage.GetProperty("flightStates").EnumerateArray(), state => ImportApi.NameOf(state, "state") == "ACCEPTED" && state.GetProperty("flights").GetInt32() == 8);
+
+        var engine = await _imports.GetDataAsync($"engines/{fleet.EngineOneId}");
+        var model = await _imports.GetDataAsync($"engine-models/{engine.GetProperty("engineModelId").GetString()}/period-performance?kind=CRUISE&selector=OPERATOR_60S");
+        Assert.Contains(model.GetProperty("engines").EnumerateArray(), entry => entry.GetProperty("engineId").GetString() == fleet.EngineOneId);
+
+        var report = await _imports.GetDataAsync("reviews?from=2000-01-01&to=2100-01-01");
+        var acceptCount = report.GetProperty("byReviewer").EnumerateArray().Where(row => ImportApi.NameOf(row, "action") == "ACCEPT").Sum(row => row.GetProperty("count").GetInt32());
+        Assert.Equal(8, acceptCount);
+
+        using (var again = await _imports.PostAsync("flights/bulk-review", new { flightIds, action = "ACCEPT" }))
+        {
+            var result = await ApiResponses.DataOf(again);
+            Assert.All(result.GetProperty("items").EnumerateArray(), item => Assert.Contains(item.GetProperty("refusals").EnumerateArray(), refusal => refusal.GetProperty("code").GetString() == "NOT_PENDING_REVIEW"));
+        }
+
+        using (var recompute = await _imports.PostAsync($"engines/{fleet.EngineOneId}/recompute", new { }))
+        {
+            var result = await ApiResponses.DataOf(recompute);
+            Assert.Equal((8, 0), (result.GetProperty("acceptedFlights").GetInt32(), result.GetProperty("queued").GetInt32()));
+        }
+    }
+
+    private async Task ReviewAsync(string flightId, object body, string expectedState)
+    {
+        using var response = await _imports.PostAsync($"flights/{flightId}/review", body);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(expectedState, ImportApi.NameOf(await ApiResponses.DataOf(response), "state"));
+    }
+
+    private static JsonElement SelectorOf(JsonElement points, string selector)
+        => points.GetProperty("cruise").EnumerateArray().Single(entry => entry.GetProperty("selector").GetString() == selector);
+
+    private static JsonElement EngineOf(JsonElement selector, int position)
+        => selector.GetProperty("engines").EnumerateArray().Single(engine => engine.GetProperty("position").GetInt32() == position);
 
     private async Task TheSameBytesAgainAreLinkedNotImported(string flight25)
     {
@@ -181,12 +301,6 @@ public sealed class ImportWalkthroughTests(MigratedDatabaseFixture fixture)
 
         using (var release = await _imports.PostAsync($"flights/{flight24}/review", new { action = "RELEASE" }))
             Assert.Equal("PENDING_REVIEW", ImportApi.NameOf(await ApiResponses.DataOf(release), "state"));
-
-        using (var accept = await _imports.PostAsync($"flights/{flight24}/review", new { action = "ACCEPT" }))
-        {
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, accept.StatusCode);
-            Assert.Equal(80315, await ApiResponses.FirstErrorCodeOf(accept));
-        }
 
         using (var releaseAgain = await _imports.PostAsync($"flights/{flight24}/review", new { action = "RELEASE" }))
         {

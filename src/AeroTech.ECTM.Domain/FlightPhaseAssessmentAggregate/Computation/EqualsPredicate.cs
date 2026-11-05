@@ -12,7 +12,7 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
         public override PredicateTrace Trace(PhaseFrame frame, int index)
             => new(Operator, Holds(frame, index), Channel, Expected: Value, ObservedText: frame.Text(Channel!, index));
 
-        public override void Check(PhaseRuleSetCheck check, string path)
+        public override void Check(RuleDocumentCheck check, string path)
         {
             check.TextChannel(Channel, $"{path}.channel");
             check.Literal(Channel, Value, $"{path}.value");

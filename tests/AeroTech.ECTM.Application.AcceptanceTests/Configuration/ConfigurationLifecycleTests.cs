@@ -13,7 +13,7 @@ public sealed class ConfigurationLifecycleTests(MigratedDatabaseFixture fixture)
     [Fact]
     public async Task A_kind_of_a_later_phase_cannot_be_authored_yet()
     {
-        using var response = await _configuration.PostAsync("config/SNAPSHOT_RULES/documents", new { content = new { rules = 1 } });
+        using var response = await _configuration.PostAsync("config/BASELINE_RULES/documents", new { content = new { rules = 1 } });
 
         Assert.Equal((HttpStatusCode)422, response.StatusCode);
         Assert.Equal(80105, await ApiResponses.FirstErrorCodeOf(response));

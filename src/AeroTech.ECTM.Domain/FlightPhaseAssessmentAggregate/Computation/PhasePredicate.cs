@@ -18,9 +18,9 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
 
         public abstract PredicateTrace Trace(PhaseFrame frame, int index);
 
-        public abstract void Check(PhaseRuleSetCheck check, string path);
+        public abstract void Check(RuleDocumentCheck check, string path);
 
-        public static void CheckPresent(PhasePredicate? predicate, PhaseRuleSetCheck check, string path)
+        public static void CheckPresent(PhasePredicate? predicate, RuleDocumentCheck check, string path)
         {
             if (predicate is null)
                 check.Required(null, path);
@@ -28,7 +28,7 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
                 predicate.Check(check, path);
         }
 
-        public static void CheckEach(IReadOnlyList<PhasePredicate>? predicates, PhaseRuleSetCheck check, string path)
+        public static void CheckEach(IReadOnlyList<PhasePredicate>? predicates, RuleDocumentCheck check, string path)
         {
             check.Entries(predicates, path, allowEmpty: false);
 

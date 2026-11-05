@@ -18,7 +18,7 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
             }
         }
 
-        public override void Check(PhaseRuleSetCheck check, string path)
+        public override void Check(RuleDocumentCheck check, string path)
         {
             check.Required(UnknownReason, $"{path}.unknownReason");
             check.ProducesLabel(FlightPhaseCode.UNKNOWN);

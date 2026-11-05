@@ -24,7 +24,7 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
             return Label!.Value;
         }
 
-        public void Check(PhaseRuleSetCheck check, string path)
+        public void Check(RuleDocumentCheck check, string path)
         {
             check.Text(Id, $"{path}.id");
             check.Label(Label, UnknownReason, path);
@@ -33,7 +33,7 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
             CheckAnchorLabel(AfterAnchor, check, $"{path}.afterAnchor");
         }
 
-        private void CheckAnchorLabel(AnchorLabel? anchorLabel, PhaseRuleSetCheck check, string path)
+        private void CheckAnchorLabel(AnchorLabel? anchorLabel, RuleDocumentCheck check, string path)
         {
             if (anchorLabel is null)
                 return;
@@ -45,7 +45,7 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
                 return;
 
             if (label == FlightPhaseCode.UNKNOWN || UnknownReason is not null)
-                check.Issue($"{path}.label", PhaseRuleSetValidator.ValueInvalid, "An anchor sub-label is a known phase of a rule without an unknown reason.");
+                check.Issue($"{path}.label", RuleDocumentCheck.ValueInvalid, "An anchor sub-label is a known phase of a rule without an unknown reason.");
             else
                 check.ProducesLabel(label);
         }

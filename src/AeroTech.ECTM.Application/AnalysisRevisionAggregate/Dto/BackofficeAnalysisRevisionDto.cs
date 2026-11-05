@@ -1,5 +1,7 @@
 using AeroTech.ECTM.Application._Shared.Enums;
+using AeroTech.ECTM.Application.FlightReviewAggregate.Dto;
 using AeroTech.ECTM.Domain.AnalysisRevisionAggregate;
+using AeroTech.ECTM.Domain.FlightReviewAggregate;
 
 namespace AeroTech.ECTM.Application.AnalysisRevisionAggregate.Dto
 {
@@ -18,13 +20,17 @@ namespace AeroTech.ECTM.Application.AnalysisRevisionAggregate.Dto
         int QualityRulesVersion,
         long? PhaseRuleSetDocumentId,
         int? PhaseRuleSetVersion,
+        long? SnapshotRulesDocumentId,
+        int? SnapshotRulesVersion,
+        string EngineAssignments,
         long? ProcessingJobId,
         string? FailureCode,
         DateTimeOffset CreatedUtc,
         DateTimeOffset? CompletedUtc,
-        DateTimeOffset? SupersededUtc)
+        DateTimeOffset? SupersededUtc,
+        BackofficeFlightReviewDto? Review)
     {
-        public static BackofficeAnalysisRevisionDto From(AnalysisRevision revision)
+        public static BackofficeAnalysisRevisionDto From(AnalysisRevision revision, FlightReview? review = null)
             => new(
                 revision.Id,
                 revision.FlightId,
@@ -40,10 +46,14 @@ namespace AeroTech.ECTM.Application.AnalysisRevisionAggregate.Dto
                 revision.QualityRulesVersion,
                 revision.PhaseRuleSetDocumentId,
                 revision.PhaseRuleSetVersion,
+                revision.SnapshotRulesDocumentId,
+                revision.SnapshotRulesVersion,
+                revision.EngineAssignments,
                 revision.ProcessingJobId,
                 revision.FailureCode,
                 revision.CreatedAt,
                 revision.CompletedAt,
-                revision.SupersededAt);
+                revision.SupersededAt,
+                review is null ? null : BackofficeFlightReviewDto.From(review));
     }
 }

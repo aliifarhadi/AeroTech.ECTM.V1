@@ -8,6 +8,8 @@ namespace AeroTech.ECTM.Application.AnalysisRevisionAggregate.Commands.Recompute
 
         long? PhaseRuleSetDocumentId { get; }
 
+        long? SnapshotRulesDocumentId { get; }
+
         bool DryRun { get; }
     }
 }

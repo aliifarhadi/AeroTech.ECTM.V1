@@ -87,6 +87,11 @@ namespace AeroTech.ECTM.Persistence.Migrations
                     b.Property<int>("DataProfileVersion")
                         .HasColumnType("int");
 
+                    b.Property<string>("EngineAssignments")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<string>("FailureCode")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -129,6 +134,12 @@ namespace AeroTech.ECTM.Persistence.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
+
+                    b.Property<long?>("SnapshotRulesDocumentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("SnapshotRulesVersion")
+                        .HasColumnType("int");
 
                     b.Property<string>("SourceSha256")
                         .IsRequired()
@@ -1020,6 +1031,160 @@ namespace AeroTech.ECTM.Persistence.Migrations
                     b.ToTable("FlightQualities", "Ectm");
                 });
 
+            modelBuilder.Entity("AeroTech.ECTM.Domain.FlightReviewAggregate.Entities.FlightReviewEntry", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Action")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Actor")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTimeOffset>("At")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long>("FlightReviewId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("FlightStateAfter")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("LastUpdateTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long?>("LastUpdatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<int?>("ReasonCode")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("At");
+
+                    b.HasIndex("FlightReviewId");
+
+                    b.ToTable("FlightReviewEntries", "Ectm");
+                });
+
+            modelBuilder.Entity("AeroTech.ECTM.Domain.FlightReviewAggregate.FlightReview", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("AnalysisRevisionId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset?>("DecidedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DecidedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<long>("FlightId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("LastUpdateTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long?>("LastUpdatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTimeOffset>("OpenedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("ReasonCode")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnalysisRevisionId")
+                        .IsUnique();
+
+                    b.HasIndex("FlightId", "State");
+
+                    b.ToTable("FlightReviews", "Ectm");
+                });
+
+            modelBuilder.Entity("AeroTech.ECTM.Domain.FlightStabilityPointsAggregate.FlightStabilityPoints", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("AnalysisRevisionId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("EvaluatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long>("FlightId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("LastUpdateTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long?>("LastUpdatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("NotEvaluableReason")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PhaseMetrics")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Result")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<long>("SnapshotRulesDocumentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("SnapshotRulesVersion")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnalysisRevisionId")
+                        .IsUnique();
+
+                    b.HasIndex("FlightId", "Status");
+
+                    b.ToTable("FlightStabilityPoints", "Ectm");
+                });
+
             modelBuilder.Entity("AeroTech.ECTM.Domain.ImportBatchAggregate.Entities.ImportItem", b =>
                 {
                     b.Property<long>("Id")
@@ -1387,6 +1552,15 @@ namespace AeroTech.ECTM.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("AeroTech.ECTM.Domain.FlightReviewAggregate.Entities.FlightReviewEntry", b =>
+                {
+                    b.HasOne("AeroTech.ECTM.Domain.FlightReviewAggregate.FlightReview", null)
+                        .WithMany("Entries")
+                        .HasForeignKey("FlightReviewId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("AeroTech.ECTM.Domain.ImportBatchAggregate.Entities.ImportItem", b =>
                 {
                     b.HasOne("AeroTech.ECTM.Domain.ImportBatchAggregate.ImportBatch", null)
@@ -1427,6 +1601,11 @@ namespace AeroTech.ECTM.Persistence.Migrations
                     b.Navigation("Engines");
 
                     b.Navigation("Issues");
+                });
+
+            modelBuilder.Entity("AeroTech.ECTM.Domain.FlightReviewAggregate.FlightReview", b =>
+                {
+                    b.Navigation("Entries");
                 });
 
             modelBuilder.Entity("AeroTech.ECTM.Domain.ImportBatchAggregate.ImportBatch", b =>

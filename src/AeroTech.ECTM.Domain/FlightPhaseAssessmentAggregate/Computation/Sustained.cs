@@ -33,7 +33,7 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
             return new ConditionTrace(Code!, Operator, contains, predicate, start, end, frame.RunSeconds(start, end), MinSec);
         }
 
-        public override void Check(PhaseRuleSetCheck check, string path)
+        public override void Check(RuleDocumentCheck check, string path)
         {
             check.Positive(MinSec, $"{path}.minSec");
             PhasePredicate.CheckPresent(Predicate, check, $"{path}.predicate");

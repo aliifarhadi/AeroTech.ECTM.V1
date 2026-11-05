@@ -28,7 +28,7 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
                 .Select(TransitionAt)
                 .ToList();
 
-            return new PhaseResult(PhaseRuleSetHeader.Of(Rules), PhaseReference.Compare(Rules), Frame.Count, null, Frame.Anchors, Coverage(), Segments, transitions, events, eventCoverage);
+            return new PhaseResult(RuleDocumentHeader.Of(Rules), PhaseReference.Compare(Rules), Frame.Count, null, Frame.Anchors, Coverage(), Segments, transitions, events, eventCoverage);
         }
 
         public PhaseExplanation Explain(int index)

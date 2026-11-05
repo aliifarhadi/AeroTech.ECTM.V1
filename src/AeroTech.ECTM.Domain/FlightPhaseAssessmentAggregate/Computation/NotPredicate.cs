@@ -15,6 +15,6 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
             return new PredicateTrace(Operator, !inner.Holds, Of: [inner]);
         }
 
-        public override void Check(PhaseRuleSetCheck check, string path) => CheckPresent(Predicate, check, $"{path}.predicate");
+        public override void Check(RuleDocumentCheck check, string path) => CheckPresent(Predicate, check, $"{path}.predicate");
     }
 }

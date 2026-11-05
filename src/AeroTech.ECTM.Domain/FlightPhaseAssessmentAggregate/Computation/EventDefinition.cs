@@ -11,13 +11,13 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
         IReadOnlyList<string>? PeakDuring,
         string? Note)
     {
-        public void Check(PhaseRuleSetCheck check, string path)
+        public void Check(RuleDocumentCheck check, string path)
         {
             check.Text(Code, $"{path}.code");
             check.Required(Enabled, $"{path}.enabled");
 
             if (check.ParameterOf(Parameter, $"{path}.parameter") is { IsNumeric: true })
-                check.Issue($"{path}.parameter", PhaseRuleSetValidator.ChannelKindInvalid, $"{Parameter} must be a text or enumerated parameter.");
+                check.Issue($"{path}.parameter", RuleDocumentCheck.ChannelKindInvalid, $"{Parameter} must be a text or enumerated parameter.");
 
             if (Enabled == true || ActiveValue is not null)
                 check.Literal(Parameter, ActiveValue, $"{path}.activeValue");
@@ -29,14 +29,14 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
             NumericParameters(PeakDuring, check, $"{path}.peakDuring");
         }
 
-        private static void NumericParameters(IReadOnlyList<string>? codes, PhaseRuleSetCheck check, string path)
+        private static void NumericParameters(IReadOnlyList<string>? codes, RuleDocumentCheck check, string path)
         {
             check.Entries(codes, path, allowEmpty: true);
 
             for (var item = 0; item < (codes?.Count ?? 0); item++)
             {
                 if (check.ParameterOf(codes![item], $"{path}[{item}]") is { IsNumeric: false })
-                    check.Issue($"{path}[{item}]", PhaseRuleSetValidator.ChannelKindInvalid, $"{codes[item]} must be numeric.");
+                    check.Issue($"{path}[{item}]", RuleDocumentCheck.ChannelKindInvalid, $"{codes[item]} must be numeric.");
             }
         }
     }

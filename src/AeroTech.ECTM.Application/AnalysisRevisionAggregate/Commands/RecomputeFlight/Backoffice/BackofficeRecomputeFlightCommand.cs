@@ -7,5 +7,6 @@ namespace AeroTech.ECTM.Application.AnalysisRevisionAggregate.Commands.Recompute
         long FlightId,
         long? QualityRulesDocumentId,
         long? PhaseRuleSetDocumentId,
+        long? SnapshotRulesDocumentId,
         bool DryRun) : IRequest<BackofficeRecomputeDto>, IRecomputeFlightCommand;
 }

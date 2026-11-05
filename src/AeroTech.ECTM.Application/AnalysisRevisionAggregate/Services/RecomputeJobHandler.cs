@@ -62,7 +62,7 @@ namespace AeroTech.ECTM.Application.AnalysisRevisionAggregate.Services
             var rules = await _rules.LoadOfRevisionAsync(revision, cancellationToken);
             var input = await _inputs.LoadAsync(flight, rules.ParameterCodes, cancellationToken);
 
-            await _recorder.CompleteAsync(revision, rules, input, cancellationToken);
+            await _recorder.CompleteAsync(flight, revision, rules, input, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
 

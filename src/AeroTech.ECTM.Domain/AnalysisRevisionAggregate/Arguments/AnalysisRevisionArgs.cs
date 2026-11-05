@@ -9,5 +9,8 @@ namespace AeroTech.ECTM.Domain.AnalysisRevisionAggregate.Arguments
         long QualityRulesDocumentId,
         int QualityRulesVersion,
         long? PhaseRuleSetDocumentId,
-        int? PhaseRuleSetVersion);
+        int? PhaseRuleSetVersion,
+        long? SnapshotRulesDocumentId,
+        int? SnapshotRulesVersion,
+        string EngineAssignments);
 }

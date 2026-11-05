@@ -27,6 +27,13 @@ namespace AeroTech.ECTM.Persistence.ConfigurationDocumentAggregate
                 .OrderByDescending(document => document.VersionNumber)
                 .FirstOrDefaultAsync(cancellationToken);
 
+        public async Task<IReadOnlyList<ConfigurationDocument>> ListPublishedBetweenAsync(DateTimeOffset from, DateTimeOffset to, CancellationToken cancellationToken = default)
+            => await _dbContext.ConfigurationDocuments
+                .AsNoTracking()
+                .Where(document => document.PublishedAt >= from && document.PublishedAt < to)
+                .OrderBy(document => document.PublishedAt)
+                .ToListAsync(cancellationToken);
+
         public async Task<int> LastVersionNumberAsync(ConfigurationKind kind, CancellationToken cancellationToken = default)
         {
             var lastVersion = await _dbContext.ConfigurationDocuments

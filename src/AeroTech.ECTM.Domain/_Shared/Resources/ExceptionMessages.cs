@@ -63,7 +63,6 @@ namespace AeroTech.ECTM.Domain._Shared.Resources
         public const string EngineNotInstalledAtFlight = "Engine {0} is not installed on aircraft {1} position {2} on {3}.";
         public const string PossibleDuplicateNeedsConfirmation = "Flight {0} has the same aircraft, date and flight number; confirm that this is a distinct flight.";
         public const string ReviewNotAllowed = "{0} is not allowed while the flight is {1}.";
-        public const string ReviewActionDeliveredLater = "Review action {0} is delivered in phase {1}.";
         public const string FlightParameterNotFound = "Flight {0} has no numeric channel {1}.";
         public const string SeriesRangeTooLarge = "RAW sampling returns every sample; the range holds {0} samples and the limit is {1}.";
         public const string FlightQualityNotEvaluated = "Flight {0} has no quality result yet; publish QUALITY_RULES and recompute the flight.";
@@ -72,5 +71,8 @@ namespace AeroTech.ECTM.Domain._Shared.Resources
         public const string RecomputeChangesNothing = "Revision {0} of flight {1} already uses these versions, so a recompute gives the same result.";
         public const string RecomputeAlreadyPending = "Flight {0} already has revision {1} waiting for its job.";
         public const string DocumentNotPublishedOfKind = "Configuration document {0} is not a published {1}.";
+        public const string StabilityPointsNotEvaluated = "Flight {0} has no stability points in its current analysis revision; publish SNAPSHOT_RULES and recompute the flight.";
+        public const string FlightNotAnalysed = "Flight {0} has no analysis revision yet, so it cannot be accepted or excluded.";
+        public const string ReviewRevisionStale = "The review names analysis revision {0}, but the current revision is {1}; reload the flight.";
     }
 }

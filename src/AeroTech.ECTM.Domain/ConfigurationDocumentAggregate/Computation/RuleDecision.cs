@@ -1,4 +1,4 @@
-namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
+namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
 {
     public sealed record RuleDecision(
         string? Id,

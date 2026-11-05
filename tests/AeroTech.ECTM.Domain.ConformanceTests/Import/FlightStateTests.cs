@@ -52,13 +52,37 @@ public sealed class FlightStateTests
     }
 
     [Theory]
-    [InlineData(ReviewAction.ACCEPT)]
-    [InlineData(ReviewAction.EXCLUDE)]
-    public void Accept_and_exclude_are_delivered_in_P06(ReviewAction action)
+    [InlineData(ReviewAction.ACCEPT, FlightState.ACCEPTED)]
+    [InlineData(ReviewAction.EXCLUDE, FlightState.EXCLUDED)]
+    public void Accept_and_exclude_decide_a_pending_flight_and_a_new_revision_returns_it_to_review(ReviewAction action, FlightState decided)
     {
-        var exception = Assert.Throws<BusinessException>(() => FlightWith(IdentityStatus.RESOLVED).Review(action, null, Now));
+        var flight = FlightWith(IdentityStatus.RESOLVED);
 
-        Assert.Equal(80315, exception.Code);
+        flight.Review(action, "reviewed", Now);
+        Assert.Equal(decided, flight.State);
+
+        flight.ReturnToReview();
+        Assert.Equal(FlightState.PENDING_REVIEW, flight.State);
+    }
+
+    [Fact]
+    public void Holding_an_accepted_flight_withdraws_the_acceptance_and_release_returns_it_to_pending_review()
+    {
+        var flight = FlightWith(IdentityStatus.RESOLVED);
+
+        flight.Review(ReviewAction.ACCEPT, null, Now);
+        flight.Review(ReviewAction.HOLD, "shop report", Now);
+        flight.Review(ReviewAction.RELEASE, null, Now);
+
+        Assert.Equal(FlightState.PENDING_REVIEW, flight.State);
+    }
+
+    [Fact]
+    public void A_flight_that_needs_identity_cannot_be_accepted()
+    {
+        var exception = Assert.Throws<BusinessException>(() => FlightWith(IdentityStatus.UNRESOLVED).Review(ReviewAction.ACCEPT, null, Now));
+
+        Assert.Equal(80314, exception.Code);
     }
 
     [Fact]

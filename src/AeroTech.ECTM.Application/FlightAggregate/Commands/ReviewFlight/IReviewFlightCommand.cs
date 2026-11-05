@@ -8,6 +8,10 @@ namespace AeroTech.ECTM.Application.FlightAggregate.Commands.ReviewFlight
 
         ReviewAction Action { get; }
 
+        ExclusionReason? ReasonCode { get; }
+
         string? Note { get; }
+
+        long? AnalysisRevisionId { get; }
     }
 }

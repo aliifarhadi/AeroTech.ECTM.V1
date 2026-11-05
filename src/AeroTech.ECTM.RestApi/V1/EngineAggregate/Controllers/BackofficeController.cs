@@ -1,10 +1,14 @@
+using AeroTech.ECTM.Application.AnalysisRevisionAggregate.Commands.RecomputeEngine.Backoffice;
 using AeroTech.ECTM.Application.EngineAggregate.Commands;
 using AeroTech.ECTM.Application.EngineAggregate.Commands.AdjustEngineLifeCounters.Backoffice;
 using AeroTech.ECTM.Application.EngineAggregate.Commands.CreateEngine.Backoffice;
 using AeroTech.ECTM.Application.EngineAggregate.Commands.UpdateEngine.Backoffice;
 using AeroTech.ECTM.Application.EngineAggregate.Queries.GetEngineById.Backoffice;
 using AeroTech.ECTM.Application.EngineAggregate.Queries.GetEnginesPaginated.Backoffice;
+using AeroTech.ECTM.Application.FlightStabilityPointsAggregate.Queries.GetEngineDataCoverage.Backoffice;
+using AeroTech.ECTM.Application.FlightStabilityPointsAggregate.Queries.GetEnginePeriodPerformance.Backoffice;
 using AeroTech.ECTM.RestApi.V1.EngineAggregate.Requests;
+using AeroTech.Messages.Ectm.Enums;
 using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -57,6 +61,28 @@ namespace AeroTech.ECTM.RestApi.V1.EngineAggregate
 
             return Ok(await _mediator.Send(command, cancellationToken));
         }
+
+        [HttpPost("{engineId:long}/recompute")]
+        public async Task<IActionResult> Recompute(long engineId, [FromBody] RecomputeEngineRequest request, CancellationToken cancellationToken)
+        {
+            var command = new BackofficeRecomputeEngineCommand(engineId, request.QualityRulesDocumentId, request.PhaseRuleSetDocumentId, request.SnapshotRulesDocumentId);
+
+            return Ok(await _mediator.Send(command, cancellationToken));
+        }
+
+        [HttpGet("{engineId:long}/period-performance")]
+        public async Task<IActionResult> PeriodPerformance(
+            long engineId,
+            [FromQuery] SnapshotKind kind,
+            [FromQuery] string? selector,
+            [FromQuery] DateOnly? from,
+            [FromQuery] DateOnly? to,
+            CancellationToken cancellationToken)
+            => Ok(await _mediator.Send(new BackofficeGetEnginePeriodPerformanceQuery(engineId, from, to, kind, selector), cancellationToken));
+
+        [HttpGet("{engineId:long}/data-coverage")]
+        public async Task<IActionResult> DataCoverage(long engineId, [FromQuery] DateOnly? from, [FromQuery] DateOnly? to, CancellationToken cancellationToken)
+            => Ok(await _mediator.Send(new BackofficeGetEngineDataCoverageQuery(engineId, from, to), cancellationToken));
 
         [HttpPut("{engineId:long}/life-counters")]
         public async Task<IActionResult> SetLifeCounters(long engineId, [FromBody] SetLifeCountersRequest request, CancellationToken cancellationToken)

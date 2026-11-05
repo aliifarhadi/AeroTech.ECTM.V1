@@ -10,6 +10,7 @@ namespace AeroTech.ECTM.Application.AnalysisRevisionAggregate.Commands.Recompute
             RuleFor(command => command.FlightId).GreaterThan(0);
             RuleFor(command => command.QualityRulesDocumentId).GreaterThan(0).When(command => command.QualityRulesDocumentId is not null);
             RuleFor(command => command.PhaseRuleSetDocumentId).GreaterThan(0).When(command => command.PhaseRuleSetDocumentId is not null);
+            RuleFor(command => command.SnapshotRulesDocumentId).GreaterThan(0).When(command => command.SnapshotRulesDocumentId is not null);
         }
     }
 }

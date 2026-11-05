@@ -9,6 +9,11 @@ using AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Contracts;
 using AeroTech.ECTM.Domain.FlightQualityAggregate;
 using AeroTech.ECTM.Domain.FlightQualityAggregate.Computation;
 using AeroTech.ECTM.Domain.FlightQualityAggregate.Contracts;
+using AeroTech.ECTM.Domain.FlightReviewAggregate;
+using AeroTech.ECTM.Domain.FlightReviewAggregate.Contracts;
+using AeroTech.ECTM.Domain.FlightStabilityPointsAggregate;
+using AeroTech.ECTM.Domain.FlightStabilityPointsAggregate.Computation;
+using AeroTech.ECTM.Domain.FlightStabilityPointsAggregate.Contracts;
 using AeroTech.ECTM.Domain.SourceFileAggregate.Contracts;
 using AeroTech.Framework.Core.ServiceContracts;
 using AeroTech.Messages.Ectm.Enums;
@@ -20,6 +25,8 @@ namespace AeroTech.ECTM.Application.AnalysisRevisionAggregate.Services
         private readonly IAnalysisRevisionRepository _revisions;
         private readonly IFlightQualityRepository _qualities;
         private readonly IFlightPhaseAssessmentRepository _phases;
+        private readonly IFlightStabilityPointsRepository _stabilityPoints;
+        private readonly IFlightReviewRepository _reviews;
         private readonly ISourceFileRepository _sourceFiles;
         private readonly IIdGenerator _idGenerator;
         private readonly IClock _clock;
@@ -28,6 +35,8 @@ namespace AeroTech.ECTM.Application.AnalysisRevisionAggregate.Services
             IAnalysisRevisionRepository revisions,
             IFlightQualityRepository qualities,
             IFlightPhaseAssessmentRepository phases,
+            IFlightStabilityPointsRepository stabilityPoints,
+            IFlightReviewRepository reviews,
             ISourceFileRepository sourceFiles,
             IIdGenerator idGenerator,
             IClock clock)
@@ -35,6 +44,8 @@ namespace AeroTech.ECTM.Application.AnalysisRevisionAggregate.Services
             _revisions = revisions;
             _qualities = qualities;
             _phases = phases;
+            _stabilityPoints = stabilityPoints;
+            _reviews = reviews;
             _sourceFiles = sourceFiles;
             _idGenerator = idGenerator;
             _clock = clock;
@@ -52,7 +63,10 @@ namespace AeroTech.ECTM.Application.AnalysisRevisionAggregate.Services
                 rules.QualityDocument.Id,
                 rules.QualityDocument.VersionNumber,
                 rules.PhaseDocument?.Id,
-                rules.PhaseDocument?.VersionNumber);
+                rules.PhaseDocument?.VersionNumber,
+                rules.SnapshotDocument?.Id,
+                rules.SnapshotDocument?.VersionNumber,
+                flight.EngineAssignmentKey());
             var revision = AnalysisRevision.Open(_idGenerator.NewId(), number, trigger, args, _clock.GetDateTime());
 
             await _revisions.AddAsync(revision, cancellationToken);
@@ -60,23 +74,29 @@ namespace AeroTech.ECTM.Application.AnalysisRevisionAggregate.Services
             return revision;
         }
 
-        public async Task CompleteAsync(AnalysisRevision revision, AnalysisRules rules, QualityInput input, CancellationToken cancellationToken = default)
+        public async Task CompleteAsync(Flight flight, AnalysisRevision revision, AnalysisRules rules, QualityInput input, CancellationToken cancellationToken = default)
         {
             var now = _clock.GetDateTime();
+
+            await SupersedeCurrentAsync(flight.Id, now, cancellationToken);
+
             var quality = QualityEvaluator.Evaluate(rules.Quality, input);
+            await _qualities.AddAsync(FlightQuality.Record(_idGenerator.NewId(), flight.Id, revision.Id, rules.QualityDocument.Id, rules.QualityDocument.VersionNumber, quality, now), cancellationToken);
 
-            await SupersedeCurrentAsync(revision.FlightId, now, cancellationToken);
-            await _qualities.AddAsync(FlightQuality.Record(_idGenerator.NewId(), revision.FlightId, revision.Id, rules.QualityDocument.Id, rules.QualityDocument.VersionNumber, quality, now), cancellationToken);
+            var phases = rules.Phase is { } phaseRules ? PhaseEvaluator.Evaluate(phaseRules, input, quality) : null;
 
-            if (rules.Phase is { } phaseRules)
+            if (phases is not null)
+                await _phases.AddAsync(FlightPhaseAssessment.Record(_idGenerator.NewId(), flight.Id, revision.Id, rules.PhaseDocument!.Id, rules.PhaseDocument.VersionNumber, phases, now), cancellationToken);
+
+            if (rules.Snapshot is { } snapshotRules)
             {
-                var phases = PhaseEvaluator.Evaluate(phaseRules, input, quality);
-                var assessment = FlightPhaseAssessment.Record(_idGenerator.NewId(), revision.FlightId, revision.Id, rules.PhaseDocument!.Id, rules.PhaseDocument.VersionNumber, phases, now);
-
-                await _phases.AddAsync(assessment, cancellationToken);
+                var evaluation = StabilityPointsEvaluator.Evaluate(snapshotRules, input, quality, phases);
+                await _stabilityPoints.AddAsync(FlightStabilityPoints.Record(_idGenerator.NewId(), flight.Id, revision.Id, rules.SnapshotDocument!.Id, rules.SnapshotDocument.VersionNumber, evaluation, now), cancellationToken);
             }
 
+            await _reviews.AddAsync(FlightReview.Open(_idGenerator.NewId(), flight.Id, revision.Id, now), cancellationToken);
             revision.Activate(now);
+            flight.ReturnToReview();
         }
 
         private async Task SupersedeCurrentAsync(long flightId, DateTimeOffset now, CancellationToken cancellationToken)
@@ -84,10 +104,14 @@ namespace AeroTech.ECTM.Application.AnalysisRevisionAggregate.Services
             var revision = await _revisions.GetCurrentAsync(flightId, cancellationToken);
             var quality = await _qualities.GetCurrentAsync(flightId, cancellationToken);
             var phases = await _phases.GetCurrentAsync(flightId, cancellationToken);
+            var stabilityPoints = await _stabilityPoints.GetCurrentAsync(flightId, cancellationToken);
+            var review = await _reviews.GetCurrentAsync(flightId, cancellationToken);
 
             revision?.Supersede(now);
             quality?.Supersede();
             phases?.Supersede();
+            stabilityPoints?.Supersede();
+            review?.Supersede();
         }
     }
 }

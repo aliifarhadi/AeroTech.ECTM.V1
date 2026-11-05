@@ -34,7 +34,7 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
                 WindowEnd: window?.End);
         }
 
-        public override void Check(PhaseRuleSetCheck check, string path)
+        public override void Check(RuleDocumentCheck check, string path)
         {
             check.Anchor(Anchor, $"{path}.anchor");
             check.NotNegative(AfterSec, $"{path}.afterSec");

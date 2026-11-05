@@ -11,7 +11,7 @@ namespace AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Computation
         public override ConditionTrace Trace(PhaseFrame frame, int index)
             => new(Code!, Operator, frame.InCondition(Code!, index), Predicate!.Trace(frame, index));
 
-        public override void Check(PhaseRuleSetCheck check, string path)
+        public override void Check(RuleDocumentCheck check, string path)
             => PhasePredicate.CheckPresent(Predicate, check, $"{path}.predicate");
     }
 }

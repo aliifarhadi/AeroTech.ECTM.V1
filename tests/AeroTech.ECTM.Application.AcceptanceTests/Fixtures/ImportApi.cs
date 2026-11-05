@@ -107,6 +107,7 @@ public sealed class ImportApi(MigratedDatabaseFixture fixture)
         await configuration.EnsureActiveAsync(ConfigurationApi.Profile);
         await configuration.EnsureActiveAsync(ConfigurationApi.QualityRules);
         await configuration.EnsureActiveAsync(ConfigurationApi.PhaseRuleSet);
+        await configuration.EnsureActiveAsync(ConfigurationApi.SnapshotRules);
     }
 
     public Task<HttpResponseMessage> PreviewAsync(IEnumerable<(string Name, byte[] Content)> files, string? defaultRegistration = null, int? defaultYear = null)

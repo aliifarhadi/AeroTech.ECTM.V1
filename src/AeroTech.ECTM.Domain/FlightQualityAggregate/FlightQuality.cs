@@ -59,6 +59,16 @@ namespace AeroTech.ECTM.Domain.FlightQualityAggregate
 
         public QualityResult ReadResult() => QualityResult.FromJson(Result);
 
+        public void MarkFinal()
+        {
+            Status = ResultStatus.FINAL;
+        }
+
+        public void MarkProvisional()
+        {
+            Status = ResultStatus.PROVISIONAL;
+        }
+
         public void Supersede()
         {
             Status = ResultStatus.SUPERSEDED;
