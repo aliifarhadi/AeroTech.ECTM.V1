@@ -12,6 +12,7 @@ public sealed class ImportWalkthroughTests(MigratedDatabaseFixture fixture)
     private const string ArchiveName = "EP-DOA_eight_flights.zip";
     private const string Flight24 = "2026-10-01_EP-DOA_24.csv";
     private const string Flight25 = "2026-10-01_EP-DOA_25.csv";
+    private const string Flight9072 = "2026-09-24_EP-DOA_9072.csv";
     private const string AirGroundHeader = " AIR GROUND ()";
 
     private const string EgtOverN2 = """
@@ -96,6 +97,8 @@ public sealed class ImportWalkthroughTests(MigratedDatabaseFixture fixture)
         await HoldAndReleaseFollowTheStateMachine(flight24);
         await ACatalogDraftDryRunsOnFlight25(flight25);
         await QualityIsEvaluatedOnCommit(batch, flight24, fleet.AircraftId);
+        await PhasesAreEvaluatedOnCommit(flight24, fleet.AircraftId);
+        await APhaseDraftDryRunsWithoutBeingPublished(flight24, ImportApi.ItemNamed(batch, Flight9072).GetProperty("flightId").GetString()!);
     }
 
     private async Task TheSameBytesAgainAreLinkedNotImported(string flight25)
@@ -209,8 +212,20 @@ public sealed class ImportWalkthroughTests(MigratedDatabaseFixture fixture)
         Assert.Equal("UNTRUSTED", ImportApi.NameOf(quality.GetProperty("clock"), "timeTrust"));
         Assert.Equal(0, quality.GetProperty("clock").GetProperty("invalidOrMissingRows").GetInt32());
 
-        using (var again = await _imports.PostAsync($"flights/{flight24}/quality", new { }))
-            Assert.Equal(FleetApi.IdOf(quality), FleetApi.IdOf(await ApiResponses.DataOf(again)));
+        using (var sameVersions = await _imports.PostAsync($"flights/{flight24}/recompute", new { }))
+        {
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, sameVersions.StatusCode);
+            Assert.Equal(80321, await ApiResponses.FirstErrorCodeOf(sameVersions));
+        }
+
+        using (var preview = await _imports.PostAsync($"flights/{flight24}/recompute", new { dryRun = true }))
+        {
+            var recompute = await ApiResponses.DataOf(preview);
+
+            Assert.True(recompute.GetProperty("dryRun").GetBoolean());
+            Assert.Equal(0, recompute.GetProperty("preview").GetProperty("changedSamples").GetInt32());
+            Assert.Equal("C", ImportApi.NameOf(recompute.GetProperty("preview"), "proposedGrade"));
+        }
 
         var detail = await _imports.GetDataAsync($"flights/{flight24}");
         Assert.Equal("C", ImportApi.NameOf(detail, "grade"));
@@ -222,6 +237,113 @@ public sealed class ImportWalkthroughTests(MigratedDatabaseFixture fixture)
         Assert.Equal(8, grades.Values.Sum());
         Assert.Equal(8, aircraft.GetProperty("untrustedTime").GetInt32());
         Assert.Equal(8, aircraft.GetProperty("withDiscontinuity").GetInt32());
+    }
+
+    private async Task PhasesAreEvaluatedOnCommit(string flight24, string aircraftId)
+    {
+        var golden = ImportApi.GoldenOf(Flight24);
+        var goldenPhase = golden.GetProperty("phase");
+        var rows = ImportApi.GoldenRowsOf(Flight24);
+        var phases = await _imports.GetDataAsync($"flights/{flight24}/phases");
+        var anchors = phases.GetProperty("anchors").EnumerateArray().ToDictionary(anchor => anchor.GetProperty("code").GetString()!);
+        var segments = phases.GetProperty("segments").EnumerateArray().ToList();
+        var lastClimbEnd = segments.Where(segment => ImportApi.NameOf(segment, "phase") == "CLIMB").Max(segment => segment.GetProperty("endIndexInclusive").GetInt32());
+
+        Assert.Equal(1, phases.GetProperty("revisionNumber").GetInt32());
+        Assert.Equal("PROVISIONAL", ImportApi.NameOf(phases, "status"));
+        Assert.Equal(("phase-v1.0.3", "MATCHES_REFERENCE"), (phases.GetProperty("reference").GetProperty("algorithm").GetString(), ImportApi.NameOf(phases.GetProperty("reference"), "match")));
+        Assert.Equal(("CANDIDATE", "PENDING"), (ImportApi.NameOf(phases.GetProperty("ruleSet"), "calibrationStatus"), ImportApi.NameOf(phases.GetProperty("ruleSet"), "engineeringSignOff")));
+        Assert.False(string.IsNullOrWhiteSpace(phases.GetProperty("ruleSet").GetProperty("description").GetString()));
+        Assert.Equal(goldenPhase.GetProperty("liftoffBasis").GetString(), ImportApi.NameOf(anchors["LIFTOFF"], "basis"));
+        Assert.Equal(goldenPhase.GetProperty("touchdownIndex").GetInt32(), anchors["TOUCHDOWN"].GetProperty("index").GetInt32());
+        Assert.Equal(goldenPhase.GetProperty("segments").GetArrayLength(), segments.Count);
+        Assert.Equal(rows, segments.Sum(segment => segment.GetProperty("endIndexInclusive").GetInt32() - segment.GetProperty("startIndex").GetInt32() + 1));
+        Assert.Contains(segments, segment => ImportApi.NameOf(segment, "phase") == "LANDING_ROLL");
+        Assert.True(lastClimbEnd < rows - 120);
+        Assert.Equal(segments.Count, phases.GetProperty("transitions").GetArrayLength());
+
+        var why = await _imports.GetDataAsync($"flights/{flight24}/phases/explain?sampleIndex=3886");
+
+        Assert.Equal(("UNKNOWN", "ALTITUDE_RATE_UNTRUSTED"), (ImportApi.NameOf(why, "phase"), ImportApi.NameOf(why, "unknownReason")));
+        Assert.Equal("R-ALTITUDE_RATE_UNTRUSTED", why.GetProperty("firedRuleId").GetString());
+        Assert.Contains(why.GetProperty("masks").EnumerateArray(), mask => mask.GetProperty("jumpIndex").GetInt32() == 3887);
+
+        using (var outside = await _imports.GetAsync($"flights/{flight24}/phases/explain?sampleIndex={rows}"))
+        {
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, outside.StatusCode);
+            Assert.Equal(80320, await ApiResponses.FirstErrorCodeOf(outside));
+        }
+
+        var events = await _imports.GetDataAsync($"flights/{flight24}/events");
+        var deployedRows = golden.GetProperty("identity").GetProperty("trDeployedRows");
+        var fire = events.GetProperty("coverage").EnumerateArray().Where(coverage => coverage.GetProperty("code").GetString() == "ENGINE_FIRE").ToList();
+
+        foreach (var position in new[] { 1, 2 })
+        {
+            var deployed = events.GetProperty("spans").EnumerateArray()
+                .Where(span => span.GetProperty("code").GetString() == "THRUST_REVERSER_DEPLOYED" && span.GetProperty("position").GetInt32() == position)
+                .Sum(span => span.GetProperty("endIndexInclusive").GetInt32() - span.GetProperty("startIndex").GetInt32() + 1);
+
+            Assert.Equal(deployedRows.GetProperty(position.ToString()).GetInt32(), deployed);
+        }
+
+        Assert.Equal(2, fire.Count);
+        Assert.All(fire, coverage => Assert.Equal("UNVERIFIED_ENUM", ImportApi.NameOf(coverage, "evaluability")));
+
+        var revision = Assert.Single((await _imports.GetDataAsync($"flights/{flight24}/revisions")).EnumerateArray());
+
+        Assert.Equal((1, "IMPORT", "CURRENT"), (revision.GetProperty("number").GetInt32(), ImportApi.NameOf(revision, "trigger"), ImportApi.NameOf(revision, "status")));
+        Assert.Equal(phases.GetProperty("analysisRevisionId").GetString(), FleetApi.IdOf(revision));
+        Assert.Equal(golden.GetProperty("identity").GetProperty("sha256").GetString(), revision.GetProperty("sourceSha256").GetString());
+
+        var rates = await _imports.GetDataAsync($"events/aircraft/{aircraftId}?from=2026-09-24&to=2026-10-01");
+        var reverser = rates.GetProperty("events").EnumerateArray().Single(rate => rate.GetProperty("code").GetString() == "THRUST_REVERSER_DEPLOYED");
+
+        Assert.Equal((8, 8, 8), (rates.GetProperty("flights").GetInt32(), rates.GetProperty("flightsWithPhases").GetInt32(), rates.GetProperty("landings").GetInt32()));
+        Assert.Equal((8, 8, 100.0), (reverser.GetProperty("evaluatedFlights").GetInt32(), reverser.GetProperty("flightsWithEvent").GetInt32(), reverser.GetProperty("perHundredLandings").GetDouble()));
+    }
+
+    private async Task APhaseDraftDryRunsWithoutBeingPublished(string flight24, string flight9072)
+    {
+        var activeId = FleetApi.IdOf(await _configuration.ActiveVersionOfAsync(ConfigurationApi.PhaseRuleSet));
+        var draftId = FleetApi.IdOf(await _configuration.CreateDraftAsync(ConfigurationApi.PhaseRuleSet, new { basedOnDocumentId = activeId }));
+        var content = await _configuration.ContentOfAsync(ConfigurationApi.PhaseRuleSet, draftId);
+        var cruise = content["conditions"]!.AsArray().Single(condition => condition!["code"]!.GetValue<string>() == "CRUISE")!;
+
+        cruise["minSec"] = 240;
+
+        using (var edited = await _configuration.PutAsync($"config/{ConfigurationApi.PhaseRuleSet}/documents/{draftId}", new { content }))
+            Assert.Equal(HttpStatusCode.OK, edited.StatusCode);
+
+        var shorterCruises = await DryRunPhasesAsync(draftId, flight9072);
+
+        Assert.Equal(213 + 184, shorterCruises.GetProperty("changedSamples").GetInt32());
+        Assert.All(shorterCruises.GetProperty("changes").EnumerateArray(), change =>
+            Assert.Equal(("CRUISE", "LEVEL"), (ImportApi.NameOf(change, "before"), ImportApi.NameOf(change, "after"))));
+        Assert.Equal("DRAFT", ImportApi.NameOf(shorterCruises, "proposedPhaseRuleSetStatus"));
+        Assert.Equal(activeId, shorterCruises.GetProperty("currentPhaseRuleSetDocumentId").GetString());
+
+        var longCruise = await DryRunPhasesAsync(draftId, flight24);
+
+        Assert.Equal(0, longCruise.GetProperty("changedSamples").GetInt32());
+        Assert.Equal(activeId, FleetApi.IdOf(await _configuration.ActiveVersionOfAsync(ConfigurationApi.PhaseRuleSet)));
+        Assert.Equal(1, (await _imports.GetDataAsync($"flights/{flight9072}/phases")).GetProperty("revisionNumber").GetInt32());
+
+        var catalogId = FleetApi.IdOf(await _configuration.ActiveVersionOfAsync(ConfigurationApi.Catalog));
+
+        using var catalog = await _imports.PostAsync($"config/{ConfigurationApi.Catalog}/documents/{catalogId}/dry-run/phases", new { flightId = flight24 });
+
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, catalog.StatusCode);
+        Assert.Equal(80111, await ApiResponses.FirstErrorCodeOf(catalog));
+    }
+
+    private async Task<JsonElement> DryRunPhasesAsync(string draftId, string flightId)
+    {
+        using var response = await _imports.PostAsync($"config/{ConfigurationApi.PhaseRuleSet}/documents/{draftId}/dry-run/phases", new { flightId });
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        return await ApiResponses.DataOf(response);
     }
 
     private async Task ACatalogDraftDryRunsOnFlight25(string flight25)

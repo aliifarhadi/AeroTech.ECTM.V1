@@ -1,0 +1,430 @@
+{
+  "ruleSetCode": "EP-DOA-PHASE",
+  "title": "قواعد تشخیص فاز پرواز EP-DOA",
+  "description": "این قواعد فاز هر ثانیهٔ پرواز (تاکسی، شروع برخاست، برخاست، صعود، کروز، پرواز هم‌تراز، نزول، فرود و تاکسی پس از فرود) را از کانال‌های ثبت‌شده تشخیص می‌دهند. منطق آن‌ها همان الگوریتم مرجع پک ECTM v3.3 است و روی ۸ پرواز مرجع و ۱۰۲ پرواز واقعی با آن برابر است. سامانه هر نسخه را خودش با مرجع مقایسه می‌کند و هر تغییری نسبت به مرجع را نشان می‌دهد. آستانه‌ها پیشنهادی‌اند و هنوز کالیبره نشده‌اند و مهندس پرواز هم آن‌ها را تأیید نکرده است. دلیل هر انتخاب در بخش decisions آمده است.",
+  "calibrationStatus": "CANDIDATE",
+  "engineeringSignOff": "PENDING",
+  "source": "pack v3.3 reference/ectm_oracle.py phase() (phase-v1.0.3; reproduces fixtures/golden 8/8) with the values of contracts/policy-defaults-v1.json -> phase (policy v1-calibration-candidate); measured on all 102 real files of samples/ (stage/P05 GAP-ANALYSIS); every departure from contracts/phase-ruleset-runtime-v1.json is a decision below",
+  "derivedChannels": [
+    {
+      "operator": "CENTRAL_DIFFERENCE_RATE",
+      "code": "ALT_RATE_FPM",
+      "parameter": "PRESSURE_ALT_FT",
+      "halfWindowSec": 15,
+      "nearestToleranceSec": 2,
+      "perSeconds": 60
+    },
+    {
+      "operator": "MEDIAN_SMOOTH",
+      "code": "ALT_RATE_SMOOTH_FPM",
+      "source": "ALT_RATE_FPM",
+      "points": 5,
+      "minValid": 3,
+      "nullInsideMasks": ["ALTITUDE_RATE_UNTRUSTED"]
+    }
+  ],
+  "anchors": [
+    {
+      "operator": "FIRST_UPWARD_CROSSING",
+      "code": "LIFTOFF",
+      "channel": "RADIO_HEIGHT_FT",
+      "aboveValue": 50,
+      "at": { "operator": "COMPARE", "channel": "CAS_KT", "op": "GE", "value": 100 },
+      "sustainSec": 10,
+      "basis": "RADIO_HEIGHT_CROSSING",
+      "fallbackBases": ["PARTIAL_START"]
+    },
+    {
+      "operator": "SUSTAINED_TRANSITION",
+      "code": "TOUCHDOWN",
+      "channel": "AIR_GROUND",
+      "from": "AIR",
+      "to": "GND",
+      "holdSec": 5,
+      "pick": "FIRST",
+      "afterAnchor": "LIFTOFF",
+      "basis": "AIRGROUND_DISCRETE_LAGGED",
+      "fallbackBases": []
+    }
+  ],
+  "conditions": [
+    {
+      "operator": "SUSTAINED",
+      "code": "GROUND",
+      "minSec": 10,
+      "predicate": {
+        "operator": "ALL",
+        "of": [
+          { "operator": "EQUALS", "channel": "AIR_GROUND", "value": "GND" },
+          { "operator": "COMPARE", "channel": "GROUNDSPEED_KT", "op": "LT", "value": 35 },
+          { "operator": "COMPARE", "channel": "CAS_KT", "op": "LT", "value": 60 },
+          { "operator": "ABS_COMPARE", "channel": "ALT_RATE_SMOOTH_FPM", "op": "LT", "value": 200, "nullAllowed": false }
+        ]
+      }
+    },
+    {
+      "operator": "SAMPLES_WHERE",
+      "code": "AIRBORNE",
+      "predicate": {
+        "operator": "ANY",
+        "of": [
+          {
+            "operator": "ALL",
+            "of": [
+              { "operator": "EQUALS", "channel": "AIR_GROUND", "value": "AIR" },
+              {
+                "operator": "ANY",
+                "of": [
+                  { "operator": "COMPARE", "channel": "GROUNDSPEED_KT", "op": "GE", "value": 100 },
+                  { "operator": "COMPARE", "channel": "CAS_KT", "op": "GE", "value": 90 },
+                  { "operator": "COMPARE", "channel": "MACH", "op": "GE", "value": 0.2 }
+                ]
+              }
+            ]
+          },
+          {
+            "operator": "ALL",
+            "of": [
+              { "operator": "COMPARE", "channel": "RADIO_HEIGHT_FT", "op": "GT", "value": 50 },
+              { "operator": "COMPARE", "channel": "CAS_KT", "op": "GE", "value": 90 }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operator": "SUSTAINED",
+      "code": "CLIMB",
+      "minSec": 20,
+      "predicate": {
+        "operator": "ALL",
+        "of": [
+          { "operator": "IN_CONDITION", "condition": "AIRBORNE" },
+          { "operator": "COMPARE", "channel": "ALT_RATE_SMOOTH_FPM", "op": "GE", "value": 300 }
+        ]
+      }
+    },
+    {
+      "operator": "SUSTAINED",
+      "code": "DESCENT",
+      "minSec": 20,
+      "predicate": {
+        "operator": "ALL",
+        "of": [
+          { "operator": "IN_CONDITION", "condition": "AIRBORNE" },
+          { "operator": "COMPARE", "channel": "ALT_RATE_SMOOTH_FPM", "op": "LE", "value": -300 }
+        ]
+      }
+    },
+    {
+      "operator": "SUSTAINED",
+      "code": "LEVEL",
+      "minSec": 20,
+      "predicate": {
+        "operator": "ALL",
+        "of": [
+          { "operator": "IN_CONDITION", "condition": "AIRBORNE" },
+          { "operator": "ABS_COMPARE", "channel": "ALT_RATE_SMOOTH_FPM", "op": "LE", "value": 200 }
+        ]
+      }
+    },
+    {
+      "operator": "SUSTAINED",
+      "code": "CRUISE",
+      "minSec": 180,
+      "predicate": {
+        "operator": "ALL",
+        "of": [
+          { "operator": "IN_CONDITION", "condition": "LEVEL" },
+          { "operator": "COMPARE", "channel": "MACH", "op": "GE", "value": 0.35 }
+        ]
+      }
+    },
+    {
+      "operator": "ANCHOR_WINDOW",
+      "code": "TAKEOFF",
+      "anchor": "LIFTOFF",
+      "afterSec": 120,
+      "where": { "operator": "NOT", "predicate": { "operator": "IN_CONDITION", "condition": "GROUND" } }
+    },
+    {
+      "operator": "BACK_FROM_ANCHOR_WHILE",
+      "code": "TAKEOFF_ROLL",
+      "anchor": "LIFTOFF",
+      "lookbackSec": 120,
+      "while": {
+        "operator": "ALL",
+        "of": [
+          { "operator": "COMPARE", "channel": "GROUNDSPEED_KT", "op": "GE", "value": 40 },
+          { "operator": "COMPARE", "channel": "RADIO_HEIGHT_FT", "op": "LE", "value": 50 },
+          { "operator": "NOT", "predicate": { "operator": "IN_CONDITION", "condition": "GROUND" } }
+        ]
+      }
+    },
+    {
+      "operator": "FROM_ANCHOR_WHILE",
+      "code": "LANDING_ROLL",
+      "anchor": "TOUCHDOWN",
+      "startWhen": { "operator": "COMPARE", "channel": "GROUNDSPEED_KT", "op": "GE", "value": 80 },
+      "while": { "operator": "COMPARE", "channel": "GROUNDSPEED_KT", "op": "GE", "value": 35 }
+    }
+  ],
+  "labelRules": [
+    {
+      "id": "R-GROUND",
+      "label": "GROUND",
+      "when": { "operator": "IN_CONDITION", "condition": "GROUND" },
+      "beforeAnchor": { "anchor": "LIFTOFF", "label": "TAXI_OUT" },
+      "afterAnchor": { "anchor": "TOUCHDOWN", "label": "TAXI_IN" }
+    },
+    { "id": "R-LANDING_ROLL", "label": "LANDING_ROLL", "when": { "operator": "IN_CONDITION", "condition": "LANDING_ROLL" } },
+    { "id": "R-TAKEOFF_ROLL", "label": "TAKEOFF_ROLL", "when": { "operator": "IN_CONDITION", "condition": "TAKEOFF_ROLL" } },
+    { "id": "R-TAKEOFF", "label": "TAKEOFF", "when": { "operator": "IN_CONDITION", "condition": "TAKEOFF" } },
+    {
+      "id": "R-ALTITUDE_RATE_UNTRUSTED",
+      "label": "UNKNOWN",
+      "unknownReason": "ALTITUDE_RATE_UNTRUSTED",
+      "when": { "operator": "IN_MASK", "mask": "ALTITUDE_RATE_UNTRUSTED" }
+    },
+    { "id": "R-CRUISE", "label": "CRUISE", "when": { "operator": "IN_CONDITION", "condition": "CRUISE" } },
+    { "id": "R-CLIMB", "label": "CLIMB", "when": { "operator": "IN_CONDITION", "condition": "CLIMB" } },
+    { "id": "R-DESCENT", "label": "DESCENT", "when": { "operator": "IN_CONDITION", "condition": "DESCENT" } },
+    { "id": "R-LEVEL", "label": "LEVEL", "when": { "operator": "IN_CONDITION", "condition": "LEVEL" } }
+  ],
+  "fallback": { "label": "UNKNOWN", "unknownReason": "INSUFFICIENT_EVIDENCE" },
+  "postProcessing": [
+    { "operator": "ADJACENT_GAP_UNKNOWN", "unknownReason": "RECORDING_GAP" },
+    {
+      "operator": "DROP_SHORT_ISLAND",
+      "minSec": 10,
+      "exempt": ["UNKNOWN", "TAKEOFF", "TAKEOFF_ROLL", "LANDING_ROLL"],
+      "unknownReason": "SHORT_ISLAND"
+    },
+    {
+      "operator": "UNCORROBORATED_CLIMB_IN_DESCENT_UNKNOWN",
+      "maxSec": 60,
+      "corroboratedBy": { "operator": "EQUALS", "channel": "TOGA", "value": "Engaged" },
+      "unknownReason": "UNCORROBORATED_CLIMB_IN_DESCENT"
+    }
+  ],
+  "segments": {
+    "coherenceSuspectMasks": ["AIRGROUND_LAGS_RADIO_HEIGHT", "ENGINE_CHANNELS_LAG_KINEMATICS"],
+    "edgeExemptLabels": ["GROUND", "TAXI_OUT", "TAXI_IN"],
+    "mediumConfidenceLabels": ["TAKEOFF", "TAKEOFF_ROLL", "LANDING_ROLL", "LEVEL"],
+    "evidenceCodes": {
+      "GROUND": ["AIR_GROUND_GND", "GS_LT35", "CAS_LT60", "ALT_RATE_LT200"],
+      "TAXI_OUT": ["GROUND_BEFORE_LIFTOFF"],
+      "TAXI_IN": ["GROUND_AFTER_TOUCHDOWN"],
+      "TAKEOFF_ROLL": ["GS_GE40_BEFORE_RH_LIFTOFF"],
+      "TAKEOFF": ["RH_LIFTOFF_PLUS_120S"],
+      "LANDING_ROLL": ["AIRGROUND_TOUCHDOWN_GS_GE80"],
+      "CLIMB": ["AIR_AND_KINEMATICS", "ALT_RATE_GE300"],
+      "DESCENT": ["AIR_AND_KINEMATICS", "ALT_RATE_LE_MINUS300"],
+      "CRUISE": ["AIR_AND_KINEMATICS", "ALT_RATE_ABS_LE200", "MACH_GE035_180S"],
+      "LEVEL": ["AIR_AND_KINEMATICS", "ALT_RATE_ABS_LE200"],
+      "UNKNOWN": ["INSUFFICIENT_EVIDENCE"]
+    }
+  },
+  "events": [
+    {
+      "code": "THRUST_REVERSER_DEPLOYED",
+      "parameter": "TR_DEPLOYED",
+      "activeValue": "Deployed",
+      "enabled": true,
+      "valuesAtStartAndEnd": ["GROUNDSPEED_KT"],
+      "peakDuring": ["N1_PCT"],
+      "note": "Deployed on 0.4 % of all samples of samples/ per engine, in all 102 flights"
+    },
+    {
+      "code": "TOGA_ENGAGED",
+      "parameter": "TOGA",
+      "activeValue": "Engaged",
+      "enabled": true,
+      "valuesAtStartAndEnd": ["CAS_KT", "RADIO_HEIGHT_FT"],
+      "peakDuring": ["N1_PCT"],
+      "note": "Engaged on 2.5 % of all samples of samples/, in all 102 flights"
+    },
+    {
+      "code": "AUTOTHROTTLE_MANUAL_DISCONNECT",
+      "parameter": "AT_MANUAL_DISCONNECT",
+      "activeValue": "Disconnect",
+      "enabled": true,
+      "valuesAtStartAndEnd": ["CAS_KT", "PRESSURE_ALT_FT"],
+      "peakDuring": [],
+      "note": "Disconnect on 0.1 % of all samples of samples/, in 100 of 102 flights"
+    },
+    {
+      "code": "AUTOTHROTTLE_WARNING_RIGHT",
+      "parameter": "AT_WARN_R",
+      "activeValue": "Warning",
+      "enabled": true,
+      "valuesAtStartAndEnd": ["CAS_KT"],
+      "peakDuring": [],
+      "note": "Warning on 0.8 % of all samples of samples/, in all 102 flights"
+    },
+    {
+      "code": "AUTOTHROTTLE_WARNING_LEFT",
+      "parameter": "AT_WARN_L",
+      "activeValue": "Warning",
+      "enabled": false,
+      "valuesAtStartAndEnd": ["CAS_KT"],
+      "peakDuring": [],
+      "note": "Warning on 50.4 % of all samples of samples/ (all 102 flights); the meaning of the literal is unverified, so the channel is not evaluated"
+    },
+    {
+      "code": "ENGINE_CUTOFF",
+      "parameter": "ENGINE_CUTOFF",
+      "activeValue": "Cutoff",
+      "enabled": true,
+      "valuesAtStartAndEnd": ["GROUNDSPEED_KT", "N1_PCT"],
+      "peakDuring": [],
+      "note": "Cutoff in 6 flights on engine 1 and 7 flights on engine 2 of samples/"
+    },
+    {
+      "code": "ENGINE_FIRE",
+      "parameter": "ENGINE_FIRE",
+      "activeValue": null,
+      "enabled": false,
+      "valuesAtStartAndEnd": [],
+      "peakDuring": [],
+      "note": "Only 'No Fire' is recorded in samples/; the active literal is unknown until the recorder documentation names it"
+    },
+    {
+      "code": "STICK_SHAKER_LEFT",
+      "parameter": "STICK_SHAKER_L",
+      "activeValue": null,
+      "enabled": false,
+      "valuesAtStartAndEnd": [],
+      "peakDuring": [],
+      "note": "Only 'No Shake' is recorded in samples/; the active literal is unknown until the recorder documentation names it"
+    },
+    {
+      "code": "STICK_SHAKER_RIGHT",
+      "parameter": "STICK_SHAKER_R",
+      "activeValue": null,
+      "enabled": false,
+      "valuesAtStartAndEnd": [],
+      "peakDuring": [],
+      "note": "Only 'No Shake' is recorded in samples/; the active literal is unknown until the recorder documentation names it"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "P05-D01",
+      "topic": "Reference algorithm",
+      "choice": "Express the pack oracle phase() of phase-v1.0.3 exactly",
+      "basis": "It reproduces the 8 goldens; the pack runtime AST is a candidate whose equivalence is unverified (docs/28 section 1) and differs from the goldens in the points of P05-D02 to P05-D08",
+      "alternative": "Adopt contracts/phase-ruleset-runtime-v1.json as written",
+      "howToChange": "Edit the parts named in P05-D02 to P05-D08 in a draft, dry-run it on flights, then publish",
+      "appliesTo": ["document"]
+    },
+    {
+      "id": "P05-D02",
+      "topic": "Touchdown",
+      "choice": "The FIRST AIR to GND change of the discrete that holds 5 s, after lift-off",
+      "basis": "The goldens use it; on all 102 real files there is exactly one such change, so FIRST and LAST give the same sample",
+      "alternative": "LAST, as in docs/04 section 3 and the pack AST",
+      "howToChange": "Set anchors TOUCHDOWN pick to LAST",
+      "appliesTo": ["anchors/TOUCHDOWN"]
+    },
+    {
+      "id": "P05-D03",
+      "topic": "Ground evidence",
+      "choice": "Ground needs AIR_GROUND = GND and a valid smoothed rate (nullAllowed false)",
+      "basis": "The goldens use it",
+      "alternative": "The pack AST: no discrete test and a missing rate allowed",
+      "howToChange": "Remove the EQUALS AIR_GROUND test or set nullAllowed to true in conditions GROUND",
+      "appliesTo": ["conditions/GROUND"]
+    },
+    {
+      "id": "P05-D04",
+      "topic": "Airborne evidence",
+      "choice": "The speed tests count only while AIR_GROUND = AIR; radio height above 50 ft with CAS of 90 kt or more counts on its own",
+      "basis": "The goldens use it",
+      "alternative": "The pack AST: the speed tests without the discrete",
+      "howToChange": "Edit the predicate of conditions AIRBORNE",
+      "appliesTo": ["conditions/AIRBORNE"]
+    },
+    {
+      "id": "P05-D05",
+      "topic": "Takeoff roll",
+      "choice": "Walk back from lift-off while GS is 40 kt or more, radio height is 50 ft or less and the sample is not ground, for at most 120 s",
+      "basis": "The goldens use it",
+      "alternative": "The pack AST: from the last GS below 40 kt to lift-off",
+      "howToChange": "Edit the while predicate or lookbackSec of conditions TAKEOFF_ROLL",
+      "appliesTo": ["conditions/TAKEOFF_ROLL"]
+    },
+    {
+      "id": "P05-D06",
+      "topic": "Takeoff",
+      "choice": "Lift-off to 120 s after it, excluding ground samples",
+      "basis": "The goldens use it",
+      "alternative": "The pack AST: the whole window",
+      "howToChange": "Remove the where predicate of conditions TAKEOFF",
+      "appliesTo": ["conditions/TAKEOFF"]
+    },
+    {
+      "id": "P05-D07",
+      "topic": "Late landing roll",
+      "choice": "A landing roll is claimed only when GS is 80 kt or more at touchdown; no fallback",
+      "basis": "The goldens use it; in 9 of 102 real flights the discrete reaches GND only at GS 18 to 37 kt, so no landing roll is claimed there",
+      "alternative": "A fallback touchdown from radio height or deceleration, which needs the flight engineer",
+      "howToChange": "Lower startWhen of conditions LANDING_ROLL, or add a fallback anchor after the engineer's review",
+      "appliesTo": ["conditions/LANDING_ROLL", "anchors/TOUCHDOWN"]
+    },
+    {
+      "id": "P05-D08",
+      "topic": "Partial start",
+      "choice": "The lift-off fallback PARTIAL_START uses the quality result (radio height above 20 ft at the first sample)",
+      "basis": "The goldens use it; 20 of 102 real files start airborne",
+      "alternative": "The pack AST: AIR_GROUND = AIR or radio height above 20 ft",
+      "howToChange": "Change partial.startRadioHeightAboveFt in QUALITY_RULES, or remove PARTIAL_START from the lift-off fallbackBases",
+      "appliesTo": ["anchors/LIFTOFF"]
+    },
+    {
+      "id": "P05-D09",
+      "topic": "Thresholds",
+      "choice": "Every number is the value of policy-defaults-v1.json -> phase; minValid 3 is the oracle's fixed value",
+      "basis": "Pack values, CANDIDATE until calibration in P13 on an independent corpus",
+      "alternative": "Values proposed by the flight engineer",
+      "howToChange": "Edit the number in a draft and compare with the dry-run before publishing",
+      "appliesTo": ["document"]
+    },
+    {
+      "id": "P05-D10",
+      "topic": "Invalid groundspeed at power-up",
+      "choice": "No groundspeed plausibility gate; such samples stay UNKNOWN",
+      "basis": "In 2026-10-05_EP-DOA_14200 GS reads 335 to 365 kt on the ground for 868 s, so 18.6 % of the flight is UNKNOWN; claiming a phase there would be invented",
+      "alternative": "A plausibility test on GS against CAS on the ground, after the engineer's review",
+      "howToChange": "Add a predicate to conditions GROUND",
+      "appliesTo": ["conditions/GROUND"]
+    },
+    {
+      "id": "P05-D11",
+      "topic": "Events",
+      "choice": "Spans of the observed active literals; fire and stick shaker are not evaluated because only their inactive literal is recorded; the left A/T warning is not evaluated; AT_ENGAGED is a state, not an event",
+      "basis": "Literal shares measured on all 102 real files of samples/ (the note of each event)",
+      "alternative": "Enable a channel once the recorder documentation names its active literal and meaning",
+      "howToChange": "Set enabled and activeValue of the event",
+      "appliesTo": ["events/ENGINE_FIRE", "events/STICK_SHAKER_LEFT", "events/STICK_SHAKER_RIGHT", "events/AUTOTHROTTLE_WARNING_LEFT"]
+    },
+    {
+      "id": "P05-D12",
+      "topic": "Evidence codes",
+      "choice": "The oracle's evidence codes, which quote the default thresholds",
+      "basis": "The goldens use them",
+      "alternative": "Codes without numbers",
+      "howToChange": "Edit segments evidenceCodes together with the threshold they quote",
+      "appliesTo": ["segments"]
+    },
+    {
+      "id": "P05-D13",
+      "topic": "Engineering sign-off",
+      "choice": "PENDING",
+      "basis": "Never inferred automatically (PHASE-05 exit criteria)",
+      "alternative": "APPROVED after the flight engineer's review",
+      "howToChange": "Set engineeringSignOff in a new version with the reviewer's approval note",
+      "appliesTo": ["document"]
+    }
+  ]
+}

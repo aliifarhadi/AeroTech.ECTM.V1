@@ -10,10 +10,11 @@ namespace AeroTech.ECTM.Domain.FlightQualityAggregate
         {
         }
 
-        private FlightQuality(long id, long flightId, long qualityRulesDocumentId, int qualityRulesVersion, QualityResult result, DateTimeOffset evaluatedAt)
+        private FlightQuality(long id, long flightId, long analysisRevisionId, long qualityRulesDocumentId, int qualityRulesVersion, QualityResult result, DateTimeOffset evaluatedAt)
         {
             Id = id;
             FlightId = flightId;
+            AnalysisRevisionId = analysisRevisionId;
             QualityRulesDocumentId = qualityRulesDocumentId;
             QualityRulesVersion = qualityRulesVersion;
             Status = ResultStatus.PROVISIONAL;
@@ -28,6 +29,8 @@ namespace AeroTech.ECTM.Domain.FlightQualityAggregate
         }
 
         public long FlightId { get; private set; }
+
+        public long AnalysisRevisionId { get; private set; }
 
         public long QualityRulesDocumentId { get; private set; }
 
@@ -51,8 +54,8 @@ namespace AeroTech.ECTM.Domain.FlightQualityAggregate
 
         public string Result { get; private set; } = default!;
 
-        public static FlightQuality Record(long id, long flightId, long qualityRulesDocumentId, int qualityRulesVersion, QualityResult result, DateTimeOffset now)
-            => new(id, flightId, qualityRulesDocumentId, qualityRulesVersion, result, now);
+        public static FlightQuality Record(long id, long flightId, long analysisRevisionId, long qualityRulesDocumentId, int qualityRulesVersion, QualityResult result, DateTimeOffset now)
+            => new(id, flightId, analysisRevisionId, qualityRulesDocumentId, qualityRulesVersion, result, now);
 
         public QualityResult ReadResult() => QualityResult.FromJson(Result);
 

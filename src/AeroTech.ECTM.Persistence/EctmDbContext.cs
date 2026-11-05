@@ -1,11 +1,13 @@
 using AeroTech.ECTM.Domain._Shared.Resources;
 using AeroTech.ECTM.Domain.AircraftAggregate;
+using AeroTech.ECTM.Domain.AnalysisRevisionAggregate;
 using AeroTech.ECTM.Domain.AuditEntryAggregate;
 using AeroTech.ECTM.Domain.ConfigurationDocumentAggregate;
 using AeroTech.ECTM.Domain.EngineAggregate;
 using AeroTech.ECTM.Domain.EngineInstallationAggregate;
 using AeroTech.ECTM.Domain.EngineModelAggregate;
 using AeroTech.ECTM.Domain.FlightAggregate;
+using AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate;
 using AeroTech.ECTM.Domain.FlightQualityAggregate;
 using AeroTech.ECTM.Domain.ImportBatchAggregate;
 using AeroTech.ECTM.Domain.MaintenanceEventAggregate;
@@ -70,6 +72,10 @@ namespace AeroTech.ECTM.Persistence
         public DbSet<ProcessingJob> ProcessingJobs => Set<ProcessingJob>();
 
         public DbSet<FlightQuality> FlightQualities => Set<FlightQuality>();
+
+        public DbSet<AnalysisRevision> AnalysisRevisions => Set<AnalysisRevision>();
+
+        public DbSet<FlightPhaseAssessment> FlightPhaseAssessments => Set<FlightPhaseAssessment>();
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {

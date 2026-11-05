@@ -186,5 +186,20 @@ namespace AeroTech.ECTM.Domain._Shared.Resources
 
         public static BusinessException FlightQualityNotEvaluated(params object?[] args) =>
             new(80318, ExceptionMessages.FlightQualityNotEvaluated, args) { HttpStatus = 404 };
+
+        public static BusinessException FlightPhasesNotEvaluated(params object?[] args) =>
+            new(80319, ExceptionMessages.FlightPhasesNotEvaluated, args) { HttpStatus = 404 };
+
+        public static BusinessException SampleIndexOutOfRange(params object?[] args) =>
+            new(80320, ExceptionMessages.SampleIndexOutOfRange, args) { HttpStatus = 422 };
+
+        public static BusinessException RecomputeChangesNothing(params object?[] args) =>
+            new(80321, ExceptionMessages.RecomputeChangesNothing, args) { HttpStatus = 422 };
+
+        public static BusinessException RecomputeAlreadyPending(params object?[] args) =>
+            new(80322, ExceptionMessages.RecomputeAlreadyPending, args) { HttpStatus = 409 };
+
+        public static BusinessException DocumentNotPublishedOfKind(params object?[] args) =>
+            new(80323, ExceptionMessages.DocumentNotPublishedOfKind, args) { HttpStatus = 422 };
     }
 }

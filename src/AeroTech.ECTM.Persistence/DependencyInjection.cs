@@ -1,22 +1,26 @@
 using AeroTech.ECTM.Domain.AircraftAggregate.Contracts;
+using AeroTech.ECTM.Domain.AnalysisRevisionAggregate.Contracts;
 using AeroTech.ECTM.Domain.AuditEntryAggregate.Contracts;
 using AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Contracts;
 using AeroTech.ECTM.Domain.EngineAggregate.Contracts;
 using AeroTech.ECTM.Domain.EngineInstallationAggregate.Contracts;
 using AeroTech.ECTM.Domain.EngineModelAggregate.Contracts;
 using AeroTech.ECTM.Domain.FlightAggregate.Contracts;
+using AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Contracts;
 using AeroTech.ECTM.Domain.FlightQualityAggregate.Contracts;
 using AeroTech.ECTM.Domain.ImportBatchAggregate.Contracts;
 using AeroTech.ECTM.Domain.MaintenanceEventAggregate.Contracts;
 using AeroTech.ECTM.Domain.ProcessingJobAggregate.Contracts;
 using AeroTech.ECTM.Domain.SourceFileAggregate.Contracts;
 using AeroTech.ECTM.Persistence.AircraftAggregate;
+using AeroTech.ECTM.Persistence.AnalysisRevisionAggregate;
 using AeroTech.ECTM.Persistence.AuditEntryAggregate;
 using AeroTech.ECTM.Persistence.ConfigurationDocumentAggregate;
 using AeroTech.ECTM.Persistence.EngineAggregate;
 using AeroTech.ECTM.Persistence.EngineInstallationAggregate;
 using AeroTech.ECTM.Persistence.EngineModelAggregate;
 using AeroTech.ECTM.Persistence.FlightAggregate;
+using AeroTech.ECTM.Persistence.FlightPhaseAssessmentAggregate;
 using AeroTech.ECTM.Persistence.FlightQualityAggregate;
 using AeroTech.ECTM.Persistence.ImportBatchAggregate;
 using AeroTech.ECTM.Persistence.MaintenanceEventAggregate;
@@ -58,6 +62,8 @@ namespace AeroTech.ECTM.Persistence
             services.AddScoped<IFlightRepository, FlightRepository>();
             services.AddScoped<IProcessingJobRepository, ProcessingJobRepository>();
             services.AddScoped<IFlightQualityRepository, FlightQualityRepository>();
+            services.AddScoped<IAnalysisRevisionRepository, AnalysisRevisionRepository>();
+            services.AddScoped<IFlightPhaseAssessmentRepository, FlightPhaseAssessmentRepository>();
 
             services.AddHealthChecks().AddDbContextReadinessCheck<EctmDbContext>("sql-server-command");
 

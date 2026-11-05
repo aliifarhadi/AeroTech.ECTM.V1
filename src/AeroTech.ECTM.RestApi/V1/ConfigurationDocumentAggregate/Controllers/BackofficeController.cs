@@ -3,6 +3,7 @@ using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Commands.PublishC
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Commands.RetireConfigurationDocument.Backoffice;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Commands.UpdateConfigurationDraft.Backoffice;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.DryRunOnFlight.Backoffice;
+using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.DryRunPhasesOnFlight.Backoffice;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.EvaluateTypedDefinition.Backoffice;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.GetConfigurationDocumentById.Backoffice;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.GetConfigurationDocumentDiff.Backoffice;
@@ -92,6 +93,10 @@ namespace AeroTech.ECTM.RestApi.V1.ConfigurationDocumentAggregate
 
             return Ok(await _mediator.Send(query, cancellationToken));
         }
+
+        [HttpPost("{kind}/documents/{documentId:long}/dry-run/phases")]
+        public async Task<IActionResult> DryRunPhasesOnFlight(string kind, long documentId, [FromBody] DryRunPhasesOnFlightRequest request, CancellationToken cancellationToken)
+            => Ok(await _mediator.Send(new BackofficeDryRunPhasesOnFlightQuery(kind, documentId, request.FlightId), cancellationToken));
 
         [HttpGet("{kind}/documents/{fromDocumentId:long}/diff/{toDocumentId:long}")]
         public async Task<IActionResult> Diff(string kind, long fromDocumentId, long toDocumentId, CancellationToken cancellationToken)

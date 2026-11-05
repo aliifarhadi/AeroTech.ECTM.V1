@@ -34,6 +34,14 @@ public sealed class ImportApi(MigratedDatabaseFixture fixture)
 
     public static byte[] RealBytes(string fileName) => File.ReadAllBytes(RepositoryPaths.Fixtures("real", fileName));
 
+    public static JsonElement GoldenOf(string fileName)
+    {
+        var golden = RepositoryPaths.Fixtures("golden", Path.ChangeExtension(fileName, ".oracle.json"));
+        using var document = JsonDocument.Parse(File.ReadAllBytes(golden));
+
+        return document.RootElement.Clone();
+    }
+
     public static int GoldenRowsOf(string fileName)
     {
         var golden = RepositoryPaths.Fixtures("golden", Path.ChangeExtension(fileName, ".oracle.json"));
@@ -98,6 +106,7 @@ public sealed class ImportApi(MigratedDatabaseFixture fixture)
         await configuration.EnsureActiveAsync(ConfigurationApi.Catalog);
         await configuration.EnsureActiveAsync(ConfigurationApi.Profile);
         await configuration.EnsureActiveAsync(ConfigurationApi.QualityRules);
+        await configuration.EnsureActiveAsync(ConfigurationApi.PhaseRuleSet);
     }
 
     public Task<HttpResponseMessage> PreviewAsync(IEnumerable<(string Name, byte[] Content)> files, string? defaultRegistration = null, int? defaultYear = null)

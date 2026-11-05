@@ -1,14 +1,22 @@
+using AeroTech.ECTM.Application._Shared.Behaviors;
+using AeroTech.ECTM.Application._Shared.Concurrency;
+using AeroTech.ECTM.Application._Shared.Events;
+using AeroTech.ECTM.Application._Shared.Paging;
 using AeroTech.ECTM.Application.AircraftAggregate.Commands.CreateAircraft;
 using AeroTech.ECTM.Application.AircraftAggregate.Commands.UpdateAircraft;
 using AeroTech.ECTM.Application.AircraftAggregate.Queries.GetAircraftById;
 using AeroTech.ECTM.Application.AircraftAggregate.Queries.GetAircraftPaginated;
 using AeroTech.ECTM.Application.AircraftAggregate.Services;
+using AeroTech.ECTM.Application.AnalysisRevisionAggregate.Commands.RecomputeFlight;
+using AeroTech.ECTM.Application.AnalysisRevisionAggregate.Queries.GetFlightRevisions;
+using AeroTech.ECTM.Application.AnalysisRevisionAggregate.Services;
 using AeroTech.ECTM.Application.AuditEntryAggregate.Queries.GetAuditEntriesPaginated;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Commands.CreateConfigurationDraft;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Commands.PublishConfigurationDocument;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Commands.RetireConfigurationDocument;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Commands.UpdateConfigurationDraft;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.DryRunOnFlight;
+using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.DryRunPhasesOnFlight;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.EvaluateTypedDefinition;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.GetConfigurationDocumentById;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.GetConfigurationDocumentDiff;
@@ -40,7 +48,11 @@ using AeroTech.ECTM.Application.FlightAggregate.Queries.GetFlightSamples;
 using AeroTech.ECTM.Application.FlightAggregate.Queries.GetFlightSeries;
 using AeroTech.ECTM.Application.FlightAggregate.Queries.GetFlightsPaginated;
 using AeroTech.ECTM.Application.FlightAggregate.Services;
-using AeroTech.ECTM.Application.FlightQualityAggregate.Commands.EvaluateFlightQuality;
+using AeroTech.ECTM.Application.FlightPhaseAssessmentAggregate.Queries.ExplainFlightPhase;
+using AeroTech.ECTM.Application.FlightPhaseAssessmentAggregate.Queries.GetAircraftEventRates;
+using AeroTech.ECTM.Application.FlightPhaseAssessmentAggregate.Queries.GetFlightEvents;
+using AeroTech.ECTM.Application.FlightPhaseAssessmentAggregate.Queries.GetFlightPhases;
+using AeroTech.ECTM.Application.FlightPhaseAssessmentAggregate.Services;
 using AeroTech.ECTM.Application.FlightQualityAggregate.Queries.GetAircraftQuality;
 using AeroTech.ECTM.Application.FlightQualityAggregate.Queries.GetFlightQuality;
 using AeroTech.ECTM.Application.FlightQualityAggregate.Services;
@@ -55,10 +67,6 @@ using AeroTech.ECTM.Application.MaintenanceEventAggregate.Queries.GetMaintenance
 using AeroTech.ECTM.Application.MaintenanceEventAggregate.Services;
 using AeroTech.ECTM.Application.ProcessingJobAggregate.Queries.GetProcessingJobById;
 using AeroTech.ECTM.Application.ProcessingJobAggregate.Services;
-using AeroTech.ECTM.Application._Shared.Behaviors;
-using AeroTech.ECTM.Application._Shared.Concurrency;
-using AeroTech.ECTM.Application._Shared.Events;
-using AeroTech.ECTM.Application._Shared.Paging;
 using AeroTech.Framework.Core.ServiceContracts;
 using FluentValidation;
 using MediatR;
@@ -91,6 +99,7 @@ namespace AeroTech.ECTM.Application
             services.AddScoped<IConfigurationContentValidator, ParameterCatalogContentValidator>();
             services.AddScoped<IConfigurationContentValidator, DataProfileContentValidator>();
             services.AddScoped<IConfigurationContentValidator, QualityRulesContentValidator>();
+            services.AddScoped<IConfigurationContentValidator, PhaseRuleSetContentValidator>();
             services.AddScoped<ConfigurationContentValidators>();
             services.AddScoped<ConfigurationDocumentLoader>();
             services.AddScoped<ActiveCatalogLoader>();
@@ -166,12 +175,21 @@ namespace AeroTech.ECTM.Application
             services.AddScoped<IGetFlightSeriesService, GetFlightSeriesService>();
             services.AddScoped<IGetFlightSamplesService, GetFlightSamplesService>();
 
-            services.AddScoped<ActiveQualityRulesLoader>();
             services.AddScoped<FlightQualityInputLoader>();
-            services.AddScoped<FlightQualityRecorder>();
-            services.AddScoped<IEvaluateFlightQualityService, EvaluateFlightQualityService>();
             services.AddScoped<IGetFlightQualityService, GetFlightQualityService>();
             services.AddScoped<IGetAircraftQualityService, GetAircraftQualityService>();
+
+            services.AddScoped<AnalysisRulesLoader>();
+            services.AddScoped<AnalysisRecorder>();
+            services.AddScoped<PhasePreviewer>();
+            services.AddScoped<IProcessingJobHandler, RecomputeJobHandler>();
+            services.AddScoped<IRecomputeFlightService, RecomputeFlightService>();
+            services.AddScoped<IGetFlightRevisionsService, GetFlightRevisionsService>();
+            services.AddScoped<IGetFlightPhasesService, GetFlightPhasesService>();
+            services.AddScoped<IExplainFlightPhaseService, ExplainFlightPhaseService>();
+            services.AddScoped<IGetFlightEventsService, GetFlightEventsService>();
+            services.AddScoped<IGetAircraftEventRatesService, GetAircraftEventRatesService>();
+            services.AddScoped<IDryRunPhasesOnFlightService, DryRunPhasesOnFlightService>();
 
             return services;
         }

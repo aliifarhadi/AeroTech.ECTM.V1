@@ -70,6 +70,90 @@ namespace AeroTech.ECTM.Persistence.Migrations
                     b.ToTable("Aircraft", "Ectm");
                 });
 
+            modelBuilder.Entity("AeroTech.ECTM.Domain.AnalysisRevisionAggregate.AnalysisRevision", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset?>("CompletedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long>("DataProfileDocumentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("DataProfileVersion")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FailureCode")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<long>("FlightId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("LastUpdateTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long?>("LastUpdatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
+
+                    b.Property<long>("ParameterCatalogDocumentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("ParameterCatalogVersion")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("PhaseRuleSetDocumentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("PhaseRuleSetVersion")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("ProcessingJobId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("QualityRulesDocumentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("QualityRulesVersion")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<string>("SourceSha256")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("SupersededAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Trigger")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FlightId", "Number")
+                        .IsUnique();
+
+                    b.HasIndex("FlightId", "Status");
+
+                    b.ToTable("AnalysisRevisions", "Ectm");
+                });
+
             modelBuilder.Entity("AeroTech.ECTM.Domain.AuditEntryAggregate.AuditEntry", b =>
                 {
                     b.Property<long>("Id")
@@ -797,9 +881,83 @@ namespace AeroTech.ECTM.Persistence.Migrations
                     b.ToTable("Flights", "Ectm");
                 });
 
+            modelBuilder.Entity("AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.FlightPhaseAssessment", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("AnalysisRevisionId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("EvaluatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("EventSpanCount")
+                        .HasColumnType("int");
+
+                    b.Property<long>("FlightId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("LastUpdateTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long?>("LastUpdatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("NotEvaluableReason")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<long>("PhaseRuleSetDocumentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("PhaseRuleSetVersion")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReferenceAlgorithm")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("ReferenceMatch")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Result")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int>("SegmentCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UnknownSampleCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnalysisRevisionId")
+                        .IsUnique();
+
+                    b.HasIndex("FlightId", "Status");
+
+                    b.ToTable("FlightPhaseAssessments", "Ectm");
+                });
+
             modelBuilder.Entity("AeroTech.ECTM.Domain.FlightQualityAggregate.FlightQuality", b =>
                 {
                     b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("AnalysisRevisionId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("DiscontinuityCount")
@@ -854,7 +1012,7 @@ namespace AeroTech.ECTM.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FlightId", "QualityRulesDocumentId")
+                    b.HasIndex("AnalysisRevisionId")
                         .IsUnique();
 
                     b.HasIndex("FlightId", "Status");

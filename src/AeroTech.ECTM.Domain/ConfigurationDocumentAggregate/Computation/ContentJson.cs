@@ -9,7 +9,9 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
 
         private static readonly JsonSerializerOptions StrictOptions = new(JsonSerializerDefaults.Web)
         {
-            UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow
+            UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
+            AllowOutOfOrderMetadataProperties = true,
+            Converters = { new JsonStringEnumConverter(allowIntegerValues: false) }
         };
 
         public static TContent? Read<TContent>(string content, List<ValidationIssue> issues)
@@ -22,6 +24,11 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
             catch (JsonException exception)
             {
                 issues.Add(new ValidationIssue(exception.Path ?? "$", ShapeInvalid, exception.Message));
+                return null;
+            }
+            catch (NotSupportedException exception)
+            {
+                issues.Add(new ValidationIssue("$", ShapeInvalid, exception.Message));
                 return null;
             }
         }

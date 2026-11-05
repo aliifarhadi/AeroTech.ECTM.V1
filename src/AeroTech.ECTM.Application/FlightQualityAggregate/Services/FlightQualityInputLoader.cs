@@ -12,9 +12,8 @@ namespace AeroTech.ECTM.Application.FlightQualityAggregate.Services
 
         public FlightQualityInputLoader(IFlightRepository flights) => _flights = flights;
 
-        public async Task<QualityInput> LoadAsync(Flight flight, QualityRulesContent rules, CancellationToken cancellationToken = default)
+        public async Task<QualityInput> LoadAsync(Flight flight, IReadOnlySet<string> neededCodes, CancellationToken cancellationToken = default)
         {
-            var neededCodes = NeededCodesOf(rules);
             var needed = flight.Channels
                 .Where(channel => channel.ParameterKey == flight.TimeParameterKey || neededCodes.Contains(channel.ParameterCode))
                 .ToList();
@@ -33,7 +32,7 @@ namespace AeroTech.ECTM.Application.FlightQualityAggregate.Services
             return new QualityInput(flight.SampleCount, elapsed, numbers, texts, statistics, flight.BlockingCount > 0);
         }
 
-        private static HashSet<string> NeededCodesOf(QualityRulesContent rules)
+        public static HashSet<string> CodesOf(QualityRulesContent rules)
         {
             var channels = rules.Channels!;
             var codes = new HashSet<string>(StringComparer.Ordinal)

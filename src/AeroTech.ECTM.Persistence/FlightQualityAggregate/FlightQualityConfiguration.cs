@@ -13,6 +13,7 @@ namespace AeroTech.ECTM.Persistence.FlightQualityAggregate
             builder.Property(quality => quality.Id).ValueGeneratedNever();
 
             builder.Property(quality => quality.FlightId).IsRequired();
+            builder.Property(quality => quality.AnalysisRevisionId).IsRequired();
             builder.Property(quality => quality.QualityRulesDocumentId).IsRequired();
             builder.Property(quality => quality.QualityRulesVersion).IsRequired();
             builder.Property(quality => quality.Status).IsRequired();
@@ -22,7 +23,7 @@ namespace AeroTech.ECTM.Persistence.FlightQualityAggregate
             builder.Property(quality => quality.EvaluatedAt).IsRequired();
             builder.Property(quality => quality.Result).HasColumnType("nvarchar(max)").IsRequired();
 
-            builder.HasIndex(quality => new { quality.FlightId, quality.QualityRulesDocumentId }).IsUnique();
+            builder.HasIndex(quality => quality.AnalysisRevisionId).IsUnique();
             builder.HasIndex(quality => new { quality.FlightId, quality.Status });
         }
     }

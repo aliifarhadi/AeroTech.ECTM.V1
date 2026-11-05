@@ -1,3 +1,5 @@
+using AeroTech.ECTM.Application.AnalysisRevisionAggregate.Commands.RecomputeFlight.Backoffice;
+using AeroTech.ECTM.Application.AnalysisRevisionAggregate.Queries.GetFlightRevisions.Backoffice;
 using AeroTech.ECTM.Application.FlightAggregate.Commands.ConfirmFlightIdentity.Backoffice;
 using AeroTech.ECTM.Application.FlightAggregate.Commands.ReviewFlight.Backoffice;
 using AeroTech.ECTM.Application.FlightAggregate.Queries.GetFlightById.Backoffice;
@@ -5,7 +7,9 @@ using AeroTech.ECTM.Application.FlightAggregate.Queries.GetFlightSamples.Backoff
 using AeroTech.ECTM.Application.FlightAggregate.Queries.GetFlightSeries;
 using AeroTech.ECTM.Application.FlightAggregate.Queries.GetFlightSeries.Backoffice;
 using AeroTech.ECTM.Application.FlightAggregate.Queries.GetFlightsPaginated.Backoffice;
-using AeroTech.ECTM.Application.FlightQualityAggregate.Commands.EvaluateFlightQuality.Backoffice;
+using AeroTech.ECTM.Application.FlightPhaseAssessmentAggregate.Queries.ExplainFlightPhase.Backoffice;
+using AeroTech.ECTM.Application.FlightPhaseAssessmentAggregate.Queries.GetFlightEvents.Backoffice;
+using AeroTech.ECTM.Application.FlightPhaseAssessmentAggregate.Queries.GetFlightPhases.Backoffice;
 using AeroTech.ECTM.Application.FlightQualityAggregate.Queries.GetFlightQuality.Backoffice;
 using AeroTech.ECTM.Domain.FlightAggregate.Arguments;
 using AeroTech.ECTM.Domain.FlightAggregate.Computation;
@@ -82,9 +86,29 @@ namespace AeroTech.ECTM.RestApi.V1.FlightAggregate
         public async Task<IActionResult> Quality(long flightId, CancellationToken cancellationToken)
             => Ok(await _mediator.Send(new BackofficeGetFlightQualityQuery(flightId), cancellationToken));
 
-        [HttpPost("{flightId:long}/quality")]
-        public async Task<IActionResult> EvaluateQuality(long flightId, CancellationToken cancellationToken)
-            => Ok(await _mediator.Send(new BackofficeEvaluateFlightQualityCommand(flightId), cancellationToken));
+        [HttpGet("{flightId:long}/phases")]
+        public async Task<IActionResult> Phases(long flightId, CancellationToken cancellationToken)
+            => Ok(await _mediator.Send(new BackofficeGetFlightPhasesQuery(flightId), cancellationToken));
+
+        [HttpGet("{flightId:long}/phases/explain")]
+        public async Task<IActionResult> ExplainPhase(long flightId, [FromQuery] int sampleIndex, CancellationToken cancellationToken)
+            => Ok(await _mediator.Send(new BackofficeExplainFlightPhaseQuery(flightId, sampleIndex), cancellationToken));
+
+        [HttpGet("{flightId:long}/events")]
+        public async Task<IActionResult> Events(long flightId, CancellationToken cancellationToken)
+            => Ok(await _mediator.Send(new BackofficeGetFlightEventsQuery(flightId), cancellationToken));
+
+        [HttpGet("{flightId:long}/revisions")]
+        public async Task<IActionResult> Revisions(long flightId, CancellationToken cancellationToken)
+            => Ok(await _mediator.Send(new BackofficeGetFlightRevisionsQuery(flightId), cancellationToken));
+
+        [HttpPost("{flightId:long}/recompute")]
+        public async Task<IActionResult> Recompute(long flightId, [FromBody] RecomputeFlightRequest request, CancellationToken cancellationToken)
+        {
+            var command = new BackofficeRecomputeFlightCommand(flightId, request.QualityRulesDocumentId, request.PhaseRuleSetDocumentId, request.DryRun ?? false);
+
+            return Ok(await _mediator.Send(command, cancellationToken));
+        }
 
         [HttpGet("{flightId:long}/samples")]
         public async Task<IActionResult> Samples(long flightId, [FromQuery] int? from, [FromQuery] int? to, CancellationToken cancellationToken)
