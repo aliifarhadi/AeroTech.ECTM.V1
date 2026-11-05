@@ -40,6 +40,10 @@ using AeroTech.ECTM.Application.FlightAggregate.Queries.GetFlightSamples;
 using AeroTech.ECTM.Application.FlightAggregate.Queries.GetFlightSeries;
 using AeroTech.ECTM.Application.FlightAggregate.Queries.GetFlightsPaginated;
 using AeroTech.ECTM.Application.FlightAggregate.Services;
+using AeroTech.ECTM.Application.FlightQualityAggregate.Commands.EvaluateFlightQuality;
+using AeroTech.ECTM.Application.FlightQualityAggregate.Queries.GetAircraftQuality;
+using AeroTech.ECTM.Application.FlightQualityAggregate.Queries.GetFlightQuality;
+using AeroTech.ECTM.Application.FlightQualityAggregate.Services;
 using AeroTech.ECTM.Application.ImportBatchAggregate.Commands.CommitImport;
 using AeroTech.ECTM.Application.ImportBatchAggregate.Commands.PreviewImport;
 using AeroTech.ECTM.Application.ImportBatchAggregate.Queries.GetImportBatchById;
@@ -86,6 +90,7 @@ namespace AeroTech.ECTM.Application
 
             services.AddScoped<IConfigurationContentValidator, ParameterCatalogContentValidator>();
             services.AddScoped<IConfigurationContentValidator, DataProfileContentValidator>();
+            services.AddScoped<IConfigurationContentValidator, QualityRulesContentValidator>();
             services.AddScoped<ConfigurationContentValidators>();
             services.AddScoped<ConfigurationDocumentLoader>();
             services.AddScoped<ActiveCatalogLoader>();
@@ -160,6 +165,13 @@ namespace AeroTech.ECTM.Application
             services.AddScoped<IReviewFlightService, ReviewFlightService>();
             services.AddScoped<IGetFlightSeriesService, GetFlightSeriesService>();
             services.AddScoped<IGetFlightSamplesService, GetFlightSamplesService>();
+
+            services.AddScoped<ActiveQualityRulesLoader>();
+            services.AddScoped<FlightQualityInputLoader>();
+            services.AddScoped<FlightQualityRecorder>();
+            services.AddScoped<IEvaluateFlightQualityService, EvaluateFlightQualityService>();
+            services.AddScoped<IGetFlightQualityService, GetFlightQualityService>();
+            services.AddScoped<IGetAircraftQualityService, GetAircraftQualityService>();
 
             return services;
         }

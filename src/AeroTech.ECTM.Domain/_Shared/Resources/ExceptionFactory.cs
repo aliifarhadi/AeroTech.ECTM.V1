@@ -183,5 +183,8 @@ namespace AeroTech.ECTM.Domain._Shared.Resources
 
         public static BusinessException SeriesRangeTooLarge(params object?[] args) =>
             new(80317, ExceptionMessages.SeriesRangeTooLarge, args) { HttpStatus = 422 };
+
+        public static BusinessException FlightQualityNotEvaluated(params object?[] args) =>
+            new(80318, ExceptionMessages.FlightQualityNotEvaluated, args) { HttpStatus = 404 };
     }
 }

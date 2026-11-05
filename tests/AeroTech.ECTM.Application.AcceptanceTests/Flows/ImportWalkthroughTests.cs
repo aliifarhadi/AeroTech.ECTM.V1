@@ -95,6 +95,7 @@ public sealed class ImportWalkthroughTests(MigratedDatabaseFixture fixture)
         await TheFlightListFiltersByEngine(fleet.EngineOneId);
         await HoldAndReleaseFollowTheStateMachine(flight24);
         await ACatalogDraftDryRunsOnFlight25(flight25);
+        await QualityIsEvaluatedOnCommit(batch, flight24, fleet.AircraftId);
     }
 
     private async Task TheSameBytesAgainAreLinkedNotImported(string flight25)
@@ -189,6 +190,38 @@ public sealed class ImportWalkthroughTests(MigratedDatabaseFixture fixture)
             Assert.Equal(HttpStatusCode.Conflict, releaseAgain.StatusCode);
             Assert.Equal(80314, await ApiResponses.FirstErrorCodeOf(releaseAgain));
         }
+    }
+
+    private async Task QualityIsEvaluatedOnCommit(JsonElement batch, string flight24, string aircraftId)
+    {
+        Assert.All(batch.GetProperty("items").EnumerateArray(), item => Assert.Equal(JsonValueKind.Object, item.GetProperty("grade").ValueKind));
+
+        var quality = await _imports.GetDataAsync($"flights/{flight24}/quality");
+        var jump = Assert.Single(quality.GetProperty("discontinuities").EnumerateArray());
+        var mask = quality.GetProperty("spans").EnumerateArray().Single(span => span.GetProperty("code").GetString() == "ALTITUDE_RATE_UNTRUSTED");
+
+        Assert.Equal("PROVISIONAL", ImportApi.NameOf(quality, "status"));
+        Assert.Equal("C", ImportApi.NameOf(quality, "grade"));
+        Assert.Equal(["PARTIAL_START_AND_END"], quality.GetProperty("gradeReasons").EnumerateArray().Select(reason => reason.GetString()));
+        Assert.Equal((3887, "ALTITUDE_DISCONTINUITY_CONFIRMED"), (jump.GetProperty("index").GetInt32(), jump.GetProperty("code").GetString()));
+        Assert.Equal((3867, 3917), (mask.GetProperty("startIndex").GetInt32(), mask.GetProperty("endIndexInclusive").GetInt32()));
+        Assert.Equal(57, quality.GetProperty("airGroundLagSec").GetInt32());
+        Assert.Equal("UNTRUSTED", ImportApi.NameOf(quality.GetProperty("clock"), "timeTrust"));
+        Assert.Equal(0, quality.GetProperty("clock").GetProperty("invalidOrMissingRows").GetInt32());
+
+        using (var again = await _imports.PostAsync($"flights/{flight24}/quality", new { }))
+            Assert.Equal(FleetApi.IdOf(quality), FleetApi.IdOf(await ApiResponses.DataOf(again)));
+
+        var detail = await _imports.GetDataAsync($"flights/{flight24}");
+        Assert.Equal("C", ImportApi.NameOf(detail, "grade"));
+
+        var aircraft = await _imports.GetDataAsync($"quality/aircraft/{aircraftId}?from=2026-09-24&to=2026-10-01");
+        var grades = aircraft.GetProperty("grades").EnumerateArray().ToDictionary(grade => ImportApi.NameOf(grade, "grade"), grade => grade.GetProperty("flights").GetInt32());
+
+        Assert.Equal((8, 8), (aircraft.GetProperty("flights").GetInt32(), aircraft.GetProperty("evaluated").GetInt32()));
+        Assert.Equal(8, grades.Values.Sum());
+        Assert.Equal(8, aircraft.GetProperty("untrustedTime").GetInt32());
+        Assert.Equal(8, aircraft.GetProperty("withDiscontinuity").GetInt32());
     }
 
     private async Task ACatalogDraftDryRunsOnFlight25(string flight25)

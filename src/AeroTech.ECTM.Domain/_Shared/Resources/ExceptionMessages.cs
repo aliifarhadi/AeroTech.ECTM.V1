@@ -66,5 +66,6 @@ namespace AeroTech.ECTM.Domain._Shared.Resources
         public const string ReviewActionDeliveredLater = "Review action {0} is delivered in phase {1}.";
         public const string FlightParameterNotFound = "Flight {0} has no numeric channel {1}.";
         public const string SeriesRangeTooLarge = "RAW sampling returns every sample; the range holds {0} samples and the limit is {1}.";
+        public const string FlightQualityNotEvaluated = "Flight {0} has no quality result yet; publish QUALITY_RULES and evaluate the flight.";
     }
 }

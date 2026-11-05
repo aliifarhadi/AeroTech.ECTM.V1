@@ -1,6 +1,7 @@
 using AeroTech.ECTM.Application._Shared.Enums;
 using AeroTech.ECTM.Domain.FlightAggregate;
 using AeroTech.ECTM.Domain.SourceFileAggregate;
+using AeroTech.Messages.Ectm.Enums;
 
 namespace AeroTech.ECTM.Application.FlightAggregate.Dto
 {
@@ -10,6 +11,7 @@ namespace AeroTech.ECTM.Application.FlightAggregate.Dto
         bool DistinctFlightConfirmed,
         string? IdentityNote,
         EnumValueDto State,
+        EnumValueDto? Grade,
         EnumValueDto? StateBeforeHold,
         string? HoldNote,
         DateTimeOffset? HeldUtc,
@@ -27,13 +29,14 @@ namespace AeroTech.ECTM.Application.FlightAggregate.Dto
         long ImportItemId,
         DateTimeOffset ImportedUtc)
     {
-        public static BackofficeFlightDetailDto From(Flight flight, SourceFile sourceFile, IReadOnlyDictionary<long, string> serialByEngine)
+        public static BackofficeFlightDetailDto From(Flight flight, SourceFile sourceFile, QualityGrade? grade, IReadOnlyDictionary<long, string> serialByEngine)
             => new(
                 flight.Id,
                 BackofficeFlightIdentityDto.From(flight, serialByEngine),
                 flight.DistinctFlightConfirmed,
                 flight.IdentityNote,
                 EnumValueDto.Of(flight.State),
+                EnumValueDto.OfNullable(grade),
                 EnumValueDto.OfNullable(flight.StateBeforeHold),
                 flight.HoldNote,
                 flight.HeldAt,

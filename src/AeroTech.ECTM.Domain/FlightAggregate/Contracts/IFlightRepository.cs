@@ -20,6 +20,8 @@ namespace AeroTech.ECTM.Domain.FlightAggregate.Contracts
 
         Task<Flight?> FindSameIdentityAsync(long excludedFlightId, long aircraftId, DateOnly flightDate, string flightNumber, CancellationToken cancellationToken = default);
 
+        Task<IReadOnlyList<Flight>> ListForAircraftAsync(long aircraftId, DateOnly? from, DateOnly? to, CancellationToken cancellationToken = default);
+
         Task<PaginatedList<Flight>> ListAsync(FlightFilterArgs filter, int pageNumber, int pageSize, CancellationToken cancellationToken = default);
 
         Task<IReadOnlyList<FlightChannelPayload>> ListChannelPayloadsAsync(IReadOnlyCollection<long> channelIds, CancellationToken cancellationToken = default);

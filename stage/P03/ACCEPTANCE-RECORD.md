@@ -105,4 +105,4 @@ See SCIENTIFIC-CONTRACT.md. P03 makes no engineering claim.
   2. **Publish gate:** docs/03 asks for "a dry-run on at least one flight (where applicable)" before publishing. The dry-run exists; should publishing require one?
   3. **I-02:** the recorder frame manual: the unit and meaning of `ENGINE_ASYMMETRY`, and the domains of the three always-empty columns.
   4. **Still open:** engine model of Eng1S1 and Eng2S2 (I-01); THETA and DELTA; fixture publication; package vulnerability.
-- **Owner signature and gate to start P04:**
+- **Owner signature and gate to start P04:** the owner's instruction "start the next phase" (2026-11-05)

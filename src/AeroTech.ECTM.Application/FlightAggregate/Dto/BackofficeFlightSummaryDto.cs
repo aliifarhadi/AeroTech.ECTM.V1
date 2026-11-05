@@ -1,5 +1,6 @@
 using AeroTech.ECTM.Application._Shared.Enums;
 using AeroTech.ECTM.Domain.FlightAggregate;
+using AeroTech.Messages.Ectm.Enums;
 
 namespace AeroTech.ECTM.Application.FlightAggregate.Dto
 {
@@ -11,6 +12,7 @@ namespace AeroTech.ECTM.Application.FlightAggregate.Dto
         string? FlightNumber,
         IReadOnlyList<BackofficeEngineAssignmentDto> Engines,
         EnumValueDto State,
+        EnumValueDto? Grade,
         EnumValueDto IdentityStatus,
         int SampleCount,
         int BlockingCount,
@@ -19,7 +21,7 @@ namespace AeroTech.ECTM.Application.FlightAggregate.Dto
         long ImportBatchId,
         DateTimeOffset ImportedUtc)
     {
-        public static BackofficeFlightSummaryDto From(Flight flight, IReadOnlyDictionary<long, string> serialByEngine)
+        public static BackofficeFlightSummaryDto From(Flight flight, QualityGrade? grade, IReadOnlyDictionary<long, string> serialByEngine)
             => new(
                 flight.Id,
                 flight.FlightDate,
@@ -31,6 +33,7 @@ namespace AeroTech.ECTM.Application.FlightAggregate.Dto
                     .Select(engine => BackofficeEngineAssignmentDto.From(engine, serialByEngine))
                     .ToList(),
                 EnumValueDto.Of(flight.State),
+                EnumValueDto.OfNullable(grade),
                 EnumValueDto.Of(flight.IdentityStatus),
                 flight.SampleCount,
                 flight.BlockingCount,

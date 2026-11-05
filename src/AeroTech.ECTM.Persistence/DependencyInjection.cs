@@ -5,6 +5,7 @@ using AeroTech.ECTM.Domain.EngineAggregate.Contracts;
 using AeroTech.ECTM.Domain.EngineInstallationAggregate.Contracts;
 using AeroTech.ECTM.Domain.EngineModelAggregate.Contracts;
 using AeroTech.ECTM.Domain.FlightAggregate.Contracts;
+using AeroTech.ECTM.Domain.FlightQualityAggregate.Contracts;
 using AeroTech.ECTM.Domain.ImportBatchAggregate.Contracts;
 using AeroTech.ECTM.Domain.MaintenanceEventAggregate.Contracts;
 using AeroTech.ECTM.Domain.ProcessingJobAggregate.Contracts;
@@ -16,6 +17,7 @@ using AeroTech.ECTM.Persistence.EngineAggregate;
 using AeroTech.ECTM.Persistence.EngineInstallationAggregate;
 using AeroTech.ECTM.Persistence.EngineModelAggregate;
 using AeroTech.ECTM.Persistence.FlightAggregate;
+using AeroTech.ECTM.Persistence.FlightQualityAggregate;
 using AeroTech.ECTM.Persistence.ImportBatchAggregate;
 using AeroTech.ECTM.Persistence.MaintenanceEventAggregate;
 using AeroTech.ECTM.Persistence.ProcessingJobAggregate;
@@ -55,6 +57,7 @@ namespace AeroTech.ECTM.Persistence
             services.AddScoped<IImportBatchRepository, ImportBatchRepository>();
             services.AddScoped<IFlightRepository, FlightRepository>();
             services.AddScoped<IProcessingJobRepository, ProcessingJobRepository>();
+            services.AddScoped<IFlightQualityRepository, FlightQualityRepository>();
 
             services.AddHealthChecks().AddDbContextReadinessCheck<EctmDbContext>("sql-server-command");
 

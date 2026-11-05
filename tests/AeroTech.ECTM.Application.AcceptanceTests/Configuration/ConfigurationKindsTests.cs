@@ -23,7 +23,12 @@ public sealed class ConfigurationKindsTests(MigratedDatabaseFixture fixture)
         "REPORT_DEFINITION"
     ];
 
-    private static readonly string[] AuthorableNow = ["DATA_PROFILE", "PARAMETER_CATALOG"];
+    private static readonly Dictionary<string, string> AuthorableNow = new()
+    {
+        ["DATA_PROFILE"] = "P02",
+        ["PARAMETER_CATALOG"] = "P02",
+        ["QUALITY_RULES"] = "P04"
+    };
 
     [Fact]
     public async Task Every_kind_is_listed_and_kinds_of_later_phases_have_no_active_version()
@@ -36,7 +41,7 @@ public sealed class ConfigurationKindsTests(MigratedDatabaseFixture fixture)
         foreach (var kind in kinds.EnumerateArray())
         {
             var name = kind.GetProperty("kind").GetProperty("name").GetString()!;
-            var authorable = AuthorableNow.Contains(name);
+            var authorable = AuthorableNow.ContainsKey(name);
 
             Assert.Equal(authorable, kind.GetProperty("authorable").GetBoolean());
 
@@ -50,17 +55,17 @@ public sealed class ConfigurationKindsTests(MigratedDatabaseFixture fixture)
     }
 
     [Fact]
-    public async Task The_seed_drafts_of_the_P02_kinds_exist_on_a_new_system()
+    public async Task The_seed_drafts_of_the_authorable_kinds_exist_on_a_new_system()
     {
         var kinds = await GetKindsAsync();
 
-        foreach (var name in AuthorableNow)
+        foreach (var (name, deliveryPhase) in AuthorableNow)
         {
             var kind = KindNamed(kinds, name);
             var documents = kind.GetProperty("draftCount").GetInt32() + kind.GetProperty("publishedCount").GetInt32();
 
             Assert.True(documents >= 1, $"{name} has no seed document.");
-            Assert.Equal("P02", kind.GetProperty("deliveryPhase").GetString());
+            Assert.Equal(deliveryPhase, kind.GetProperty("deliveryPhase").GetString());
         }
     }
 

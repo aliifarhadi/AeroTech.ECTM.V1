@@ -6,6 +6,7 @@ using AeroTech.ECTM.Domain.EngineAggregate;
 using AeroTech.ECTM.Domain.EngineInstallationAggregate;
 using AeroTech.ECTM.Domain.EngineModelAggregate;
 using AeroTech.ECTM.Domain.FlightAggregate;
+using AeroTech.ECTM.Domain.FlightQualityAggregate;
 using AeroTech.ECTM.Domain.ImportBatchAggregate;
 using AeroTech.ECTM.Domain.MaintenanceEventAggregate;
 using AeroTech.ECTM.Domain.ProcessingJobAggregate;
@@ -67,6 +68,8 @@ namespace AeroTech.ECTM.Persistence
         public DbSet<Flight> Flights => Set<Flight>();
 
         public DbSet<ProcessingJob> ProcessingJobs => Set<ProcessingJob>();
+
+        public DbSet<FlightQuality> FlightQualities => Set<FlightQuality>();
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {

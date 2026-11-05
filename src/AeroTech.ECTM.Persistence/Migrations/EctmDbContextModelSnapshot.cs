@@ -797,6 +797,71 @@ namespace AeroTech.ECTM.Persistence.Migrations
                     b.ToTable("Flights", "Ectm");
                 });
 
+            modelBuilder.Entity("AeroTech.ECTM.Domain.FlightQualityAggregate.FlightQuality", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("DiscontinuityCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("EvaluatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long>("FlightId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Grade")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("LastUpdateTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long?>("LastUpdatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool?>("PartialEnd")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("PartialStart")
+                        .HasColumnType("bit");
+
+                    b.Property<long>("QualityRulesDocumentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("QualityRulesVersion")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Result")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int>("SpanCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TimeTrust")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FlightId", "QualityRulesDocumentId")
+                        .IsUnique();
+
+                    b.HasIndex("FlightId", "Status");
+
+                    b.ToTable("FlightQualities", "Ectm");
+                });
+
             modelBuilder.Entity("AeroTech.ECTM.Domain.ImportBatchAggregate.Entities.ImportItem", b =>
                 {
                     b.Property<long>("Id")

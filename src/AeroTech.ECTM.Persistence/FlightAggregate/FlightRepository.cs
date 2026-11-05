@@ -58,6 +58,24 @@ namespace AeroTech.ECTM.Persistence.FlightAggregate
                 .OrderBy(flight => flight.ImportedAt)
                 .FirstOrDefaultAsync(cancellationToken);
 
+        public async Task<IReadOnlyList<Flight>> ListForAircraftAsync(long aircraftId, DateOnly? from, DateOnly? to, CancellationToken cancellationToken = default)
+        {
+            var query = _dbContext.Flights
+                .AsNoTracking()
+                .Where(flight => flight.AircraftId == aircraftId);
+
+            if (from is { } first)
+                query = query.Where(flight => flight.FlightDate >= first);
+
+            if (to is { } last)
+                query = query.Where(flight => flight.FlightDate <= last);
+
+            return await query
+                .OrderBy(flight => flight.FlightDate)
+                .ThenBy(flight => flight.FlightNumber)
+                .ToListAsync(cancellationToken);
+        }
+
         public Task<PaginatedList<Flight>> ListAsync(FlightFilterArgs filter, int pageNumber, int pageSize, CancellationToken cancellationToken = default)
         {
             var query = _dbContext.Flights

@@ -12,6 +12,7 @@ public sealed class ConfigurationApi(HttpClient client)
 {
     public const string Catalog = "PARAMETER_CATALOG";
     public const string Profile = "DATA_PROFILE";
+    public const string QualityRules = "QUALITY_RULES";
 
     public static JsonNode SeedOf(string kind) => JsonNode.Parse(ConfigurationSeeds.ContentOf(Enum.Parse<ConfigurationKind>(kind)))!;
 

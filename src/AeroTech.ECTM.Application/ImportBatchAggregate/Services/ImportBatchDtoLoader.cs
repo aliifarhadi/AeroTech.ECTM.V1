@@ -5,6 +5,7 @@ using AeroTech.ECTM.Application.ImportBatchAggregate.Dto;
 using AeroTech.ECTM.Domain.FlightAggregate;
 using AeroTech.ECTM.Domain.FlightAggregate.Computation;
 using AeroTech.ECTM.Domain.FlightAggregate.Contracts;
+using AeroTech.ECTM.Domain.FlightQualityAggregate.Contracts;
 using AeroTech.ECTM.Domain.ImportBatchAggregate;
 using AeroTech.ECTM.Domain.ImportBatchAggregate.Computation;
 using AeroTech.ECTM.Domain.ImportBatchAggregate.Entities;
@@ -16,11 +17,13 @@ namespace AeroTech.ECTM.Application.ImportBatchAggregate.Services
     {
         private readonly IFlightRepository _flights;
         private readonly FlightDtoLoader _flightDtos;
+        private readonly IFlightQualityRepository _qualities;
 
-        public ImportBatchDtoLoader(IFlightRepository flights, FlightDtoLoader flightDtos)
+        public ImportBatchDtoLoader(IFlightRepository flights, FlightDtoLoader flightDtos, IFlightQualityRepository qualities)
         {
             _flights = flights;
             _flightDtos = flightDtos;
+            _qualities = qualities;
         }
 
         public async Task<BackofficeImportBatchDto> LoadAsync(
@@ -39,6 +42,8 @@ namespace AeroTech.ECTM.Application.ImportBatchAggregate.Services
                 .ToList();
             var flights = await _flights.ListByIdsAsync(flightIds, cancellationToken);
             var flightById = flights.ToDictionary(flight => flight.Id);
+            var qualities = await _qualities.ListCurrentAsync(flightIds, cancellationToken);
+            var gradeByFlight = qualities.ToDictionary(quality => quality.FlightId, quality => (QualityGrade?)quality.Grade);
 
             var previewEngineIds = previewByItem.Values
                 .Where(preview => preview.Identity is not null)
@@ -48,7 +53,7 @@ namespace AeroTech.ECTM.Application.ImportBatchAggregate.Services
             var serialByEngine = await _flightDtos.SerialsOfAsync(previewEngineIds.Concat(flightEngineIds), cancellationToken);
 
             var itemDtos = items
-                .Select(item => ItemDtoOf(item, previewByItem[item.Id], FlightOf(item, flightById), rowsByItem.GetValueOrDefault(item.Id), serialByEngine))
+                .Select(item => ItemDtoOf(item, previewByItem[item.Id], FlightOf(item, flightById), gradeByFlight, rowsByItem.GetValueOrDefault(item.Id), serialByEngine))
                 .ToList();
             var tallies = items
                 .GroupBy(item => new { item.Outcome, item.State })
@@ -82,6 +87,7 @@ namespace AeroTech.ECTM.Application.ImportBatchAggregate.Services
             ImportItem item,
             ImportItemPreview preview,
             Flight? flight,
+            IReadOnlyDictionary<long, QualityGrade?> gradeByFlight,
             ShownRows? rows,
             IReadOnlyDictionary<long, string> serialByEngine)
         {
@@ -115,6 +121,7 @@ namespace AeroTech.ECTM.Application.ImportBatchAggregate.Services
                 item.ErrorCode,
                 item.FlightId,
                 EnumValueDto.OfNullable(flight?.State),
+                EnumValueDto.OfNullable(flight is null ? null : gradeByFlight.GetValueOrDefault(flight.Id)),
                 identity,
                 preview.SampleCount,
                 preview.FirstElapsed,

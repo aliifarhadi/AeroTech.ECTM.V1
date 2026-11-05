@@ -1,0 +1,10 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  AeroTech.Messages -> E:\Projects\DotAir\AeroTech.ECTM.V1\Contracts\AeroTech.Messages\bin\Debug\net9.0\AeroTech.Messages.dll
+  AeroTech.Framework.Core -> E:\Projects\DotAir\AeroTech.ECTM.V1\Framework\AeroTech.Framework.Core\bin\Debug\net10.0\AeroTech.Framework.Core.dll
+  AeroTech.ECTM.Domain -> E:\Projects\DotAir\AeroTech.ECTM.V1\src\AeroTech.ECTM.Domain\bin\Debug\net10.0\AeroTech.ECTM.Domain.dll
+  AeroTech.ECTM.Domain.ConformanceTests -> E:\Projects\DotAir\AeroTech.ECTM.V1\tests\AeroTech.ECTM.Domain.ConformanceTests\bin\Debug\net10.0\AeroTech.ECTM.Domain.ConformanceTests.dll
+Test run for E:\Projects\DotAir\AeroTech.ECTM.V1\tests\AeroTech.ECTM.Domain.ConformanceTests\bin\Debug\net10.0\AeroTech.ECTM.Domain.ConformanceTests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   240, Skipped:     0, Total:   240, Duration: 1 m 25 s - AeroTech.ECTM.Domain.ConformanceTests.dll (net10.0)

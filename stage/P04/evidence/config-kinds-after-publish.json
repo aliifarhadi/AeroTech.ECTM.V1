@@ -1,0 +1,188 @@
+{
+ "data": [
+  {
+   "kind": {
+    "value": 1,
+    "name": "DATA_PROFILE",
+    "title": "Data Profile"
+   },
+   "deliveryPhase": "P02",
+   "authorable": true,
+   "activeVersion": {
+    "id": "1567685363512639488",
+    "kind": {
+     "value": 1,
+     "name": "DATA_PROFILE",
+     "title": "Data Profile"
+    },
+    "versionNumber": 1,
+    "status": {
+     "value": 2,
+     "name": "PUBLISHED",
+     "title": "Published"
+    },
+    "basedOnDocumentId": null,
+    "contentSha256": "0f85069ad4c95e3444dbf714af3dd0905cb28a690011bce10d767aa9c3a18ffc",
+    "lastUpdateTime": "2026-11-05T01:46:48.3306347+00:00",
+    "publishedUtc": "2026-11-05T01:46:48.329297+00:00",
+    "publishedBy": null,
+    "approvalNote": "Owner instruction 2026-11-05 (reply to the P03 report): replace the seed draft with the P03 seed and publish.",
+    "retiredUtc": null,
+    "retiredBy": null,
+    "retirementNote": null
+   },
+   "activeVersionReason": null,
+   "draftCount": 0,
+   "publishedCount": 1
+  },
+  {
+   "kind": {
+    "value": 2,
+    "name": "PARAMETER_CATALOG",
+    "title": "Parameter Catalog"
+   },
+   "deliveryPhase": "P02",
+   "authorable": true,
+   "activeVersion": {
+    "id": "1567685360794730496",
+    "kind": {
+     "value": 2,
+     "name": "PARAMETER_CATALOG",
+     "title": "Parameter Catalog"
+    },
+    "versionNumber": 1,
+    "status": {
+     "value": 2,
+     "name": "PUBLISHED",
+     "title": "Published"
+    },
+    "basedOnDocumentId": null,
+    "contentSha256": "e7d0c051d82129f42c13f4b9e143851e8ce20985624964b372dfe4383dddf7ae",
+    "lastUpdateTime": "2026-11-05T01:46:47.9476219+00:00",
+    "publishedUtc": "2026-11-05T01:46:47.8929661+00:00",
+    "publishedBy": null,
+    "approvalNote": "Owner instruction 2026-11-05 (reply to the P03 report): replace the seed draft with the P03 seed and publish.",
+    "retiredUtc": null,
+    "retiredBy": null,
+    "retirementNote": null
+   },
+   "activeVersionReason": null,
+   "draftCount": 0,
+   "publishedCount": 1
+  },
+  {
+   "kind": {
+    "value": 3,
+    "name": "QUALITY_RULES",
+    "title": "Quality Rules"
+   },
+   "deliveryPhase": "P04",
+   "authorable": true,
+   "activeVersion": {
+    "id": "1567845635128819712",
+    "kind": {
+     "value": 3,
+     "name": "QUALITY_RULES",
+     "title": "Quality Rules"
+    },
+    "versionNumber": 1,
+    "status": {
+     "value": 2,
+     "name": "PUBLISHED",
+     "title": "Published"
+    },
+    "basedOnDocumentId": null,
+    "contentSha256": "94c00933e258883fe5b44b173ca0875bfc3ed404f66522056ced16a0e74525f1",
+    "lastUpdateTime": "2026-11-05T10:32:08.8654431+00:00",
+    "publishedUtc": "2026-11-05T10:32:08.8426012+00:00",
+    "publishedBy": null,
+    "approvalNote": "Owner instruction 2026-11-05 (reply to the P04 report): publish the QUALITY_RULES seed with the owner rulings (one-digit clock hours valid; grade and stuck-sensor rules decided by the agent).",
+    "retiredUtc": null,
+    "retiredBy": null,
+    "retirementNote": null
+   },
+   "activeVersionReason": null,
+   "draftCount": 0,
+   "publishedCount": 1
+  },
+  {
+   "kind": {
+    "value": 4,
+    "name": "PHASE_RULESET",
+    "title": "Phase Rule Set"
+   },
+   "deliveryPhase": "P05",
+   "authorable": false,
+   "activeVersion": null,
+   "activeVersionReason": "NO_ACTIVE_VERSION",
+   "draftCount": 0,
+   "publishedCount": 0
+  },
+  {
+   "kind": {
+    "value": 5,
+    "name": "SNAPSHOT_RULES",
+    "title": "Snapshot Rules"
+   },
+   "deliveryPhase": "P06",
+   "authorable": false,
+   "activeVersion": null,
+   "activeVersionReason": "NO_ACTIVE_VERSION",
+   "draftCount": 0,
+   "publishedCount": 0
+  },
+  {
+   "kind": {
+    "value": 6,
+    "name": "BASELINE_RULES",
+    "title": "Baseline Rules"
+   },
+   "deliveryPhase": "P07",
+   "authorable": false,
+   "activeVersion": null,
+   "activeVersionReason": "NO_ACTIVE_VERSION",
+   "draftCount": 0,
+   "publishedCount": 0
+  },
+  {
+   "kind": {
+    "value": 7,
+    "name": "CORRECTION_MODEL",
+    "title": "Correction Model"
+   },
+   "deliveryPhase": "P08",
+   "authorable": false,
+   "activeVersion": null,
+   "activeVersionReason": "NO_ACTIVE_VERSION",
+   "draftCount": 0,
+   "publishedCount": 0
+  },
+  {
+   "kind": {
+    "value": 8,
+    "name": "ANALYTICS_RULES",
+    "title": "Analytics Rules"
+   },
+   "deliveryPhase": "P14",
+   "authorable": false,
+   "activeVersion": null,
+   "activeVersionReason": "NO_ACTIVE_VERSION",
+   "draftCount": 0,
+   "publishedCount": 0
+  },
+  {
+   "kind": {
+    "value": 9,
+    "name": "REPORT_DEFINITION",
+    "title": "Report Definition"
+   },
+   "deliveryPhase": "P11",
+   "authorable": false,
+   "activeVersion": null,
+   "activeVersionReason": "NO_ACTIVE_VERSION",
+   "draftCount": 0,
+   "publishedCount": 0
+  }
+ ],
+ "errors": null
+}

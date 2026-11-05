@@ -5,6 +5,8 @@ using AeroTech.ECTM.Application.FlightAggregate.Queries.GetFlightSamples.Backoff
 using AeroTech.ECTM.Application.FlightAggregate.Queries.GetFlightSeries;
 using AeroTech.ECTM.Application.FlightAggregate.Queries.GetFlightSeries.Backoffice;
 using AeroTech.ECTM.Application.FlightAggregate.Queries.GetFlightsPaginated.Backoffice;
+using AeroTech.ECTM.Application.FlightQualityAggregate.Commands.EvaluateFlightQuality.Backoffice;
+using AeroTech.ECTM.Application.FlightQualityAggregate.Queries.GetFlightQuality.Backoffice;
 using AeroTech.ECTM.Domain.FlightAggregate.Arguments;
 using AeroTech.ECTM.Domain.FlightAggregate.Computation;
 using AeroTech.ECTM.RestApi.V1.FlightAggregate.Requests;
@@ -75,6 +77,14 @@ namespace AeroTech.ECTM.RestApi.V1.FlightAggregate
 
             return Ok(await _mediator.Send(query, cancellationToken));
         }
+
+        [HttpGet("{flightId:long}/quality")]
+        public async Task<IActionResult> Quality(long flightId, CancellationToken cancellationToken)
+            => Ok(await _mediator.Send(new BackofficeGetFlightQualityQuery(flightId), cancellationToken));
+
+        [HttpPost("{flightId:long}/quality")]
+        public async Task<IActionResult> EvaluateQuality(long flightId, CancellationToken cancellationToken)
+            => Ok(await _mediator.Send(new BackofficeEvaluateFlightQualityCommand(flightId), cancellationToken));
 
         [HttpGet("{flightId:long}/samples")]
         public async Task<IActionResult> Samples(long flightId, [FromQuery] int? from, [FromQuery] int? to, CancellationToken cancellationToken)

@@ -1,10 +1,12 @@
 using AeroTech.ECTM.Application.FlightAggregate.Services;
+using AeroTech.ECTM.Application.FlightQualityAggregate.Services;
 using AeroTech.ECTM.Application.ProcessingJobAggregate.Services;
 using AeroTech.ECTM.Domain._Shared.Resources;
 using AeroTech.ECTM.Domain.FlightAggregate;
 using AeroTech.ECTM.Domain.FlightAggregate.Arguments;
 using AeroTech.ECTM.Domain.FlightAggregate.Computation;
 using AeroTech.ECTM.Domain.FlightAggregate.Contracts;
+using AeroTech.ECTM.Domain.FlightQualityAggregate.Computation;
 using AeroTech.ECTM.Domain.ImportBatchAggregate;
 using AeroTech.ECTM.Domain.ImportBatchAggregate.Contracts;
 using AeroTech.ECTM.Domain.SourceFileAggregate.Contracts;
@@ -24,6 +26,8 @@ namespace AeroTech.ECTM.Application.ImportBatchAggregate.Services
         private readonly RecordingSetLoader _recordingSets;
         private readonly RecordingInspector _inspector;
         private readonly FlightIdentityService _identities;
+        private readonly ActiveQualityRulesLoader _qualityRules;
+        private readonly FlightQualityRecorder _qualityRecorder;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IIdGenerator _idGenerator;
         private readonly IClock _clock;
@@ -35,6 +39,8 @@ namespace AeroTech.ECTM.Application.ImportBatchAggregate.Services
             RecordingSetLoader recordingSets,
             RecordingInspector inspector,
             FlightIdentityService identities,
+            ActiveQualityRulesLoader qualityRules,
+            FlightQualityRecorder qualityRecorder,
             IUnitOfWork unitOfWork,
             IIdGenerator idGenerator,
             IClock clock)
@@ -45,6 +51,8 @@ namespace AeroTech.ECTM.Application.ImportBatchAggregate.Services
             _recordingSets = recordingSets;
             _inspector = inspector;
             _identities = identities;
+            _qualityRules = qualityRules;
+            _qualityRecorder = qualityRecorder;
             _unitOfWork = unitOfWork;
             _idGenerator = idGenerator;
             _clock = clock;
@@ -135,9 +143,20 @@ namespace AeroTech.ECTM.Application.ImportBatchAggregate.Services
             var flight = Flight.Import(_idGenerator.NewId(), recordingArgs, identity, recording.Findings, recording.Channels, _idGenerator, _clock.GetDateTime());
 
             await _flights.AddAsync(flight, cancellationToken);
+            await RecordQualityAsync(flight.Id, recording, cancellationToken);
             batch.CommitItem(item.Id, flight.Id);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+
+        private async Task RecordQualityAsync(long flightId, ParsedRecording recording, CancellationToken cancellationToken)
+        {
+            var activeRules = await _qualityRules.FindAsync(cancellationToken);
+
+            if (activeRules is null)
+                return;
+
+            await _qualityRecorder.RecordAsync(flightId, activeRules, QualityInput.From(recording), cancellationToken);
         }
 
         private async Task<ImportBatch> BatchOfAsync(long batchId, CancellationToken cancellationToken)

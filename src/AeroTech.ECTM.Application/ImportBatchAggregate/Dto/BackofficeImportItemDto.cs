@@ -20,6 +20,7 @@ namespace AeroTech.ECTM.Application.ImportBatchAggregate.Dto
         string? ErrorCode,
         long? FlightId,
         EnumValueDto? FlightState,
+        EnumValueDto? Grade,
         BackofficeFlightIdentityDto? Identity,
         int SampleCount,
         double? FirstElapsed,

@@ -1,0 +1,122 @@
+{
+  "rulesCode": "EP-DOA-QUALITY",
+  "calibrationStatus": "CANDIDATE",
+  "source": "pack v3.3 contracts/policy-defaults-v1.json (quality, dataQuality; policy v1-calibration-candidate); required channels = docs/02 §4.3 ordinals 3, 4, 9-16, 43, 47, 48, 84; owner rulings 2026-11-05: one-digit clock hours are valid, grade A allows the recorder's confirmed altitude jump, stuck sensor per channel with N1 response; stuck-sensor candidates = 2 x the values measured on all 102 real files of samples/ (stage/P04 GAP-ANALYSIS §4)",
+  "channels": {
+    "altitude": "PRESSURE_ALT_FT",
+    "radioHeight": "RADIO_HEIGHT_FT",
+    "airGround": "AIR_GROUND",
+    "groundspeed": "GROUNDSPEED_KT",
+    "engineN1": "N1_PCT",
+    "primaryClock": "UTC_PRIMARY",
+    "secondaryClock": "UTC_SECONDARY"
+  },
+  "airGroundLiterals": {
+    "air": "AIR",
+    "ground": "GND"
+  },
+  "altitudeDiscontinuity": {
+    "altitudeFtPerSec": 300,
+    "radioHeightFtPerSec": 300,
+    "untrustedBeforeSec": 20,
+    "untrustedAfterSec": 30
+  },
+  "airGroundLag": {
+    "radioHeightAboveFt": 100,
+    "minSustainedSec": 10,
+    "airborneRadioHeightFt": 50
+  },
+  "engineLag": {
+    "idleN1BelowPct": 40,
+    "radioHeightAboveFt": 200,
+    "radioHeightRiseFt": 100,
+    "riseLookbackSamples": 10
+  },
+  "partial": {
+    "startRadioHeightAboveFt": 20,
+    "endGroundspeedAtLeastKt": 35
+  },
+  "clock": {
+    "stepToleranceSec": 0,
+    "acceptOneDigitHour": true
+  },
+  "coverage": {
+    "requiredChannels": [
+      "PRESSURE_ALT_FT",
+      "CAS_KT",
+      "N2_PCT[1]",
+      "N2_PCT[2]",
+      "N1_PCT[1]",
+      "N1_PCT[2]",
+      "FUEL_FLOW_PPH[1]",
+      "FUEL_FLOW_PPH[2]",
+      "EGT_C[1]",
+      "EGT_C[2]",
+      "TAT_C",
+      "GROUNDSPEED_KT",
+      "RADIO_HEIGHT_FT",
+      "MACH"
+    ],
+    "warningBelowPct": 95,
+    "blockingBelowPct": 50
+  },
+  "plausibility": {
+    "warningAbovePct": 5
+  },
+  "stuckSensor": {
+    "liveN1AtLeastPct": 40,
+    "channels": [
+      {
+        "parameterCode": "N1_PCT",
+        "minConstantSec": 16,
+        "minN1ChangePct": null
+      },
+      {
+        "parameterCode": "N2_PCT",
+        "minConstantSec": 22,
+        "minN1ChangePct": null
+      },
+      {
+        "parameterCode": "EGT_C",
+        "minConstantSec": 30,
+        "minN1ChangePct": 4
+      },
+      {
+        "parameterCode": "OIL_PRESSURE_PSI",
+        "minConstantSec": 30,
+        "minN1ChangePct": 15
+      }
+    ]
+  },
+  "grade": {
+    "aMinCoveragePct": 99,
+    "masksAllowedForA": [
+      {
+        "code": "AIRGROUND_LAGS_RADIO_HEIGHT",
+        "cause": null
+      },
+      {
+        "code": "ENGINE_CHANNELS_LAG_KINEMATICS",
+        "cause": null
+      },
+      {
+        "code": "ALTITUDE_RATE_UNTRUSTED",
+        "cause": "ALTITUDE_DISCONTINUITY_CONFIRMED"
+      }
+    ]
+  },
+  "affects": {
+    "ALTITUDE_RATE_UNTRUSTED": [
+      "PHASE_ALTITUDE_RATE"
+    ],
+    "AIRGROUND_LAGS_RADIO_HEIGHT": [
+      "PHASE_LIFTOFF_ANCHOR"
+    ],
+    "ENGINE_CHANNELS_LAG_KINEMATICS": [
+      "PHASE_TAKEOFF_SEARCH"
+    ],
+    "SENSOR_STUCK": [
+      "STABILITY_WINDOWS"
+    ]
+  }
+}
