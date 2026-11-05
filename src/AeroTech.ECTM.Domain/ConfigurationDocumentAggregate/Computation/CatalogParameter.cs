@@ -8,5 +8,6 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
         IReadOnlyList<int>? Positions,
         PlausibilityRange? Plausibility,
         string? Note,
-        OemIndication? OemIndication);
+        OemIndication? OemIndication,
+        IReadOnlyList<string>? EnumValues = null);
 }

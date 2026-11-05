@@ -1,0 +1,108 @@
+{
+ "data": {
+  "parserReady": true,
+  "missingForParser": [],
+  "kinds": [
+   {
+    "kind": {
+     "value": 1,
+     "name": "DATA_PROFILE",
+     "title": "Data Profile"
+    },
+    "deliveryPhase": "P02",
+    "requiredForParser": true,
+    "activeDocumentId": "1567685363512639488",
+    "activeVersionNumber": 1
+   },
+   {
+    "kind": {
+     "value": 2,
+     "name": "PARAMETER_CATALOG",
+     "title": "Parameter Catalog"
+    },
+    "deliveryPhase": "P02",
+    "requiredForParser": true,
+    "activeDocumentId": "1567685360794730496",
+    "activeVersionNumber": 1
+   },
+   {
+    "kind": {
+     "value": 3,
+     "name": "QUALITY_RULES",
+     "title": "Quality Rules"
+    },
+    "deliveryPhase": "P04",
+    "requiredForParser": false,
+    "activeDocumentId": null,
+    "activeVersionNumber": null
+   },
+   {
+    "kind": {
+     "value": 4,
+     "name": "PHASE_RULESET",
+     "title": "Phase Rule Set"
+    },
+    "deliveryPhase": "P05",
+    "requiredForParser": false,
+    "activeDocumentId": null,
+    "activeVersionNumber": null
+   },
+   {
+    "kind": {
+     "value": 5,
+     "name": "SNAPSHOT_RULES",
+     "title": "Snapshot Rules"
+    },
+    "deliveryPhase": "P06",
+    "requiredForParser": false,
+    "activeDocumentId": null,
+    "activeVersionNumber": null
+   },
+   {
+    "kind": {
+     "value": 6,
+     "name": "BASELINE_RULES",
+     "title": "Baseline Rules"
+    },
+    "deliveryPhase": "P07",
+    "requiredForParser": false,
+    "activeDocumentId": null,
+    "activeVersionNumber": null
+   },
+   {
+    "kind": {
+     "value": 7,
+     "name": "CORRECTION_MODEL",
+     "title": "Correction Model"
+    },
+    "deliveryPhase": "P08",
+    "requiredForParser": false,
+    "activeDocumentId": null,
+    "activeVersionNumber": null
+   },
+   {
+    "kind": {
+     "value": 8,
+     "name": "ANALYTICS_RULES",
+     "title": "Analytics Rules"
+    },
+    "deliveryPhase": "P14",
+    "requiredForParser": false,
+    "activeDocumentId": null,
+    "activeVersionNumber": null
+   },
+   {
+    "kind": {
+     "value": 9,
+     "name": "REPORT_DEFINITION",
+     "title": "Report Definition"
+    },
+    "deliveryPhase": "P11",
+    "requiredForParser": false,
+    "activeDocumentId": null,
+    "activeVersionNumber": null
+   }
+  ]
+ },
+ "errors": null
+}

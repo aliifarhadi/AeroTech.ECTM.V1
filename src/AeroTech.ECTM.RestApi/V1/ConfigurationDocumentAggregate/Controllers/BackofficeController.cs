@@ -2,6 +2,7 @@ using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Commands.CreateCo
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Commands.PublishConfigurationDocument.Backoffice;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Commands.RetireConfigurationDocument.Backoffice;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Commands.UpdateConfigurationDraft.Backoffice;
+using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.DryRunOnFlight.Backoffice;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.EvaluateTypedDefinition.Backoffice;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.GetConfigurationDocumentById.Backoffice;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.GetConfigurationDocumentDiff.Backoffice;
@@ -12,6 +13,7 @@ using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.GetTypedD
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.PreviewDataProfile;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.PreviewDataProfile.Backoffice;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.ValidateConfigurationDocument.Backoffice;
+using AeroTech.ECTM.Application.FlightAggregate.Queries.GetFlightSeries;
 using AeroTech.ECTM.RestApi.V1.ConfigurationDocumentAggregate.Requests;
 using Asp.Versioning;
 using MediatR;
@@ -79,6 +81,14 @@ namespace AeroTech.ECTM.RestApi.V1.ConfigurationDocumentAggregate
             await file.CopyToAsync(buffer, cancellationToken);
 
             var query = new BackofficePreviewDataProfileQuery(kind, documentId, file.FileName, buffer.ToArray());
+
+            return Ok(await _mediator.Send(query, cancellationToken));
+        }
+
+        [HttpPost("{kind}/documents/{documentId:long}/dry-run/flight")]
+        public async Task<IActionResult> DryRunOnFlight(string kind, long documentId, [FromBody] DryRunOnFlightRequest request, CancellationToken cancellationToken)
+        {
+            var query = new BackofficeDryRunOnFlightQuery(kind, documentId, request.FlightId, request.Budget ?? GetFlightSeriesService.DefaultBudget);
 
             return Ok(await _mediator.Send(query, cancellationToken));
         }

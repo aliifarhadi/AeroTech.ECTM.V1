@@ -8,6 +8,7 @@ using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Commands.CreateCo
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Commands.PublishConfigurationDocument;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Commands.RetireConfigurationDocument;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Commands.UpdateConfigurationDraft;
+using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.DryRunOnFlight;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.EvaluateTypedDefinition;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.GetConfigurationDocumentById;
 using AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.GetConfigurationDocumentDiff;
@@ -32,10 +33,24 @@ using AeroTech.ECTM.Application.EngineModelAggregate.Commands.UpdateEngineModel;
 using AeroTech.ECTM.Application.EngineModelAggregate.Queries.GetEngineModelById;
 using AeroTech.ECTM.Application.EngineModelAggregate.Queries.GetEngineModelsPaginated;
 using AeroTech.ECTM.Application.EngineModelAggregate.Services;
+using AeroTech.ECTM.Application.FlightAggregate.Commands.ConfirmFlightIdentity;
+using AeroTech.ECTM.Application.FlightAggregate.Commands.ReviewFlight;
+using AeroTech.ECTM.Application.FlightAggregate.Queries.GetFlightById;
+using AeroTech.ECTM.Application.FlightAggregate.Queries.GetFlightSamples;
+using AeroTech.ECTM.Application.FlightAggregate.Queries.GetFlightSeries;
+using AeroTech.ECTM.Application.FlightAggregate.Queries.GetFlightsPaginated;
+using AeroTech.ECTM.Application.FlightAggregate.Services;
+using AeroTech.ECTM.Application.ImportBatchAggregate.Commands.CommitImport;
+using AeroTech.ECTM.Application.ImportBatchAggregate.Commands.PreviewImport;
+using AeroTech.ECTM.Application.ImportBatchAggregate.Queries.GetImportBatchById;
+using AeroTech.ECTM.Application.ImportBatchAggregate.Queries.GetImportBatchesPaginated;
+using AeroTech.ECTM.Application.ImportBatchAggregate.Services;
 using AeroTech.ECTM.Application.MaintenanceEventAggregate.Commands.CreateMaintenanceEvent;
 using AeroTech.ECTM.Application.MaintenanceEventAggregate.Commands.UpdateMaintenanceEvent;
 using AeroTech.ECTM.Application.MaintenanceEventAggregate.Queries.GetMaintenanceEventsPaginated;
 using AeroTech.ECTM.Application.MaintenanceEventAggregate.Services;
+using AeroTech.ECTM.Application.ProcessingJobAggregate.Queries.GetProcessingJobById;
+using AeroTech.ECTM.Application.ProcessingJobAggregate.Services;
 using AeroTech.ECTM.Application._Shared.Behaviors;
 using AeroTech.ECTM.Application._Shared.Concurrency;
 using AeroTech.ECTM.Application._Shared.Events;
@@ -86,6 +101,7 @@ namespace AeroTech.ECTM.Application
             services.AddScoped<IValidateConfigurationDocumentService, ValidateConfigurationDocumentService>();
             services.AddScoped<IGetConfigurationDocumentDiffService, GetConfigurationDocumentDiffService>();
             services.AddScoped<IPreviewDataProfileService, PreviewDataProfileService>();
+            services.AddScoped<IDryRunOnFlightService, DryRunOnFlightService>();
             services.AddScoped<IEvaluateTypedDefinitionService, EvaluateTypedDefinitionService>();
             services.AddScoped<IGetReadinessService, GetReadinessService>();
 
@@ -120,6 +136,30 @@ namespace AeroTech.ECTM.Application
             services.AddScoped<ICreateMaintenanceEventService, CreateMaintenanceEventService>();
             services.AddScoped<IUpdateMaintenanceEventService, UpdateMaintenanceEventService>();
             services.AddScoped<IGetMaintenanceEventsPaginatedService, GetMaintenanceEventsPaginatedService>();
+
+            services.Configure<ImportOptions>(configuration.GetSection(ImportOptions.SectionName));
+            services.Configure<ProcessingJobOptions>(configuration.GetSection(ProcessingJobOptions.SectionName));
+            services.AddSingleton<IProcessingJobRunner, ProcessingJobRunner>();
+            services.AddScoped<IProcessingJobHandler, ImportCommitJobHandler>();
+            services.AddScoped<IGetProcessingJobByIdService, GetProcessingJobByIdService>();
+
+            services.AddScoped<UploadExpander>();
+            services.AddScoped<RecordingSetLoader>();
+            services.AddScoped<RecordingInspector>();
+            services.AddScoped<FlightIdentityService>();
+            services.AddScoped<FlightDtoLoader>();
+            services.AddScoped<ImportBatchDtoLoader>();
+            services.AddScoped<IPreviewImportService, PreviewImportService>();
+            services.AddScoped<ICommitImportService, CommitImportService>();
+            services.AddScoped<IGetImportBatchByIdService, GetImportBatchByIdService>();
+            services.AddScoped<IGetImportBatchesPaginatedService, GetImportBatchesPaginatedService>();
+
+            services.AddScoped<IGetFlightsPaginatedService, GetFlightsPaginatedService>();
+            services.AddScoped<IGetFlightByIdService, GetFlightByIdService>();
+            services.AddScoped<IConfirmFlightIdentityService, ConfirmFlightIdentityService>();
+            services.AddScoped<IReviewFlightService, ReviewFlightService>();
+            services.AddScoped<IGetFlightSeriesService, GetFlightSeriesService>();
+            services.AddScoped<IGetFlightSamplesService, GetFlightSamplesService>();
 
             return services;
         }

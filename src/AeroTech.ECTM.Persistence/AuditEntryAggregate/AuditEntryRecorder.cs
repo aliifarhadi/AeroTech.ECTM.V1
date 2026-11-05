@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using AeroTech.ECTM.Domain._Shared;
 using AeroTech.ECTM.Domain.AuditEntryAggregate;
 using AeroTech.Framework.Core.Domain.Aggregates;
 using AeroTech.Framework.Core.Domain.Entities;
@@ -35,6 +36,9 @@ namespace AeroTech.ECTM.Persistence.AuditEntryAggregate
             foreach (var entry in changedEntries)
             {
                 if (entry.Entity is AuditEntry)
+                    continue;
+
+                if (entry.Entity is IBulkData)
                     continue;
 
                 if (ActionOf(entry.State) is not { } action)
@@ -98,6 +102,9 @@ namespace AeroTech.ECTM.Persistence.AuditEntryAggregate
                 var generatedByDatabase = property.ValueGenerated == ValueGenerated.OnAdd;
 
                 if (generatedByDatabase)
+                    continue;
+
+                if (property.ClrType == typeof(byte[]))
                     continue;
 
                 var unchanged = !entry.Property(property.Name).IsModified;

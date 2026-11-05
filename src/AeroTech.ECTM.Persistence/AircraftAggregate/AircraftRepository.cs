@@ -25,6 +25,12 @@ namespace AeroTech.ECTM.Persistence.AircraftAggregate
         public Task<bool> RegistrationExistsAsync(string registration, CancellationToken cancellationToken = default)
             => _dbContext.Aircraft.AnyAsync(aircraft => aircraft.Registration == registration, cancellationToken);
 
+        public async Task<IReadOnlyList<Aircraft>> ListByRegistrationsAsync(IReadOnlyCollection<string> registrations, CancellationToken cancellationToken = default)
+            => await _dbContext.Aircraft
+                .AsNoTracking()
+                .Where(aircraft => registrations.Contains(aircraft.Registration))
+                .ToListAsync(cancellationToken);
+
         public async Task<IReadOnlyList<Aircraft>> ListByIdsAsync(IReadOnlyCollection<long> ids, CancellationToken cancellationToken = default)
             => await _dbContext.Aircraft
                 .AsNoTracking()

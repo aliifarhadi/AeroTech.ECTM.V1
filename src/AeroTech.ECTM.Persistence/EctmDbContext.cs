@@ -5,7 +5,11 @@ using AeroTech.ECTM.Domain.ConfigurationDocumentAggregate;
 using AeroTech.ECTM.Domain.EngineAggregate;
 using AeroTech.ECTM.Domain.EngineInstallationAggregate;
 using AeroTech.ECTM.Domain.EngineModelAggregate;
+using AeroTech.ECTM.Domain.FlightAggregate;
+using AeroTech.ECTM.Domain.ImportBatchAggregate;
 using AeroTech.ECTM.Domain.MaintenanceEventAggregate;
+using AeroTech.ECTM.Domain.ProcessingJobAggregate;
+using AeroTech.ECTM.Domain.SourceFileAggregate;
 using AeroTech.ECTM.Persistence.AuditEntryAggregate;
 using AeroTech.Framework.Core.Domain.Repository;
 using AeroTech.Framework.Core.ServiceContracts;
@@ -55,6 +59,14 @@ namespace AeroTech.ECTM.Persistence
         public DbSet<EngineInstallation> EngineInstallations => Set<EngineInstallation>();
 
         public DbSet<MaintenanceEvent> MaintenanceEvents => Set<MaintenanceEvent>();
+
+        public DbSet<SourceFile> SourceFiles => Set<SourceFile>();
+
+        public DbSet<ImportBatch> ImportBatches => Set<ImportBatch>();
+
+        public DbSet<Flight> Flights => Set<Flight>();
+
+        public DbSet<ProcessingJob> ProcessingJobs => Set<ProcessingJob>();
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {

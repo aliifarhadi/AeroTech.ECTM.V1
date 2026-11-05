@@ -5,7 +5,9 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
         string? Unit,
         string? ValueKind,
         IReadOnlyList<int> Positions,
-        bool IsDerived)
+        bool IsDerived,
+        PlausibilityRange? Plausibility = null,
+        IReadOnlyList<string>? EnumValues = null)
     {
         public bool IsNumeric => ValueKind is "NUMERIC" or "INTEGER";
     }

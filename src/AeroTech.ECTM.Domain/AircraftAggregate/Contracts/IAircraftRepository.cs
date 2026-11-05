@@ -13,6 +13,8 @@ namespace AeroTech.ECTM.Domain.AircraftAggregate.Contracts
 
         Task<bool> RegistrationExistsAsync(string registration, CancellationToken cancellationToken = default);
 
+        Task<IReadOnlyList<Aircraft>> ListByRegistrationsAsync(IReadOnlyCollection<string> registrations, CancellationToken cancellationToken = default);
+
         Task<IReadOnlyList<Aircraft>> ListByIdsAsync(IReadOnlyCollection<long> ids, CancellationToken cancellationToken = default);
 
         Task<PaginatedList<Aircraft>> ListAsync(string? search, AircraftStatus? status, int pageNumber, int pageSize, CancellationToken cancellationToken = default);

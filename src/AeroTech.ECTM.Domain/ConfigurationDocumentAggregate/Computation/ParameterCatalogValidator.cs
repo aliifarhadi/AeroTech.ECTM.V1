@@ -15,6 +15,7 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
         public const string PositionsRequired = "POSITIONS_REQUIRED";
         public const string PositionInvalid = "POSITION_INVALID";
         public const string PlausibilityInvalid = "PLAUSIBILITY_INVALID";
+        public const string EnumValuesInvalid = "ENUM_VALUES_INVALID";
         public const string OemCitationRequired = "OEM_CITATION_REQUIRED";
         public const string KindUnknown = "KIND_UNKNOWN";
         public const string KindNotAvailable = "KIND_NOT_AVAILABLE";
@@ -190,10 +191,11 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
 
                 var positions = ValidPositions(parameter.Positions, $"{path}.positions", issues);
                 CheckPlausibility(parameter, path, issues);
+                CheckEnumValues(parameter, path, issues);
                 CheckOemIndication(parameter.OemIndication, $"{path}.oemIndication", issues);
 
                 if (parameter.Code is not null && CodePattern.IsMatch(parameter.Code))
-                    entries.TryAdd(parameter.Code, new CatalogEntry(parameter.Code, parameter.Unit, parameter.ValueKind, positions, IsDerived: false));
+                    entries.TryAdd(parameter.Code, new CatalogEntry(parameter.Code, parameter.Unit, parameter.ValueKind, positions, IsDerived: false, parameter.Plausibility, parameter.EnumValues));
             }
         }
 
@@ -226,6 +228,21 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
 
             if (range.Min is not { } min || range.Max is not { } max || min >= max)
                 issues.Add(new ValidationIssue($"{path}.plausibility", PlausibilityInvalid, "A plausibility range needs min < max."));
+        }
+
+        private static void CheckEnumValues(CatalogParameter parameter, string path, List<ValidationIssue> issues)
+        {
+            if (parameter.EnumValues is not { } values)
+                return;
+
+            if (parameter.ValueKind != "ENUM")
+                issues.Add(new ValidationIssue($"{path}.enumValues", EnumValuesInvalid, "Enumerated values apply to ENUM parameters only."));
+
+            var blank = values.Any(string.IsNullOrWhiteSpace);
+            var distinctCount = values.Select(value => value.Trim()).Distinct(StringComparer.Ordinal).Count();
+
+            if (values.Count == 0 || blank || distinctCount != values.Count)
+                issues.Add(new ValidationIssue($"{path}.enumValues", EnumValuesInvalid, "Enumerated values must be distinct, non-blank literals."));
         }
 
         private static void CheckOemIndication(OemIndication? indication, string path, List<ValidationIssue> issues)

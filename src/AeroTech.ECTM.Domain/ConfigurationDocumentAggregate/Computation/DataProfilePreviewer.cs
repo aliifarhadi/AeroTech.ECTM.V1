@@ -1,4 +1,4 @@
-using System.Globalization;
+using AeroTech.ECTM.Domain._Shared.Recording;
 using AeroTech.ECTM.Domain._Shared.Resources;
 
 namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
@@ -67,7 +67,7 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
             return new ProfilePreview(true, expectedColumnCount, header.Count, [], dataRowCount, raggedRowCount, firstRows, lastRows.ToList(), parseSummary, engines);
         }
 
-        private static List<HeaderMismatch> HeaderMismatchesOf(IReadOnlyList<DataProfileColumn> columns, IReadOnlyList<string> header)
+        public static List<HeaderMismatch> HeaderMismatchesOf(IReadOnlyList<DataProfileColumn> columns, IReadOnlyList<string> header)
         {
             var mismatches = new List<HeaderMismatch>();
 
@@ -79,7 +79,7 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
                 if (ordinal < header.Count)
                     actual = header[ordinal];
 
-                if (actual != column.ExactHeader)
+                if (actual?.Trim() != column.ExactHeader?.Trim())
                     mismatches.Add(new HeaderMismatch(ordinal, column.ExactHeader, actual));
             }
 
@@ -148,7 +148,7 @@ namespace AeroTech.ECTM.Domain.ConfigurationDocumentAggregate.Computation
                 if (!_numeric)
                     return new PreviewCell(Ordinal, ParameterKey, raw, null, Text);
 
-                if (double.TryParse(trimmed, NumberStyles.Float, CultureInfo.InvariantCulture, out var number))
+                if (RecordedNumbers.TryParse(trimmed, out var number))
                     return new PreviewCell(Ordinal, ParameterKey, raw, number, Ok);
 
                 UnparseableCount++;

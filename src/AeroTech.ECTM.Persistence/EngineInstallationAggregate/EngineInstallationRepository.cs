@@ -28,6 +28,12 @@ namespace AeroTech.ECTM.Persistence.EngineInstallationAggregate
                                        || (installation.AircraftId == aircraftId && installation.Position == position))
                 .ToListAsync(cancellationToken);
 
+        public async Task<IReadOnlyList<EngineInstallation>> ListByAircraftIdsAsync(IReadOnlyCollection<long> aircraftIds, CancellationToken cancellationToken = default)
+            => await _dbContext.EngineInstallations
+                .AsNoTracking()
+                .Where(installation => aircraftIds.Contains(installation.AircraftId))
+                .ToListAsync(cancellationToken);
+
         public async Task<IReadOnlyList<EngineInstallation>> ListOpenByAircraftIdsAsync(IReadOnlyCollection<long> aircraftIds, CancellationToken cancellationToken = default)
             => await _dbContext.EngineInstallations
                 .AsNoTracking()

@@ -1,3 +1,4 @@
+using AeroTech.ECTM.Consumers.Jobs;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +28,8 @@ namespace AeroTech.ECTM.Consumers
                     });
                 });
             });
+
+            services.AddHostedService<ProcessingJobPoller>();
 
             return services;
         }

@@ -11,6 +11,8 @@ namespace AeroTech.ECTM.Domain.EngineInstallationAggregate.Contracts
 
         Task<IReadOnlyList<EngineInstallation>> ListForEngineOrPositionAsync(long engineId, long aircraftId, int position, CancellationToken cancellationToken = default);
 
+        Task<IReadOnlyList<EngineInstallation>> ListByAircraftIdsAsync(IReadOnlyCollection<long> aircraftIds, CancellationToken cancellationToken = default);
+
         Task<IReadOnlyList<EngineInstallation>> ListOpenByAircraftIdsAsync(IReadOnlyCollection<long> aircraftIds, CancellationToken cancellationToken = default);
 
         Task<IReadOnlyList<EngineInstallation>> ListOpenByEngineIdsAsync(IReadOnlyCollection<long> engineIds, CancellationToken cancellationToken = default);

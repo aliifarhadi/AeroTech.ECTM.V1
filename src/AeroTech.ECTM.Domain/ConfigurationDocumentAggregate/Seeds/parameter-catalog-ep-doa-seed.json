@@ -1,7 +1,7 @@
 {
   "catalogCode": "EP-DOA-PARAMETER-CATALOG",
   "engineFamily": "CFM56-3 (models -3B1/-3B2/-3C1 per OEM-D1/D2); exact variant, rating and trim configuration per ESN from owner records (I-13)",
-  "source": "pack v3.3 contracts/parameter-catalog-ep-doa-v1.json (catalogVersion v2); ALT_RATE belongs to the PHASE_RULESET (P05)",
+  "source": "pack v3.3 contracts/parameter-catalog-ep-doa-v1.json (catalogVersion v2); ALT_RATE belongs to the PHASE_RULESET (P05); enumValues = the literals observed in all 102 real files of samples/ (measured 2026-11-05, stage/P03 GAP-ANALYSIS §5)",
   "parameters": [
     {
       "code": "ELAPSED_S",
@@ -31,7 +31,11 @@
       "positions": [],
       "plausibility": null,
       "note": "observed literals: AIR, GND; lags radio height by 41-59 s in sample",
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "AIR",
+        "GND"
+      ]
     },
     {
       "code": "PRESSURE_ALT_FT",
@@ -456,7 +460,11 @@
       "positions": [],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "Connect",
+        "Disconnect"
+      ]
     },
     {
       "code": "ENGINE_CUTOFF",
@@ -469,7 +477,11 @@
       ],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "Cutoff",
+        "Run"
+      ]
     },
     {
       "code": "STICK_SHAKER_L",
@@ -479,7 +491,10 @@
       "positions": [],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "No Shake"
+      ]
     },
     {
       "code": "STICK_SHAKER_R",
@@ -489,7 +504,10 @@
       "positions": [],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "No Shake"
+      ]
     },
     {
       "code": "AT_WARN_R",
@@ -499,7 +517,11 @@
       "positions": [],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "No Warn",
+        "Warning"
+      ]
     },
     {
       "code": "AT_WARN_L",
@@ -509,7 +531,11 @@
       "positions": [],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "No Warn",
+        "Warning"
+      ]
     },
     {
       "code": "ENGINE_BLEED",
@@ -522,7 +548,11 @@
       ],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "Off",
+        "On"
+      ]
     },
     {
       "code": "ENGINE_FIRE",
@@ -535,7 +565,10 @@
       ],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "No Fire"
+      ]
     },
     {
       "code": "AT_GA",
@@ -545,7 +578,10 @@
       "positions": [],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "Not Engage"
+      ]
     },
     {
       "code": "AT_MCP_SPEED",
@@ -555,7 +591,11 @@
       "positions": [],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "Engaged",
+        "Not Engage"
+      ]
     },
     {
       "code": "AT_LIMIT",
@@ -565,7 +605,10 @@
       "positions": [],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "Not Limit"
+      ]
     },
     {
       "code": "AT_N1_LIMIT_MODE",
@@ -585,7 +628,11 @@
       "positions": [],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "Engaged",
+        "Not Engage"
+      ]
     },
     {
       "code": "AT_RETARD",
@@ -595,7 +642,11 @@
       "positions": [],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "Engaged",
+        "Not Engage"
+      ]
     },
     {
       "code": "AT_ENGAGED",
@@ -605,7 +656,11 @@
       "positions": [],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "Engaged",
+        "Not Engage"
+      ]
     },
     {
       "code": "AT_MIN_SPEED",
@@ -615,7 +670,11 @@
       "positions": [],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "Engaged",
+        "Not Engage"
+      ]
     },
     {
       "code": "ISOLATION_VALVE",
@@ -625,7 +684,11 @@
       "positions": [],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "Closed",
+        "Open"
+      ]
     },
     {
       "code": "WING_ANTI_ICE",
@@ -635,7 +698,10 @@
       "positions": [],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "Off"
+      ]
     },
     {
       "code": "COWL_ANTI_ICE",
@@ -648,7 +714,11 @@
       ],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "Off",
+        "On"
+      ]
     },
     {
       "code": "PACK_HL_R",
@@ -658,7 +728,11 @@
       "positions": [],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "High",
+        "Low"
+      ]
     },
     {
       "code": "PACK_HL_L",
@@ -668,7 +742,11 @@
       "positions": [],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "High",
+        "Low"
+      ]
     },
     {
       "code": "PACK_ON_R",
@@ -678,7 +756,11 @@
       "positions": [],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "Off",
+        "On"
+      ]
     },
     {
       "code": "PACK_ON_L",
@@ -688,7 +770,11 @@
       "positions": [],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "Off",
+        "On"
+      ]
     },
     {
       "code": "FCC_N1_LIMIT_MODE",
@@ -718,16 +804,20 @@
       "positions": [],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "Engaged",
+        "Not Engaged"
+      ]
     },
     {
       "code": "ENGINE_ASYMMETRY",
       "role": "DISCRETE_STATE",
-      "unit": "ENUM",
-      "valueKind": "ENUM",
+      "unit": "NONE",
+      "valueKind": "NUMERIC",
       "positions": [],
       "plausibility": null,
-      "note": null,
+      "note": "owner ruling 2026-11-05: numeric (real values 0 to 55.2 in samples/); unit and meaning unknown until the recorder manual (I-02)",
       "oemIndication": null
     },
     {
@@ -741,7 +831,11 @@
       ],
       "plausibility": null,
       "note": null,
-      "oemIndication": null
+      "oemIndication": null,
+      "enumValues": [
+        "Deployed",
+        "Not Deployed"
+      ]
     },
     {
       "code": "N1_DIFF_E1_E2_PCT",

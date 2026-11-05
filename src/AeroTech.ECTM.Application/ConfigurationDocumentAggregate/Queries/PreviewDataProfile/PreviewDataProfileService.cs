@@ -12,7 +12,7 @@ namespace AeroTech.ECTM.Application.ConfigurationDocumentAggregate.Queries.Previ
     {
         public const int MaximumFileBytes = 50 * 1024 * 1024;
 
-        private const string CatalogDryRunPhase = "P03 (dry-run on imported flights)";
+        private const string CatalogDryRunPhase = "P03 as a dry-run on an imported flight (POST .../dry-run/flight)";
 
         private readonly ConfigurationDocumentLoader _documents;
         private readonly ActiveCatalogLoader _activeCatalog;

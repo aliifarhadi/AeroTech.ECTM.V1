@@ -1,3 +1,4 @@
+using System.Buffers;
 using System.Text;
 using AeroTech.ECTM.Domain._Shared.Resources;
 
@@ -6,38 +7,50 @@ namespace AeroTech.ECTM.Domain._Shared.Recording
     public static class CsvRows
     {
         private const char Quote = '"';
+        private const char ByteOrderMark = '﻿';
 
         private static readonly Encoding StrictUtf8 = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
 
         public static IEnumerable<IReadOnlyList<string>> Read(byte[] content, char delimiter)
         {
-            using var stream = new MemoryStream(content, writable: false);
-            using var reader = new StreamReader(stream, StrictUtf8, detectEncodingFromByteOrderMarks: true);
+            var text = Decode(content);
 
+            return RowsOf(text, delimiter);
+        }
+
+        private static string Decode(byte[] content)
+        {
+            string text;
+
+            try
+            {
+                text = StrictUtf8.GetString(content);
+            }
+            catch (DecoderFallbackException)
+            {
+                throw ExceptionFactory.SourceFileIsUnreadable("the file is not valid UTF-8");
+            }
+
+            if (text.Length > 0 && text[0] == ByteOrderMark)
+                return text[1..];
+
+            return text;
+        }
+
+        private static IEnumerable<IReadOnlyList<string>> RowsOf(string text, char delimiter)
+        {
+            var plainStops = SearchValues.Create([delimiter, '\n', '\r']);
             var cells = new List<string>();
             var cell = new StringBuilder();
-            var quoted = false;
-            int next;
+            var index = 0;
 
-            while ((next = ReadCharacter(reader)) >= 0)
+            while (index < text.Length)
             {
-                var character = (char)next;
-
-                if (quoted)
-                {
-                    if (character != Quote)
-                        cell.Append(character);
-                    else if (reader.Peek() == Quote)
-                        cell.Append((char)reader.Read());
-                    else
-                        quoted = false;
-
-                    continue;
-                }
+                var character = text[index];
 
                 if (character == Quote && cell.Length == 0)
                 {
-                    quoted = true;
+                    index = ReadQuoted(text, index + 1, cell);
                     continue;
                 }
 
@@ -45,11 +58,15 @@ namespace AeroTech.ECTM.Domain._Shared.Recording
                 {
                     cells.Add(cell.ToString());
                     cell.Clear();
+                    index++;
                     continue;
                 }
 
                 if (character == '\r')
+                {
+                    index++;
                     continue;
+                }
 
                 if (character == '\n')
                 {
@@ -61,14 +78,16 @@ namespace AeroTech.ECTM.Domain._Shared.Recording
                         cells.Clear();
                     }
 
+                    index++;
                     continue;
                 }
 
-                cell.Append(character);
-            }
+                var stop = text.AsSpan(index).IndexOfAny(plainStops);
+                var end = stop < 0 ? text.Length : index + stop;
 
-            if (quoted)
-                throw ExceptionFactory.SourceFileIsUnreadable("a quoted cell is not terminated");
+                cell.Append(text, index, end - index);
+                index = end;
+            }
 
             if (cells.Count > 0 || cell.Length > 0)
             {
@@ -77,16 +96,27 @@ namespace AeroTech.ECTM.Domain._Shared.Recording
             }
         }
 
-        private static int ReadCharacter(StreamReader reader)
+        private static int ReadQuoted(string text, int index, StringBuilder cell)
         {
-            try
+            while (index < text.Length)
             {
-                return reader.Read();
+                var closing = text.IndexOf(Quote, index);
+
+                if (closing < 0)
+                    break;
+
+                cell.Append(text, index, closing - index);
+
+                var escaped = closing + 1 < text.Length && text[closing + 1] == Quote;
+
+                if (!escaped)
+                    return closing + 1;
+
+                cell.Append(Quote);
+                index = closing + 2;
             }
-            catch (DecoderFallbackException)
-            {
-                throw ExceptionFactory.SourceFileIsUnreadable("the file is not valid UTF-8");
-            }
+
+            throw ExceptionFactory.SourceFileIsUnreadable("a quoted cell is not terminated");
         }
     }
 }

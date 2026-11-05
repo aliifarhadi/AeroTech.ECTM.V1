@@ -4,12 +4,16 @@ namespace AeroTech.ECTM.Domain._Shared.Resources
 {
     public static class ExceptionFactory
     {
+        public const int ResourceChangedConcurrentlyCode = 80001;
+        public const int SourceFileIsUnreadableCode = 80112;
+        public const int SourceFileIsTooLargeCode = 80113;
+
         // Shared: 80000-80099
         public static BusinessException OperationInProgress(params object?[] args) =>
             new(80000, ExceptionMessages.OperationInProgress, args) { HttpStatus = 409 };
 
         public static BusinessException ResourceChangedConcurrently() =>
-            new(80001, ExceptionMessages.ResourceChangedConcurrently) { HttpStatus = 409 };
+            new(ResourceChangedConcurrentlyCode, ExceptionMessages.ResourceChangedConcurrently) { HttpStatus = 409 };
 
         // Configuration registry: 80100-80199
         public static BusinessException ConfigurationKindNotFound(params object?[] args) =>
@@ -49,10 +53,10 @@ namespace AeroTech.ECTM.Domain._Shared.Resources
             new(80111, ExceptionMessages.DryRunNotAvailable, args) { HttpStatus = 422 };
 
         public static BusinessException SourceFileIsUnreadable(params object?[] args) =>
-            new(80112, ExceptionMessages.SourceFileIsUnreadable, args) { HttpStatus = 422 };
+            new(SourceFileIsUnreadableCode, ExceptionMessages.SourceFileIsUnreadable, args) { HttpStatus = 422 };
 
         public static BusinessException SourceFileIsTooLarge(params object?[] args) =>
-            new(80113, ExceptionMessages.SourceFileIsTooLarge, args) { HttpStatus = 422 };
+            new(SourceFileIsTooLargeCode, ExceptionMessages.SourceFileIsTooLarge, args) { HttpStatus = 422 };
 
 
         public static BusinessException TypedDefinitionIsInvalid(params object?[] args) =>
@@ -124,5 +128,60 @@ namespace AeroTech.ECTM.Domain._Shared.Resources
 
         public static BusinessException LifeCounterAdjustmentReasonIsRequired() =>
             new(80220, ExceptionMessages.LifeCounterAdjustmentReasonIsRequired) { HttpStatus = 422 };
+
+        // Imports and flights: 80300-80399
+        public static BusinessException ImportBatchNotFound(params object?[] args) =>
+            new(80300, ExceptionMessages.ImportBatchNotFound, args) { HttpStatus = 404 };
+
+        public static BusinessException ImportFileTypeNotSupported(params object?[] args) =>
+            new(80301, ExceptionMessages.ImportFileTypeNotSupported, args) { HttpStatus = 422 };
+
+        public static BusinessException ImportFileIsTooLarge(params object?[] args) =>
+            new(80302, ExceptionMessages.ImportFileIsTooLarge, args) { HttpStatus = 422 };
+
+        public static BusinessException ArchiveIsUnreadable(params object?[] args) =>
+            new(80303, ExceptionMessages.ArchiveIsUnreadable, args) { HttpStatus = 422 };
+
+        public static BusinessException ArchiveIsEncrypted(params object?[] args) =>
+            new(80304, ExceptionMessages.ArchiveIsEncrypted, args) { HttpStatus = 422 };
+
+        public static BusinessException ImportHasTooManyFiles(params object?[] args) =>
+            new(80305, ExceptionMessages.ImportHasTooManyFiles, args) { HttpStatus = 422 };
+
+        public static BusinessException ImportExpandsBeyondLimit(params object?[] args) =>
+            new(80306, ExceptionMessages.ImportExpandsBeyondLimit, args) { HttpStatus = 422 };
+
+        public static BusinessException ImportBatchCommittedWithAnotherKey(params object?[] args) =>
+            new(80307, ExceptionMessages.ImportBatchCommittedWithAnotherKey, args) { HttpStatus = 409 };
+
+        public static BusinessException ArchiveHasNoMembers(params object?[] args) =>
+            new(80308, ExceptionMessages.ArchiveHasNoMembers, args) { HttpStatus = 422 };
+
+        public static BusinessException FlightIdentityIsIncomplete(params object?[] args) =>
+            new(80309, ExceptionMessages.FlightIdentityIsIncomplete, args) { HttpStatus = 422 };
+
+        public static BusinessException ProcessingJobNotFound(params object?[] args) =>
+            new(80310, ExceptionMessages.ProcessingJobNotFound, args) { HttpStatus = 404 };
+
+        public static BusinessException FlightNotFound(params object?[] args) =>
+            new(80311, ExceptionMessages.FlightNotFound, args) { HttpStatus = 404 };
+
+        public static BusinessException EngineNotInstalledAtFlight(params object?[] args) =>
+            new(80312, ExceptionMessages.EngineNotInstalledAtFlight, args) { HttpStatus = 422 };
+
+        public static BusinessException PossibleDuplicateNeedsConfirmation(params object?[] args) =>
+            new(80313, ExceptionMessages.PossibleDuplicateNeedsConfirmation, args) { HttpStatus = 422 };
+
+        public static BusinessException ReviewNotAllowed(params object?[] args) =>
+            new(80314, ExceptionMessages.ReviewNotAllowed, args) { HttpStatus = 409 };
+
+        public static BusinessException ReviewActionDeliveredLater(params object?[] args) =>
+            new(80315, ExceptionMessages.ReviewActionDeliveredLater, args) { HttpStatus = 422 };
+
+        public static BusinessException FlightParameterNotFound(params object?[] args) =>
+            new(80316, ExceptionMessages.FlightParameterNotFound, args) { HttpStatus = 422 };
+
+        public static BusinessException SeriesRangeTooLarge(params object?[] args) =>
+            new(80317, ExceptionMessages.SeriesRangeTooLarge, args) { HttpStatus = 422 };
     }
 }

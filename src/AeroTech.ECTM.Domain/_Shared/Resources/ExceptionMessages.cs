@@ -46,5 +46,25 @@ namespace AeroTech.ECTM.Domain._Shared.Resources
         public const string MaintenanceEventNotFound = "Maintenance event {0} was not found.";
         public const string RegistryChangeReasonIsRequired = "A reason is required for every installation and removal.";
         public const string LifeCounterAdjustmentReasonIsRequired = "A reason is required for every life counter adjustment.";
+
+        // Imports and flights
+        public const string ImportBatchNotFound = "Import batch {0} was not found.";
+        public const string ImportFileTypeNotSupported = "File {0} is not a CSV, XLSX, ZIP or RAR file.";
+        public const string ImportFileIsTooLarge = "File {0} has {1} bytes; the limit is {2}.";
+        public const string ArchiveIsUnreadable = "Archive {0} cannot be read.";
+        public const string ArchiveIsEncrypted = "Archive {0} is encrypted.";
+        public const string ImportHasTooManyFiles = "The upload holds {0} files; the limit is {1}.";
+        public const string ImportExpandsBeyondLimit = "The upload expands beyond {0} bytes.";
+        public const string ImportBatchCommittedWithAnotherKey = "Import batch {0} is {1} with another idempotency key.";
+        public const string ArchiveHasNoMembers = "Archive {0} holds no file.";
+        public const string FlightIdentityIsIncomplete = "The identity is incomplete: {0}";
+        public const string ProcessingJobNotFound = "Processing job {0} was not found.";
+        public const string FlightNotFound = "Flight {0} was not found.";
+        public const string EngineNotInstalledAtFlight = "Engine {0} is not installed on aircraft {1} position {2} on {3}.";
+        public const string PossibleDuplicateNeedsConfirmation = "Flight {0} has the same aircraft, date and flight number; confirm that this is a distinct flight.";
+        public const string ReviewNotAllowed = "{0} is not allowed while the flight is {1}.";
+        public const string ReviewActionDeliveredLater = "Review action {0} is delivered in phase {1}.";
+        public const string FlightParameterNotFound = "Flight {0} has no numeric channel {1}.";
+        public const string SeriesRangeTooLarge = "RAW sampling returns every sample; the range holds {0} samples and the limit is {1}.";
     }
 }
