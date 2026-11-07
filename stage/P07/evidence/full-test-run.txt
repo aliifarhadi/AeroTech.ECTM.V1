@@ -1,0 +1,8 @@
+[xUnit.net 00:00:09.81]     AeroTech.ECTM.Domain.ConformanceTests.Import.SampleCorpusTests.Every_real_file_in_samples_parses_with_the_seed_profile_as_measured [FAIL]
+[xUnit.net 00:00:16.52]     AeroTech.ECTM.Domain.ConformanceTests.Quality.QualityGoldenTests.The_seed_rules_grade_the_real_data_as_measured_and_find_no_stuck_sensor [FAIL]
+[xUnit.net 00:00:19.25]     AeroTech.ECTM.Domain.ConformanceTests.Quality.QualityGoldenTests.Every_real_file_in_samples_matches_the_oracle [FAIL]
+[xUnit.net 00:00:20.83]     AeroTech.ECTM.Domain.ConformanceTests.Phases.PhaseGoldenTests.Every_real_file_in_samples_matches_the_oracle [FAIL]
+[xUnit.net 00:00:26.22]     AeroTech.ECTM.Domain.ConformanceTests.StabilityPoints.SnapshotGoldenTests.Every_real_file_in_samples_matches_the_oracle [FAIL]
+Failed!  - Failed:     5, Passed:   377, Skipped:     0, Total:   382, Duration: 33 s - AeroTech.ECTM.Domain.ConformanceTests.dll (net10.0)
+Passed!  - Failed:     0, Passed:    82, Skipped:     0, Total:    82, Duration: 49 s - AeroTech.ECTM.Application.AcceptanceTests.dll (net10.0)
+Rerun of the 5 failing corpus tests: all fail with IOException - samples/EP-DOA_Parameters (20261025)/2026-10-02_EP-DOA_6950.csv is open in Excel (process EXCEL 19304). 48 other tests of the same group pass, including golden parity 8/8.

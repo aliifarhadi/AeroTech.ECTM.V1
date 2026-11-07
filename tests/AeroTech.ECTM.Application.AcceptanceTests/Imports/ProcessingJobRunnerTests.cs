@@ -82,6 +82,12 @@ public sealed class ProcessingJobRunnerTests
         public Task<ProcessingJob?> FindNextRunnableAsync(DateTimeOffset now, CancellationToken cancellationToken = default)
             => Task.FromResult(Jobs.FirstOrDefault(job => job.State == ProcessingJobState.QUEUED));
 
+        public Task<ProcessingJob?> FindQueuedAsync(ProcessingJobKind kind, long subjectId, CancellationToken cancellationToken = default)
+            => Task.FromResult(Jobs.Where(job => job.Kind == kind).Where(job => job.SubjectId == subjectId).FirstOrDefault(job => job.State == ProcessingJobState.QUEUED));
+
+        public Task<ProcessingJob?> FindLatestAsync(ProcessingJobKind kind, long subjectId, CancellationToken cancellationToken = default)
+            => Task.FromResult(Jobs.Where(job => job.Kind == kind).LastOrDefault(job => job.SubjectId == subjectId));
+
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => Task.FromResult(1);
     }
 

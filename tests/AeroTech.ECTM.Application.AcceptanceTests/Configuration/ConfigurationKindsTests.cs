@@ -29,7 +29,8 @@ public sealed class ConfigurationKindsTests(MigratedDatabaseFixture fixture)
         ["PARAMETER_CATALOG"] = "P02",
         ["QUALITY_RULES"] = "P04",
         ["PHASE_RULESET"] = "P05",
-        ["SNAPSHOT_RULES"] = "P06"
+        ["SNAPSHOT_RULES"] = "P06",
+        ["BASELINE_RULES"] = "P07"
     };
 
     [Fact]

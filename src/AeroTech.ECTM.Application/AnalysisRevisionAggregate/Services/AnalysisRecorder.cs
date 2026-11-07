@@ -1,3 +1,4 @@
+using AeroTech.ECTM.Application.BaselineParameterFlightAggregate.Services;
 using AeroTech.ECTM.Domain._Shared.Resources;
 using AeroTech.ECTM.Domain.AnalysisRevisionAggregate;
 using AeroTech.ECTM.Domain.AnalysisRevisionAggregate.Arguments;
@@ -28,6 +29,7 @@ namespace AeroTech.ECTM.Application.AnalysisRevisionAggregate.Services
         private readonly IFlightStabilityPointsRepository _stabilityPoints;
         private readonly IFlightReviewRepository _reviews;
         private readonly ISourceFileRepository _sourceFiles;
+        private readonly BaselineEvaluationScheduler _baselineEvaluations;
         private readonly IIdGenerator _idGenerator;
         private readonly IClock _clock;
 
@@ -38,6 +40,7 @@ namespace AeroTech.ECTM.Application.AnalysisRevisionAggregate.Services
             IFlightStabilityPointsRepository stabilityPoints,
             IFlightReviewRepository reviews,
             ISourceFileRepository sourceFiles,
+            BaselineEvaluationScheduler baselineEvaluations,
             IIdGenerator idGenerator,
             IClock clock)
         {
@@ -47,6 +50,7 @@ namespace AeroTech.ECTM.Application.AnalysisRevisionAggregate.Services
             _stabilityPoints = stabilityPoints;
             _reviews = reviews;
             _sourceFiles = sourceFiles;
+            _baselineEvaluations = baselineEvaluations;
             _idGenerator = idGenerator;
             _clock = clock;
         }
@@ -97,6 +101,8 @@ namespace AeroTech.ECTM.Application.AnalysisRevisionAggregate.Services
             await _reviews.AddAsync(FlightReview.Open(_idGenerator.NewId(), flight.Id, revision.Id, now), cancellationToken);
             revision.Activate(now);
             flight.ReturnToReview();
+
+            await _baselineEvaluations.ScheduleForFlightAsync(flight, cancellationToken);
         }
 
         private async Task SupersedeCurrentAsync(long flightId, DateTimeOffset now, CancellationToken cancellationToken)

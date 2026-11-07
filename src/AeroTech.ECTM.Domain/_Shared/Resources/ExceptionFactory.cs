@@ -207,5 +207,38 @@ namespace AeroTech.ECTM.Domain._Shared.Resources
 
         public static BusinessException StabilityPointsNotEvaluated(params object?[] args) =>
             new(80326, ExceptionMessages.StabilityPointsNotEvaluated, args) { HttpStatus = 404 };
+
+        public static BusinessException BaselineNotFound(params object?[] args) =>
+            new(80400, ExceptionMessages.BaselineNotFound, args) { HttpStatus = 404 };
+
+        public static BusinessException BaselineIsNotDraft(params object?[] args) =>
+            new(80401, ExceptionMessages.BaselineIsNotDraft, args) { HttpStatus = 409 };
+
+        public static BusinessException BaselineIsNotPublished(params object?[] args) =>
+            new(80402, ExceptionMessages.BaselineIsNotPublished, args) { HttpStatus = 409 };
+
+        public static BusinessException BaselineDraftRevisionStale(params object?[] args) =>
+            new(80403, ExceptionMessages.BaselineDraftRevisionStale, args) { HttpStatus = 409 };
+
+        public static BusinessException BaselineCannotBePublished(params object?[] args) =>
+            new(80404, ExceptionMessages.BaselineCannotBePublished, args) { HttpStatus = 422 };
+
+        public static BusinessException BaselineParameterInvalid(params object?[] args) =>
+            new(80405, ExceptionMessages.BaselineParameterInvalid, args) { HttpStatus = 400 };
+
+        public static BusinessException BaselinePrefillFileRejected(params object?[] args) =>
+            new(80406, ExceptionMessages.BaselinePrefillFileRejected, args) { HttpStatus = 400 };
+
+        public static BusinessException BaselineParameterNotFound(params object?[] args) =>
+            new(80407, ExceptionMessages.BaselineParameterNotFound, args) { HttpStatus = 404 };
+
+        public static BusinessException BaselinePrimaryChanged(params object?[] args) =>
+            new(80408, ExceptionMessages.BaselinePrimaryChanged, args) { HttpStatus = 409 };
+
+        public static BusinessException BaselineShopVisitInvalid(params object?[] args) =>
+            new(80409, ExceptionMessages.BaselineShopVisitInvalid, args) { HttpStatus = 422 };
+
+        public static BusinessException BaselineEngineMismatch(params object?[] args) =>
+            new(80410, ExceptionMessages.BaselineEngineMismatch, args) { HttpStatus = 422 };
     }
 }

@@ -17,5 +17,6 @@
     <EmbeddedResource Include="ConfigurationDocumentAggregate\Seeds\quality-rules-ep-doa-seed.json" LogicalName="quality-rules-ep-doa-seed.json" />
     <EmbeddedResource Include="ConfigurationDocumentAggregate\Seeds\phase-ruleset-ep-doa-seed.json" LogicalName="phase-ruleset-ep-doa-seed.json" />
     <EmbeddedResource Include="ConfigurationDocumentAggregate\Seeds\snapshot-rules-ep-doa-seed.json" LogicalName="snapshot-rules-ep-doa-seed.json" />
+    <EmbeddedResource Include="ConfigurationDocumentAggregate\Seeds\baseline-rules-ep-doa-seed.json" LogicalName="baseline-rules-ep-doa-seed.json" />
   </ItemGroup>
 </Project>

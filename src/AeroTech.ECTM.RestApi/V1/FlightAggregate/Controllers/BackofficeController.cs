@@ -1,5 +1,6 @@
 using AeroTech.ECTM.Application.AnalysisRevisionAggregate.Commands.RecomputeFlight.Backoffice;
 using AeroTech.ECTM.Application.AnalysisRevisionAggregate.Queries.GetFlightRevisions.Backoffice;
+using AeroTech.ECTM.Application.BaselineParameterFlightAggregate.Queries.GetFlightBaselineComparisons.Backoffice;
 using AeroTech.ECTM.Application.FlightAggregate.Commands.ConfirmFlightIdentity.Backoffice;
 using AeroTech.ECTM.Application.FlightAggregate.Commands.ReviewFlight.Backoffice;
 using AeroTech.ECTM.Application.FlightAggregate.Queries.GetFlightById.Backoffice;
@@ -17,6 +18,7 @@ using AeroTech.ECTM.Application.FlightStabilityPointsAggregate.Queries.GetFlight
 using AeroTech.ECTM.Application.FlightStabilityPointsAggregate.Queries.GetFlightStabilityPoints.Backoffice;
 using AeroTech.ECTM.Domain.FlightAggregate.Arguments;
 using AeroTech.ECTM.Domain.FlightAggregate.Computation;
+using AeroTech.ECTM.RestApi.V1.BaselineAggregate.Requests;
 using AeroTech.ECTM.RestApi.V1.FlightAggregate.Requests;
 using AeroTech.Messages.Ectm.Enums;
 using Asp.Versioning;
@@ -134,5 +136,9 @@ namespace AeroTech.ECTM.RestApi.V1.FlightAggregate
         [HttpGet("{flightId:long}/samples")]
         public async Task<IActionResult> Samples(long flightId, [FromQuery] int? from, [FromQuery] int? to, CancellationToken cancellationToken)
             => Ok(await _mediator.Send(new BackofficeGetFlightSamplesQuery(flightId, from, to), cancellationToken));
+
+        [HttpGet("{flightId:long}/baseline-comparisons")]
+        public async Task<IActionResult> BaselineComparisons(long flightId, [FromQuery] BaselineEvaluationFilterRequest filter, CancellationToken cancellationToken)
+            => Ok(await _mediator.Send(new BackofficeGetFlightBaselineComparisonsQuery(flightId, filter.ToArgs()), cancellationToken));
     }
 }

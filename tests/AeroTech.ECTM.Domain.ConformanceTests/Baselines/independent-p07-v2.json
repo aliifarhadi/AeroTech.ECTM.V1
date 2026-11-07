@@ -1,0 +1,14 @@
+{
+  "id":"P07-OWNER-RAW-ARITHMETIC-v2",
+  "origin":"independent hand arithmetic, synthetic for tests only; not recorder goldens",
+  "cases":[
+    {"id":"P07-MATH-01","metric":"CRUISE/OPERATOR_60S/EGT_C/MEAN","baselineRawValue":675.0,"rawObserved":681.0,"expectedRawDelta":6.0,"correctedObserved":null,"correctedBaseline":null,"correctedDelta":null,"status":"DESCRIPTIVE_RAW"},
+    {"id":"P07-MATH-02","metric":"CRUISE/OPERATOR_60S/EGT_C/MEAN","baselineRawValue":674.0,"rawObserved":681.0,"expectedRawDelta":7.0,"correctedObserved":null,"correctedBaseline":null,"correctedDelta":null,"status":"DESCRIPTIVE_RAW"},
+    {"id":"P07-MATH-03","metric":"CRUISE/OPERATOR_60S/EGT_C/MEAN","baselineRawValue":670.0,"rawObserved":681.0,"expectedRawDelta":11.0,"correctedObserved":null,"correctedBaseline":null,"correctedDelta":null,"status":"DESCRIPTIVE_RAW"},
+    {"id":"P07-MATH-04","metric":"CRUISE/OPERATOR_60S/VIB_N1_FAN/MEAN","unit":"RECORDER_VIBRATION_NATIVE_UNVERIFIED","baselineRawValue":0.28,"rawObserved":0.31,"expectedRawDelta":0.03,"correctedDelta":null,"status":"DESCRIPTIVE_RAW_UNIT_UNVERIFIED"},
+    {"id":"P07-NULL-01","reason":"MISSING_OBSERVATION","baselineRawValue":675.0,"rawObserved":null,"expectedRawDelta":null},
+    {"id":"P07-NULL-02","reason":"UNIT_MISMATCH","baselineUnit":"CELSIUS","observedUnit":"KELVIN","baselineRawValue":675.0,"rawObserved":681.0,"expectedRawDelta":null},
+    {"id":"P07-NULL-03","reason":"DIFFERENT_ESN","baselineEngineId":"1001","observationEngineId":"1002","baselineRawValue":675.0,"rawObserved":681.0,"expectedRawDelta":null},
+    {"id":"P07-NULL-04","reason":"SELECTOR_MISMATCH","baselineSelector":"OPERATOR_60S","observationSelector":"STRICT","baselineRawValue":675.0,"rawObserved":681.0,"expectedRawDelta":null}
+  ]
+}

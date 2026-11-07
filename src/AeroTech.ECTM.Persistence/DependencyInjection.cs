@@ -9,6 +9,9 @@ using AeroTech.ECTM.Domain.FlightAggregate.Contracts;
 using AeroTech.ECTM.Domain.FlightPhaseAssessmentAggregate.Contracts;
 using AeroTech.ECTM.Domain.FlightQualityAggregate.Contracts;
 using AeroTech.ECTM.Domain.FlightReviewAggregate.Contracts;
+using AeroTech.ECTM.Domain.BaselineAggregate.Contracts;
+using AeroTech.ECTM.Domain.BaselineParameterFlightAggregate.Contracts;
+using AeroTech.ECTM.Domain.BaselinePrimarySelectionAggregate.Contracts;
 using AeroTech.ECTM.Domain.FlightStabilityPointsAggregate.Contracts;
 using AeroTech.ECTM.Domain.ImportBatchAggregate.Contracts;
 using AeroTech.ECTM.Domain.MaintenanceEventAggregate.Contracts;
@@ -25,6 +28,9 @@ using AeroTech.ECTM.Persistence.FlightAggregate;
 using AeroTech.ECTM.Persistence.FlightPhaseAssessmentAggregate;
 using AeroTech.ECTM.Persistence.FlightQualityAggregate;
 using AeroTech.ECTM.Persistence.FlightReviewAggregate;
+using AeroTech.ECTM.Persistence.BaselineAggregate;
+using AeroTech.ECTM.Persistence.BaselineParameterFlightAggregate;
+using AeroTech.ECTM.Persistence.BaselinePrimarySelectionAggregate;
 using AeroTech.ECTM.Persistence.FlightStabilityPointsAggregate;
 using AeroTech.ECTM.Persistence.ImportBatchAggregate;
 using AeroTech.ECTM.Persistence.MaintenanceEventAggregate;
@@ -70,6 +76,9 @@ namespace AeroTech.ECTM.Persistence
             services.AddScoped<IFlightPhaseAssessmentRepository, FlightPhaseAssessmentRepository>();
             services.AddScoped<IFlightStabilityPointsRepository, FlightStabilityPointsRepository>();
             services.AddScoped<IFlightReviewRepository, FlightReviewRepository>();
+            services.AddScoped<IBaselineRepository, BaselineRepository>();
+            services.AddScoped<IBaselinePrimarySelectionRepository, BaselinePrimarySelectionRepository>();
+            services.AddScoped<IBaselineParameterFlightRepository, BaselineParameterFlightRepository>();
 
             services.AddHealthChecks().AddDbContextReadinessCheck<EctmDbContext>("sql-server-command");
 

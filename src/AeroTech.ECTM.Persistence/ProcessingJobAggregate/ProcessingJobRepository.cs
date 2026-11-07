@@ -24,5 +24,30 @@ namespace AeroTech.ECTM.Persistence.ProcessingJobAggregate
                 .OrderBy(job => job.CreatedAt)
                 .ThenBy(job => job.Id)
                 .FirstOrDefaultAsync(cancellationToken);
+
+        public async Task<ProcessingJob?> FindQueuedAsync(ProcessingJobKind kind, long subjectId, CancellationToken cancellationToken = default)
+        {
+            var unsaved = _dbContext.ProcessingJobs.Local
+                .Where(job => job.Kind == kind)
+                .Where(job => job.SubjectId == subjectId)
+                .FirstOrDefault(job => job.State == ProcessingJobState.QUEUED);
+
+            if (unsaved is not null)
+                return unsaved;
+
+            return await _dbContext.ProcessingJobs
+                .Where(job => job.Kind == kind)
+                .Where(job => job.SubjectId == subjectId)
+                .FirstOrDefaultAsync(job => job.State == ProcessingJobState.QUEUED, cancellationToken);
+        }
+
+        public Task<ProcessingJob?> FindLatestAsync(ProcessingJobKind kind, long subjectId, CancellationToken cancellationToken = default)
+            => _dbContext.ProcessingJobs
+                .AsNoTracking()
+                .Where(job => job.Kind == kind)
+                .Where(job => job.SubjectId == subjectId)
+                .OrderByDescending(job => job.CreatedAt)
+                .ThenByDescending(job => job.Id)
+                .FirstOrDefaultAsync(cancellationToken);
     }
 }

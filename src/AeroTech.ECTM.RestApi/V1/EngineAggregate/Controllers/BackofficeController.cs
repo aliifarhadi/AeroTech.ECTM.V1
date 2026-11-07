@@ -1,4 +1,11 @@
+using AeroTech.ECTM.Application._Shared.Paging;
 using AeroTech.ECTM.Application.AnalysisRevisionAggregate.Commands.RecomputeEngine.Backoffice;
+using AeroTech.ECTM.Application.BaselineAggregate.Commands.CreateBaseline.Backoffice;
+using AeroTech.ECTM.Application.BaselineAggregate.Commands.PrefillBaselineFromFile.Backoffice;
+using AeroTech.ECTM.Application.BaselineAggregate.Commands.SetPrimaryBaseline.Backoffice;
+using AeroTech.ECTM.Application.BaselineAggregate.Queries.GetEngineBaselines.Backoffice;
+using AeroTech.ECTM.Application.BaselineParameterFlightAggregate.Queries.GetEngineBaselineTrend.Backoffice;
+using AeroTech.ECTM.Application.ImportBatchAggregate.Services;
 using AeroTech.ECTM.Application.EngineAggregate.Commands;
 using AeroTech.ECTM.Application.EngineAggregate.Commands.AdjustEngineLifeCounters.Backoffice;
 using AeroTech.ECTM.Application.EngineAggregate.Commands.CreateEngine.Backoffice;
@@ -7,6 +14,7 @@ using AeroTech.ECTM.Application.EngineAggregate.Queries.GetEngineById.Backoffice
 using AeroTech.ECTM.Application.EngineAggregate.Queries.GetEnginesPaginated.Backoffice;
 using AeroTech.ECTM.Application.FlightStabilityPointsAggregate.Queries.GetEngineDataCoverage.Backoffice;
 using AeroTech.ECTM.Application.FlightStabilityPointsAggregate.Queries.GetEnginePeriodPerformance.Backoffice;
+using AeroTech.ECTM.RestApi.V1.BaselineAggregate.Requests;
 using AeroTech.ECTM.RestApi.V1.EngineAggregate.Requests;
 using AeroTech.Messages.Ectm.Enums;
 using Asp.Versioning;
@@ -97,6 +105,73 @@ namespace AeroTech.ECTM.RestApi.V1.EngineAggregate
             var command = new BackofficeAdjustEngineLifeCountersCommand(engineId, lifeCounters, request.Reason);
 
             return Ok(await _mediator.Send(command, cancellationToken));
+        }
+
+        [HttpGet("{engineId:long}/baselines")]
+        public async Task<IActionResult> Baselines(long engineId, CancellationToken cancellationToken)
+            => Ok(await _mediator.Send(new BackofficeGetEngineBaselinesQuery(engineId), cancellationToken));
+
+        [HttpPost("{engineId:long}/baselines")]
+        public async Task<IActionResult> CreateBaseline(long engineId, [FromBody] CreateBaselineRequest request, CancellationToken cancellationToken)
+        {
+            var command = new BackofficeCreateBaselineCommand(
+                engineId,
+                request.Name,
+                request.DeclaredEffectiveDate,
+                request.ShopVisitEventId,
+                request.FirstPostShopDeclared,
+                request.SourceFileName,
+                request.SourceFileSha256,
+                request.Notes,
+                request.Parameters);
+
+            return StatusCode(StatusCodes.Status201Created, await _mediator.Send(command, cancellationToken));
+        }
+
+        [HttpPost("{engineId:long}/baselines/prefill-file")]
+        [Consumes("multipart/form-data")]
+        [RequestSizeLimit(ImportOptions.RequestBodyLimitBytes)]
+        [RequestFormLimits(MultipartBodyLengthLimit = ImportOptions.RequestBodyLimitBytes)]
+        public async Task<IActionResult> PrefillBaseline(long engineId, [FromForm] PrefillBaselineFileRequest request, CancellationToken cancellationToken)
+        {
+            var file = await UploadedFileOfAsync(request.File, cancellationToken);
+            var command = new BackofficePrefillBaselineFromFileCommand(engineId, file, request.EnginePosition, request.ShopVisitEventId);
+
+            return Ok(await _mediator.Send(command, cancellationToken));
+        }
+
+        [HttpPut("{engineId:long}/baselines/primary")]
+        public async Task<IActionResult> SetPrimaryBaseline(long engineId, [FromBody] SetPrimaryBaselineRequest request, CancellationToken cancellationToken)
+        {
+            var command = new BackofficeSetPrimaryBaselineCommand(
+                engineId,
+                request.BaselineParameterId,
+                request.SnapshotKind,
+                request.Selector,
+                request.ParameterCode,
+                request.ExpectedCurrentPrimaryId);
+
+            return Ok(await _mediator.Send(command, cancellationToken));
+        }
+
+        [HttpGet("{engineId:long}/baseline-trend")]
+        public async Task<IActionResult> BaselineTrend(
+            long engineId,
+            [FromQuery] BaselineEvaluationFilterRequest filter,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = PageLimits.DefaultPageSize,
+            CancellationToken cancellationToken = default)
+            => Ok(await _mediator.Send(new BackofficeGetEngineBaselineTrendQuery(engineId, filter.ToArgs(), pageNumber, pageSize), cancellationToken));
+
+        private static async Task<UploadedFile> UploadedFileOfAsync(IFormFile? file, CancellationToken cancellationToken)
+        {
+            if (file is null)
+                return new UploadedFile(string.Empty, []);
+
+            using var buffer = new MemoryStream();
+            await file.CopyToAsync(buffer, cancellationToken);
+
+            return new UploadedFile(file.FileName, buffer.ToArray());
         }
     }
 }

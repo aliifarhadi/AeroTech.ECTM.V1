@@ -2,6 +2,9 @@ using AeroTech.ECTM.Domain._Shared.Resources;
 using AeroTech.ECTM.Domain.AircraftAggregate;
 using AeroTech.ECTM.Domain.AnalysisRevisionAggregate;
 using AeroTech.ECTM.Domain.AuditEntryAggregate;
+using AeroTech.ECTM.Domain.BaselineAggregate;
+using AeroTech.ECTM.Domain.BaselineParameterFlightAggregate;
+using AeroTech.ECTM.Domain.BaselinePrimarySelectionAggregate;
 using AeroTech.ECTM.Domain.ConfigurationDocumentAggregate;
 using AeroTech.ECTM.Domain.EngineAggregate;
 using AeroTech.ECTM.Domain.EngineInstallationAggregate;
@@ -82,6 +85,12 @@ namespace AeroTech.ECTM.Persistence
         public DbSet<FlightStabilityPoints> FlightStabilityPoints => Set<FlightStabilityPoints>();
 
         public DbSet<FlightReview> FlightReviews => Set<FlightReview>();
+
+        public DbSet<Baseline> Baselines => Set<Baseline>();
+
+        public DbSet<BaselinePrimarySelection> BaselinePrimarySelections => Set<BaselinePrimarySelection>();
+
+        public DbSet<BaselineParameterFlight> BaselineParameterFlights => Set<BaselineParameterFlight>();
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {

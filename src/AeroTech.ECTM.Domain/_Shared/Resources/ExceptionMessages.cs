@@ -74,5 +74,16 @@ namespace AeroTech.ECTM.Domain._Shared.Resources
         public const string StabilityPointsNotEvaluated = "Flight {0} has no stability points in its current analysis revision; publish SNAPSHOT_RULES and recompute the flight.";
         public const string FlightNotAnalysed = "Flight {0} has no analysis revision yet, so it cannot be accepted or excluded.";
         public const string ReviewRevisionStale = "The review names analysis revision {0}, but the current revision is {1}; reload the flight.";
+        public const string BaselineNotFound = "Baseline {0} was not found.";
+        public const string BaselineIsNotDraft = "Baseline {0} is {1}; only a draft can be changed. Clone it to make a new draft.";
+        public const string BaselineIsNotPublished = "Baseline {0} is {1}; this needs a published baseline.";
+        public const string BaselineDraftRevisionStale = "Baseline {0} was changed: the request names draft revision {1}, the current revision is {2}. Reload the draft.";
+        public const string BaselineCannotBePublished = "Baseline {0} cannot be published: {1}.";
+        public const string BaselineParameterInvalid = "The baseline parameters are invalid: {0}";
+        public const string BaselinePrefillFileRejected = "The file cannot be used for prefill ({0}): {1}";
+        public const string BaselineParameterNotFound = "Baseline parameter {0} was not found.";
+        public const string BaselinePrimaryChanged = "The primary baseline parameter changed: the request expects {0}, the current one is {1}. Reload the baselines.";
+        public const string BaselineShopVisitInvalid = "Maintenance event {0} is not a SHOP_VISIT of engine {1}.";
+        public const string BaselineEngineMismatch = "Baseline parameter {0} belongs to engine {1}, not to engine {2}.";
     }
 }

@@ -8,6 +8,21 @@ using AeroTech.ECTM.Application.AircraftAggregate.Queries.GetAircraftById;
 using AeroTech.ECTM.Application.AircraftAggregate.Queries.GetAircraftPaginated;
 using AeroTech.ECTM.Application.AircraftAggregate.Services;
 using AeroTech.ECTM.Application.AnalysisRevisionAggregate.Commands.RecomputeEngine;
+using AeroTech.ECTM.Application.BaselineAggregate.Commands.CloneBaseline;
+using AeroTech.ECTM.Application.BaselineAggregate.Commands.CreateBaseline;
+using AeroTech.ECTM.Application.BaselineAggregate.Commands.PrefillBaselineFromFile;
+using AeroTech.ECTM.Application.BaselineAggregate.Commands.PublishBaseline;
+using AeroTech.ECTM.Application.BaselineAggregate.Commands.ReconcileBaseline;
+using AeroTech.ECTM.Application.BaselineAggregate.Commands.RetireBaseline;
+using AeroTech.ECTM.Application.BaselineAggregate.Commands.SetPrimaryBaseline;
+using AeroTech.ECTM.Application.BaselineAggregate.Commands.UpdateBaseline;
+using AeroTech.ECTM.Application.BaselineAggregate.Queries.GetBaselineById;
+using AeroTech.ECTM.Application.BaselineAggregate.Queries.GetEngineBaselines;
+using AeroTech.ECTM.Application.BaselineAggregate.Queries.PreviewBaseline;
+using AeroTech.ECTM.Application.BaselineAggregate.Services;
+using AeroTech.ECTM.Application.BaselineParameterFlightAggregate.Queries.GetEngineBaselineTrend;
+using AeroTech.ECTM.Application.BaselineParameterFlightAggregate.Queries.GetFlightBaselineComparisons;
+using AeroTech.ECTM.Application.BaselineParameterFlightAggregate.Services;
 using AeroTech.ECTM.Application.AnalysisRevisionAggregate.Commands.RecomputeFlight;
 using AeroTech.ECTM.Application.AnalysisRevisionAggregate.Queries.GetFlightRevisions;
 using AeroTech.ECTM.Application.AnalysisRevisionAggregate.Services;
@@ -112,6 +127,7 @@ namespace AeroTech.ECTM.Application
             services.AddScoped<IConfigurationContentValidator, QualityRulesContentValidator>();
             services.AddScoped<IConfigurationContentValidator, PhaseRuleSetContentValidator>();
             services.AddScoped<IConfigurationContentValidator, SnapshotRulesContentValidator>();
+            services.AddScoped<IConfigurationContentValidator, BaselineRulesContentValidator>();
             services.AddScoped<ConfigurationContentValidators>();
             services.AddScoped<ConfigurationDocumentLoader>();
             services.AddScoped<ActiveCatalogLoader>();
@@ -216,6 +232,30 @@ namespace AeroTech.ECTM.Application
             services.AddScoped<IGetModelPeriodPerformanceService, GetModelPeriodPerformanceService>();
             services.AddScoped<IGetEngineDataCoverageService, GetEngineDataCoverageService>();
             services.AddScoped<IGetReviewReportService, GetReviewReportService>();
+
+            services.AddScoped<BaselineDefinitionsLoader>();
+            services.AddScoped<ShopVisitCheck>();
+            services.AddScoped<BaselineDtoLoader>();
+            services.AddScoped<ICreateBaselineService, CreateBaselineService>();
+            services.AddScoped<IUpdateBaselineService, UpdateBaselineService>();
+            services.AddScoped<IPublishBaselineService, PublishBaselineService>();
+            services.AddScoped<ICloneBaselineService, CloneBaselineService>();
+            services.AddScoped<IRetireBaselineService, RetireBaselineService>();
+            services.AddScoped<ISetPrimaryBaselineService, SetPrimaryBaselineService>();
+            services.AddScoped<IPrefillBaselineFromFileService, PrefillBaselineFromFileService>();
+            services.AddScoped<IReconcileBaselineService, ReconcileBaselineService>();
+            services.AddScoped<IGetEngineBaselinesService, GetEngineBaselinesService>();
+            services.AddScoped<IGetBaselineByIdService, GetBaselineByIdService>();
+            services.AddScoped<IPreviewBaselineService, PreviewBaselineService>();
+
+            services.AddScoped<BaselineEvaluationScheduler>();
+            services.AddScoped<FlightEvidenceLoader>();
+            services.AddScoped<ComparisonTolerancesLoader>();
+            services.AddScoped<EngineBaselineReconciler>();
+            services.AddScoped<BaselineEvaluationDtoLoader>();
+            services.AddScoped<IProcessingJobHandler, BaselineEvaluationJobHandler>();
+            services.AddScoped<IGetFlightBaselineComparisonsService, GetFlightBaselineComparisonsService>();
+            services.AddScoped<IGetEngineBaselineTrendService, GetEngineBaselineTrendService>();
 
             return services;
         }

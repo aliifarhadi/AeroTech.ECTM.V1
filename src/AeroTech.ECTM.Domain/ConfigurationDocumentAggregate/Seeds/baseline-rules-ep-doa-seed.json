@@ -1,0 +1,43 @@
+{
+  "rulesCode": "EP-DOA-BASELINE-WARNINGS",
+  "title": "هشدارهای شرایط مقایسه با baseline موتورهای EP-DOA",
+  "description": "این سند فقط آستانهٔ هشدار را تعیین می‌کند. اختلاف خام (مقدار پرواز منهای مقدار baseline) همیشه حساب و نمایش داده می‌شود. اگر اختلاف ارتفاع فشاری، Mach، TAT یا N1 همان موتور بین پرواز و شرایط مرجع baseline بیشتر از تلرانس این سند باشد، کنار عدد هشدار «شرایط خارج از تلرانس» می‌آید. این سند هیچ عددی را حذف یا تصحیح نمی‌کند. آستانه‌ها پیشنهادی‌اند، هنوز کالیبره نشده‌اند و مهندس قوای محرکه آن‌ها را تأیید نکرده است.",
+  "calibrationStatus": "CANDIDATE",
+  "engineeringSignOff": "PENDING",
+  "source": "ECTM-P07-Baseline-Pack-v2.0 docs/01 D07-02 and owner decision of 2026-11-07 (warnings with these tolerances); values from ECTM-v3.3 contracts/policy-defaults-v1.json -> comparability (policy v1-calibration-candidate)",
+  "conditions": [
+    { "parameter": "PRESSURE_ALT_FT", "perEngine": false, "tolerance": 2000 },
+    { "parameter": "MACH", "perEngine": false, "tolerance": 0.03 },
+    { "parameter": "TAT_C", "perEngine": false, "tolerance": 8 },
+    { "parameter": "N1_PCT", "perEngine": true, "tolerance": 1.5 }
+  ],
+  "decisions": [
+    {
+      "id": "P07-D01",
+      "topic": "Warning, not blocking",
+      "choice": "A condition outside its tolerance adds CONDITION_OUT_OF_TOLERANCE next to the raw difference; the raw difference is still shown",
+      "basis": "P07 Pack v2.0 D07-02: raw delta is always shown as DESCRIPTIVE_RAW; owner decision of 2026-11-07 keeps the warning with these tolerances",
+      "alternative": "No tolerance at all: show the condition differences only (retire this document)",
+      "howToChange": "Edit a tolerance, add or remove a condition, or retire the document to show the numbers without a warning",
+      "appliesTo": ["conditions"]
+    },
+    {
+      "id": "P07-D02",
+      "topic": "Tolerance units",
+      "choice": "Each tolerance is in the unit of its own channel: feet, Mach, degrees C and percentage points of N1; N1 is the same engine's value",
+      "basis": "ECTM-v3.3 docs/07 section 3 states the tolerances in those units",
+      "alternative": "A relative N1 tolerance",
+      "howToChange": "Edit the tolerance of the condition",
+      "appliesTo": ["conditions/N1_PCT"]
+    },
+    {
+      "id": "P07-D03",
+      "topic": "Thresholds and sign-off",
+      "choice": "Every number of this document is CANDIDATE and the powerplant sign-off is PENDING",
+      "basis": "Calibration belongs to P13; sign-off is never inferred",
+      "alternative": "None",
+      "howToChange": "Publish a CALIBRATED version after P13 and record the engineer's sign-off",
+      "appliesTo": ["document"]
+    }
+  ]
+}
